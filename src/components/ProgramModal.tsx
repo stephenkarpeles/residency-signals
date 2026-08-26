@@ -1,12 +1,12 @@
 "use client";
 
 import { useApp } from "@/context/AppProvider";
-import { FACTORS } from "@/lib/factors";
+import { CONSIDERING_SLOTS, FACTORS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { getProgram } from "@/lib/programs";
 import { colLabel, factorScore, formatPopulation, matchScore } from "@/lib/scoring";
 
 export function ProgramModal() {
-  const { detailId, setDetailId, assign, unassign, findSlot, weights, goldCount, silverCount } =
+  const { detailId, setDetailId, assign, unassign, findSlot, weights, goldCount, silverCount, consideringCount } =
     useApp();
   const program = getProgram(detailId);
   if (!program) return null;
@@ -67,7 +67,11 @@ export function ProgramModal() {
             <span className="bg-stone-400" style={{ width: `${program.percentIMG}%` }} />
           </div>
           <p className="mt-2 text-[11px] text-stone-400">
-            Resident mix {program.doMdSource === "published" ? "from published program data" : "estimated from program type and typical mix"}.
+            {program.doMdSource === "roster"
+              ? "Resident mix counted from the program's current resident roster."
+              : program.doMdSource === "published"
+                ? "Resident mix from 2026 FREIDA program surveys (three-year averages)."
+                : "Resident mix estimated from program type and typical mix."}
           </p>
         </div>
 
@@ -128,7 +132,7 @@ export function ProgramModal() {
           ) : null}
           <button
             type="button"
-            disabled={slot?.tier !== "gold" && goldCount >= 3}
+            disabled={slot?.tier !== "gold" && goldCount >= GOLD_SLOTS}
             onClick={() => assign(program.id, "gold")}
             className="rounded-xl bg-[#C4A35A] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#B3944C] disabled:opacity-40"
           >
@@ -136,11 +140,19 @@ export function ProgramModal() {
           </button>
           <button
             type="button"
-            disabled={slot?.tier !== "silver" && silverCount >= 15}
+            disabled={slot?.tier !== "silver" && silverCount >= SILVER_SLOTS}
             onClick={() => assign(program.id, "silver")}
             className="rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-40"
           >
             Signal silver
+          </button>
+          <button
+            type="button"
+            disabled={slot?.tier !== "considering" && consideringCount >= CONSIDERING_SLOTS}
+            onClick={() => assign(program.id, "considering")}
+            className="rounded-xl bg-[#3F5C51] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#344c43] disabled:opacity-40"
+          >
+            Considering
           </button>
           <button
             type="button"

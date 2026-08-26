@@ -15,6 +15,7 @@ import {
 import { useState, type ReactNode } from "react";
 import { useApp } from "@/context/AppProvider";
 import { getProgram } from "@/lib/programs";
+import type { SignalTier } from "@/lib/types";
 import { ProgramCard } from "@/components/ProgramCard";
 
 const collisionDetection: CollisionDetection = (args) => {
@@ -23,8 +24,7 @@ const collisionDetection: CollisionDetection = (args) => {
     const slots = pointer.filter(
       (hit) =>
         typeof hit.id === "string" &&
-        (hit.id.startsWith("gold-") || hit.id.startsWith("silver-")) &&
-        !hit.id.endsWith("-group"),
+        /^(gold|silver|considering)-\d+$/.test(hit.id),
     );
     return slots.length ? slots : pointer;
   }
@@ -57,11 +57,15 @@ export function DndRoot({ children }: { children: ReactNode }) {
       assign(programId, "silver");
       return;
     }
+    if (overId === "considering-group") {
+      assign(programId, "considering");
+      return;
+    }
 
-    const goldMatch = overId.match(/^gold-(\d+)$/);
-    const silverMatch = overId.match(/^silver-(\d+)$/);
-    if (goldMatch) assign(programId, "gold", Number(goldMatch[1]));
-    if (silverMatch) assign(programId, "silver", Number(silverMatch[1]));
+    const slotMatch = overId.match(/^(gold|silver|considering)-(\d+)$/);
+    if (slotMatch) {
+      assign(programId, slotMatch[1] as SignalTier, Number(slotMatch[2]));
+    }
   }
 
   const activeProgram = getProgram(activeId);

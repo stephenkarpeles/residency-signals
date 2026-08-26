@@ -2,6 +2,7 @@ import type { FactorDef, FactorId, Weights } from "./types";
 
 export const GOLD_SLOTS = 3;
 export const SILVER_SLOTS = 15;
+export const CONSIDERING_SLOTS = 10;
 
 export const FACTORS: FactorDef[] = [
   {
@@ -116,8 +117,8 @@ export function activeFactors(weights: Weights): FactorDef[] {
   return FACTORS.filter((f) => (weights[f.id] ?? 0) > 0);
 }
 
-export function unusedSuggestedFactors(weights: Weights): FactorDef[] {
-  return FACTORS.filter((f) => f.suggested && (weights[f.id] ?? 0) === 0);
+export function unusedFactors(weights: Weights): FactorDef[] {
+  return FACTORS.filter((f) => (weights[f.id] ?? 0) === 0);
 }
 
 export function weightsTotal(weights: Weights): number {

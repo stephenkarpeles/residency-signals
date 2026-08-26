@@ -4,10 +4,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ProgramCard } from "@/components/ProgramCard";
 import { useApp } from "@/context/AppProvider";
 import { PROGRAMS, REGIONS, STATE_NAMES, STATES } from "@/lib/programs";
-import { matchScore } from "@/lib/scoring";
+import { formatPopulation, matchScore } from "@/lib/scoring";
 import type { ProgramType, SortKey } from "@/lib/types";
 
-const TYPES: Array<"All" | ProgramType> = ["All", "University", "Hybrid", "Community"];
+const TYPES: ProgramType[] = ["University", "Hybrid", "Community"];
+
+const TYPE_LABELS: Record<ProgramType, string> = {
+  University: "University · academic",
+  Hybrid: "Hybrid · academic + community",
+  Community: "Community · community-based",
+};
 
 const CITY_NICKNAMES: Record<string, string> = {
   "Oklahoma City": "okc",
@@ -32,6 +38,36 @@ const CITY_NICKNAMES: Record<string, string> = {
   "St Louis": "stl",
   "Kansas City": "kc",
   Peoria: "osf st francis saint francis hospital",
+  Maywood: "loyola",
+  Aurora: "anschutz",
+  Columbia: "mizzou",
+  Wichita: "kumc",
+};
+
+const PROGRAM_NICKNAMES: Record<string, string> = {
+  "ku-wichita": "kumc kumc wichita ku wichita",
+  "ssm-okc": "saint anthony st anthony st. anthony",
+  "osu-tulsa-osteopathic": "oklahoma state osu tulsa",
+  "ou-tulsa": "ou tulsa oklahoma tulsa",
+  missouri: "mizzou mizzou columbia",
+  "cape-fear-valley": "cape fear fayetteville",
+  "uk-bowling-green": "med center health medical center bowling green mch the medical center",
+  colorado: "anschutz cu anschutz university of colorado aurora",
+  buffalo: "university of buffalo ub buffalo",
+  "buffalo-sisters": "sisters of charity sisters buffalo",
+  "advocate-aurora-milwaukee": "aurora healthcare aurora milwaukee aurora health",
+  "saint-joseph-denver": "st joseph denver st. joseph hospital denver",
+  loyola: "loyola maywood stritch",
+  umkc: "umkc truman",
+  oklahoma: "ou oklahoma city ouhsc university of oklahoma",
+  nebraska: "unmc university of nebraska omaha",
+  "creighton-omaha": "creighton omaha",
+  "advocate-illinois-masonic": "illinois masonic masonic chicago",
+  "uic-peoria-osf": "uic peoria osf peoria",
+  uams: "university of arkansas uams little rock",
+  "ut-chattanooga": "uetc uetcom utcom chattanooga erlanger",
+  "nymc-passaic": "st marys st mary's st. mary's passaic",
+  "westchester-nymc": "westchester valhalla westchester medical center",
 };
 
 const SEARCH_STOPWORDS = new Set([
@@ -73,6 +109,19 @@ function editDistance(a: string, b: string): number {
   return row[b.length];
 }
 
+const POPULATION_STEPS = [
+  0, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 2_500_000, Number.POSITIVE_INFINITY,
+] as const;
+
+function populationSummary(minValue: number, maxValue: number): string {
+  const minAny = minValue === 0;
+  const maxAny = !Number.isFinite(maxValue);
+  if (minAny && maxAny) return "Any";
+  if (minAny) return `Up to ${formatPopulation(maxValue)}`;
+  if (maxAny) return `${formatPopulation(minValue)}+`;
+  return `${formatPopulation(minValue)} – ${formatPopulation(maxValue)}`;
+}
+
 function tokenMatchesHay(token: string, hay: string): boolean {
   if (hay.includes(token)) return true;
   if (token === "st" || token === "st.") return hay.includes("saint");
@@ -93,11 +142,17 @@ export function ExploreView() {
   const [query, setQuery] = useState("");
   const [regions, setRegions] = useState<string[]>([]);
   const [states, setStates] = useState<string[]>([]);
-  const [type, setType] = useState<string>("All");
+  const [types, setTypes] = useState<string[]>([]);
   const [minDO, setMinDO] = useState(0);
   const [minMD, setMinMD] = useState(0);
+  const [minPopIndex, setMinPopIndex] = useState(0);
+  const [maxPopIndex, setMaxPopIndex] = useState(POPULATION_STEPS.length - 1);
   const [waterfront, setWaterfront] = useState(false);
   const [sort, setSort] = useState<SortKey>("score");
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+
+  const advancedActive =
+    types.length > 0 || minPopIndex > 0 || maxPopIndex < POPULATION_STEPS.length - 1;
 
   const stateOptions = useMemo(() => {
     if (regions.length === 0) return STATES;
@@ -118,14 +173,17 @@ export function ExploreView() {
     const rows = PROGRAMS.filter((program) => {
       if (regions.length > 0 && !regions.includes(program.region)) return false;
       if (states.length > 0 && !states.includes(program.state)) return false;
-      if (type !== "All" && program.type !== type) return false;
+      if (types.length > 0 && !types.includes(program.type)) return false;
       if (program.percentDO < minDO) return false;
       if (program.percentMD < minMD) return false;
+      if (program.cityPopulation < POPULATION_STEPS[minPopIndex]) return false;
+      if (program.cityPopulation > POPULATION_STEPS[maxPopIndex]) return false;
       if (waterfront && program.waterProximity < 70) return false;
       if (!q) return true;
       const nick = CITY_NICKNAMES[program.city] ?? "";
+      const programNick = PROGRAM_NICKNAMES[program.id] ?? "";
       const hay =
-        `${program.name} ${program.shortName} ${program.city} ${program.state} ${STATE_NAMES[program.state] ?? ""} ${program.highlights.join(" ")} ${nick}`.toLowerCase();
+        `${program.name} ${program.shortName} ${program.city} ${program.state} ${STATE_NAMES[program.state] ?? ""} ${program.highlights.join(" ")} ${nick} ${programNick}`.toLowerCase();
       const tokens = q.split(/\s+/).filter((token) => !SEARCH_STOPWORDS.has(token));
       if (tokens.length === 0) return true;
       return tokens.every((token) => tokenMatchesHay(token, hay));
@@ -154,7 +212,7 @@ export function ExploreView() {
       }
     });
     return rows;
-  }, [query, regions, states, type, minDO, minMD, waterfront, sort, weights]);
+  }, [query, regions, states, types, minDO, minMD, minPopIndex, maxPopIndex, waterfront, sort, weights]);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -166,8 +224,9 @@ export function ExploreView() {
           Find your 3 gold and 15 silver signals
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          Search {PROGRAMS.length} ACGME programs, then drag one into an open slot on the left — or
-          tap Gold / Silver on a card. Scores update live from your Important Factors.
+          Search {PROGRAMS.length} ACGME programs, then drag one into an open gold, silver, or
+          considering slot on the left — or tap Gold / Silver / Consider on a card. Scores update
+          live from your Important Factors.
         </p>
       </header>
 
@@ -206,7 +265,6 @@ export function ExploreView() {
             options={stateOptions}
             formatOption={(code) => `${code} · ${STATE_NAMES[code] ?? code}`}
           />
-          <FilterSelect label="Type" value={type} onChange={setType} options={TYPES} />
           <Toggle pressed={waterfront} onClick={() => setWaterfront((v) => !v)}>
             Near water
           </Toggle>
@@ -226,6 +284,43 @@ export function ExploreView() {
             accent="green"
           />
         </div>
+
+        <button
+          type="button"
+          aria-expanded={advancedOpen}
+          onClick={() => setAdvancedOpen((open) => !open)}
+          className={`mt-3 text-[13px] font-medium ${
+            advancedActive ? "text-[#8A6A2A]" : "text-stone-500 hover:text-stone-700"
+          }`}
+        >
+          {advancedOpen ? "Hide advanced filters" : "Advanced filters"}
+          {!advancedOpen && advancedActive ? " · on" : ""}
+        </button>
+
+        {advancedOpen ? (
+          <div className="mt-3 space-y-2">
+            <MultiSelect
+              label="Type"
+              values={types}
+              onChange={setTypes}
+              options={TYPES}
+              emptyLabel="Any type"
+              formatOption={(value) => TYPE_LABELS[value as ProgramType] ?? value}
+            />
+            <PopulationSlider
+              minIndex={minPopIndex}
+              maxIndex={maxPopIndex}
+              onChangeMin={(index) => {
+                setMinPopIndex(index);
+                if (index > maxPopIndex) setMaxPopIndex(index);
+              }}
+              onChangeMax={(index) => {
+                setMaxPopIndex(index);
+                if (index < minPopIndex) setMinPopIndex(index);
+              }}
+            />
+          </div>
+        ) : null}
       </div>
 
       <p className="mt-5 text-[13px] text-stone-500">
@@ -254,12 +349,14 @@ function MultiSelect({
   onChange,
   options,
   formatOption,
+  emptyLabel = "All",
 }: {
   label: string;
   values: string[];
   onChange: (values: string[]) => void;
   options: readonly string[];
   formatOption?: (value: string) => string;
+  emptyLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -283,7 +380,7 @@ function MultiSelect({
   const selected = values.filter((value) => options.includes(value));
   const summary =
     selected.length === 0
-      ? "All"
+      ? emptyLabel
       : selected.length === 1
         ? (formatOption?.(selected[0]) ?? selected[0])
         : `${selected.length} selected`;
@@ -310,13 +407,13 @@ function MultiSelect({
         }`}
       >
         <span className="text-stone-400">{label}</span>
-        <span className="max-w-[160px] truncate font-medium text-stone-800">{summary}</span>
+        <span className="max-w-[220px] truncate font-medium text-stone-800">{summary}</span>
       </button>
       {open ? (
         <div
           role="listbox"
           aria-multiselectable="true"
-          className="absolute z-30 mt-1 max-h-64 min-w-[220px] overflow-y-auto rounded-xl border border-stone-200 bg-white py-1 shadow-[0_8px_24px_rgba(28,25,23,0.12)]"
+          className="absolute z-30 mt-1 max-h-64 min-w-[260px] overflow-y-auto rounded-xl border border-stone-200 bg-white py-1 shadow-[0_8px_24px_rgba(28,25,23,0.12)]"
         >
           <button
             type="button"
@@ -324,7 +421,7 @@ function MultiSelect({
             onClick={() => onChange([])}
           >
             <span className="w-4 text-center text-[#C4A35A]">{selected.length === 0 ? "✓" : ""}</span>
-            All
+            {emptyLabel}
           </button>
           {options.map((option) => {
             const checked = selected.includes(option);
@@ -367,35 +464,6 @@ function MultiSelect({
   );
 }
 
-function FilterSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: readonly string[];
-}) {
-  return (
-    <label className="flex items-center gap-2 rounded-xl border border-stone-200 bg-[#FBF9F6] px-3 py-2 text-[13px] text-stone-600">
-      <span className="text-stone-400">{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-transparent font-medium text-stone-800 outline-none"
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
 function PercentSlider({
   label,
   value,
@@ -434,6 +502,74 @@ function PercentSlider({
         className={`w-full ${accent === "gold" ? "accent-[#C4A35A]" : "accent-[#3F5C51]"}`}
       />
     </label>
+  );
+}
+
+function PopulationSlider({
+  minIndex,
+  maxIndex,
+  onChangeMin,
+  onChangeMax,
+}: {
+  minIndex: number;
+  maxIndex: number;
+  onChangeMin: (index: number) => void;
+  onChangeMax: (index: number) => void;
+}) {
+  const last = POPULATION_STEPS.length - 1;
+  const minValue = POPULATION_STEPS[minIndex];
+  const maxValue = POPULATION_STEPS[maxIndex];
+  const active = minIndex > 0 || maxIndex < last;
+  const minLabel = minIndex === 0 ? "Any" : formatPopulation(minValue);
+  const maxLabel = maxIndex === last ? "Any" : formatPopulation(maxValue);
+
+  return (
+    <div
+      className={`rounded-xl border px-3 py-2.5 ${
+        active ? "border-[#E6D5A3] bg-[#FBF6E8]" : "border-stone-200 bg-[#FBF9F6]"
+      }`}
+    >
+      <div className="mb-1.5 flex items-center justify-between text-[13px]">
+        <span className="text-stone-500">Town population</span>
+        <span className="font-semibold tabular-nums text-stone-800">
+          {populationSummary(minValue, maxValue)}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <label>
+          <span className="mb-1 flex items-center justify-between text-[11px] text-stone-400">
+            Min
+            <span className="tabular-nums text-stone-600">{minLabel}</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={1}
+            value={minIndex}
+            aria-label="Minimum town population"
+            onChange={(e) => onChangeMin(Number(e.target.value))}
+            className="w-full accent-[#C4A35A]"
+          />
+        </label>
+        <label>
+          <span className="mb-1 flex items-center justify-between text-[11px] text-stone-400">
+            Max
+            <span className="tabular-nums text-stone-600">{maxLabel}</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={1}
+            value={maxIndex}
+            aria-label="Maximum town population"
+            onChange={(e) => onChangeMax(Number(e.target.value))}
+            className="w-full accent-[#C4A35A]"
+          />
+        </label>
+      </div>
+    </div>
   );
 }
 

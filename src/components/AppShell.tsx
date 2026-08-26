@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function Shell({ children }: { children: ReactNode }) {
-  const { goldCount, silverCount, setSidebarOpen } = useApp();
+  const { goldCount, silverCount, consideringCount, setSidebarOpen } = useApp();
 
   return (
     <div className="min-h-screen bg-[#F6F3EE] text-stone-900">
@@ -35,6 +35,8 @@ function Shell({ children }: { children: ReactNode }) {
           <span className="font-medium text-[#8A6A2A]">{goldCount}/3 gold</span>
           <span className="mx-1.5 text-stone-300">·</span>
           <span className="font-medium text-stone-600">{silverCount}/15 silver</span>
+          <span className="mx-1.5 text-stone-300">·</span>
+          <span className="font-medium text-[#3F5C51]">{consideringCount}/10 considering</span>
         </p>
       </header>
       <main className="px-4 py-8 sm:px-8 lg:pl-[332px] lg:pr-10 lg:py-10">{children}</main>

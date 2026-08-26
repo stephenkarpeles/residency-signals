@@ -10,6 +10,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extra_programs import EXTRA_CITIES, EXTRA_PROGRAMS
+from freida_overlay import overlay_for
 
 # City stats: Census populations, C2ER-style COL (100 = U.S. average),
 # metro school quality (GreatSchools/Niche style 0–100), in-state college
@@ -130,6 +131,7 @@ CITIES: dict[str, dict] = {
     "Louisville, KY": dict(pop=624444, col=92, ms=55, hs=58, colleges=68, town=78, water=48, water_note="Ohio River", safety=45, walk=42, climate=66),
     "Morgantown, WV": dict(pop=30347, col=85, ms=62, hs=65, colleges=55, town=62, water=22, water_note="Monongahela River", safety=62, walk=42, climate=58),
     "Denver, CO": dict(pop=715522, col=118, ms=72, hs=74, colleges=78, town=88, water=15, water_note="South Platte; mountains, no coast", safety=52, walk=58, climate=68),
+    "Aurora, CO": dict(pop=386261, col=115, ms=70, hs=72, colleges=78, town=80, water=12, water_note="Denver metro; mountains nearby", safety=50, walk=42, climate=68),
     "Salt Lake City, UT": dict(pop=209593, col=108, ms=70, hs=72, colleges=72, town=80, water=42, water_note="Great Salt Lake nearby", safety=58, walk=55, climate=62),
     "Phoenix, AZ": dict(pop=1650070, col=108, ms=55, hs=58, colleges=70, town=80, water=8, water_note="Desert; canals and lakes", safety=48, walk=38, climate=58),
     "Tucson, AZ": dict(pop=542629, col=98, ms=58, hs=60, colleges=70, town=75, water=5, water_note="Sonoran Desert", safety=48, walk=42, climate=62),
@@ -245,7 +247,7 @@ PROGRAMS = [
     ("Vanderbilt University Medical Center", "Vanderbilt", "Nashville, TN", "University", 8, 95, 95, 3, 2, 96, "estimated", ["Elite academic", "Nashville lifestyle", "Top-tier fellowships"]),
     ("University of Tennessee", "UT Memphis", "Memphis, TN", "University", 8, 79, 75, 12, 13, 74, "estimated", ["High-volume Regional One", "Affordable", "Diverse pathology"]),
     ("University of Tennessee Medical Center at Knoxville", "UT Knoxville", "Knoxville, TN", "University", 4, 76, 80, 12, 8, 68, "estimated", ["Smoky Mountains nearby", "Regional academic", "Lower COL"]),
-    ("University of Tennessee College of Medicine at Chattanooga", "UT Chattanooga", "Chattanooga, TN", "Hybrid", 4, 75, 78, 14, 8, 62, "estimated", ["Riverfront city revival", "Hands-on training", "Outdoor lifestyle"]),
+    ("University of Tennessee College of Medicine at Chattanooga", "UT Chattanooga", "Chattanooga, TN", "Hybrid", 4, 75, 78, 14, 8, 62, "estimated", ["UETCOM / UTCOM Chattanooga", "Erlanger", "Riverfront city revival", "Hands-on training", "Outdoor lifestyle"]),
     ("Meharry Medical College", "Meharry", "Nashville, TN", "University", 4, 76, 80, 8, 12, 64, "estimated", ["HBCU academic", "Nashville", "Mission-driven care"]),
     ("University of Florida", "Florida", "Gainesville, FL", "University", 5, 85, 86, 8, 6, 84, "estimated", ["SEC academic flagship", "Strong research", "College town"]),
     ("University of Florida College of Medicine Jacksonville", "UF Jacksonville", "Jacksonville, FL", "University", 6, 78, 75, 12, 13, 72, "estimated", ["Urban safety-net", "Atlantic coast city", "High volume"]),
@@ -261,8 +263,8 @@ PROGRAMS = [
     ("Louisiana State University (Shreveport)", "LSU Shreveport", "Shreveport, LA", "University", 6, 74, 72, 14, 14, 66, "estimated", ["High-volume safety-net", "Very affordable", "Broad pathology"]),
     ("University of Arkansas for Medical Sciences", "UAMS", "Little Rock, AR", "University", 5, 78, 82, 10, 8, 74, "estimated", ["State flagship", "Only academic in AR", "Affordable living"]),
     ("University of Mississippi Medical Center", "Ole Miss / UMMC", "Jackson, MS", "University", 6, 75, 80, 12, 8, 70, "estimated", ["Only academic in MS", "High-acuity", "Very affordable"]),
-    ("University of Oklahoma Health Sciences Center", "Oklahoma", "Oklahoma City, OK", "University", 6, 80, 82, 12, 6, 76, "estimated", ["State flagship", "Growing OKC", "Solid fellowships"]),
-    ("SSM Health St. Anthony Hospital", "SSM OKC", "Oklahoma City, OK", "Community", 3, 72, 0, 100, 0, 52, "published", ["Historically osteopathic community program", "High surgical volume", "Midtown Oklahoma City"]),
+    ("University of Oklahoma Health Sciences Center", "Oklahoma", "Oklahoma City, OK", "University", 6, 80, 82, 12, 6, 76, "estimated", ["OU Oklahoma City", "OUHSC", "State flagship", "Growing OKC", "Solid fellowships"]),
+    ("SSM Health St. Anthony Hospital", "SSM OKC", "Oklahoma City, OK", "Community", 3, 72, 0, 100, 0, 52, "published", ["Saint Anthony / St. Anthony", "Historically osteopathic community program", "High surgical volume", "Midtown Oklahoma City"]),
     ("University of Oklahoma School of Community Medicine (Tulsa)", "OU Tulsa", "Tulsa, OK", "University", 4, 74, 78, 14, 8, 62, "estimated", ["Community-academic Tulsa", "Affordable", "Hands-on"]),
     ("University of Texas Southwestern Medical Center", "UTSW", "Dallas, TX", "University", 18, 93, 90, 6, 4, 94, "estimated", ["Largest OB/GYN class in the U.S.", "Parkland volume", "Elite academic Dallas"]),
     ("Baylor College of Medicine", "Baylor", "Houston, TX", "University", 12, 92, 90, 6, 4, 93, "estimated", ["Texas Medical Center", "Huge volume", "Top-tier fellowships"]),
@@ -282,7 +284,7 @@ PROGRAMS = [
     ("University of Illinois College of Medicine at Chicago", "UIC", "Chicago, IL", "University", 8, 82, 75, 10, 15, 78, "estimated", ["Safety-net academic", "Diverse patients", "Large class"]),
     ("Loyola University Medical Center", "Loyola", "Maywood, IL", "University", 6, 83, 85, 10, 5, 80, "estimated", ["Suburban academic", "Strong Jesuit tradition", "Chicago metro"]),
     ("Southern Illinois University", "SIU", "Springfield, IL", "University", 4, 74, 78, 14, 8, 64, "estimated", ["Capital city academic", "Affordable", "Hands-on"]),
-    ("University of Illinois College of Medicine at Peoria", "UIC Peoria / OSF", "Peoria, IL", "Hybrid", 4, 73, 38, 31, 31, 58, "published", ["OSF Saint Francis Medical Center", "DO and IMG friendly", "Community-academic", "Affordable Midwest"]),
+    ("University of Illinois College of Medicine at Peoria", "UIC Peoria / OSF", "Peoria, IL", "Hybrid", 4, 73, 33, 40, 27, 58, "published", ["OSF Saint Francis Medical Center", "DO and IMG friendly", "Community-academic", "Affordable Midwest"]),
     ("Indiana University School of Medicine", "Indiana", "Indianapolis, IN", "University", 10, 86, 86, 8, 6, 84, "estimated", ["Large academic class", "Riley + Methodist system", "Affordable big city"]),
     ("University of Michigan Health System", "Michigan", "Ann Arbor, MI", "University", 7, 97, 95, 3, 2, 97, "estimated", ["Consistently top 5 reputation", "Von Voigtlander Women's", "Outstanding schools"]),
     ("Detroit Medical Center/Wayne State University", "Wayne State / DMC", "Detroit, MI", "University", 10, 81, 78, 13, 9, 76, "published", ["Hutzel Women's Hospital", "Very high volume", "DO-friendly academic"]),
@@ -308,13 +310,13 @@ PROGRAMS = [
     ("University of Missouri-Kansas City School of Medicine", "UMKC", "Kansas City, MO", "University", 6, 78, 77, 6, 17, 70, "published", ["Truman Medical Center", "KC lifestyle", "Urban safety-net"]),
     ("University of Missouri-Columbia", "Missouri", "Columbia, MO", "University", 4, 77, 82, 12, 6, 70, "estimated", ["Mizzou academic", "College town", "Affordable"]),
     ("University of Kansas School of Medicine", "Kansas", "Kansas City, KS", "University", 4, 80, 84, 10, 6, 76, "estimated", ["KU Med academic", "KC metro", "Solid fellowships"]),
-    ("University of Kansas (Wichita)", "KU Wichita", "Wichita, KS", "University", 5, 74, 75, 18, 7, 62, "estimated", ["Community-academic", "Affordable plains city", "Hands-on"]),
-    ("University of Nebraska Medical Center College of Medicine", "Nebraska", "Omaha, NE", "University", 5, 81, 84, 10, 6, 76, "estimated", ["UNMC academic", "Omaha livability", "Strong volume"]),
+    ("University of Kansas (Wichita)", "KU Wichita", "Wichita, KS", "University", 5, 74, 75, 18, 7, 62, "estimated", ["KUMC Wichita", "Community-academic", "Affordable plains city", "Hands-on"]),
+    ("University of Nebraska Medical Center College of Medicine", "Nebraska", "Omaha, NE", "University", 5, 81, 84, 10, 6, 76, "estimated", ["UNMC", "Omaha livability", "Strong volume"]),
     ("Creighton University School of Medicine (Omaha)", "Creighton Omaha", "Omaha, NE", "University", 10, 80, 81, 6, 13, 74, "published", ["Large Jesuit class", "CHI Health", "DO-friendly academic"]),
     ("University of Kentucky College of Medicine", "Kentucky", "Lexington, KY", "University", 6, 82, 84, 10, 6, 78, "estimated", ["Bluegrass academic", "UK Chandler", "College-town plus horse country"]),
     ("University of Louisville School of Medicine", "Louisville", "Louisville, KY", "University", 6, 80, 80, 12, 8, 74, "estimated", ["Urban academic", "Ohio River city", "High volume"]),
     ("West Virginia University", "WVU", "Morgantown, WV", "University", 4, 76, 80, 14, 6, 68, "estimated", ["Mountain academic", "Very affordable", "Regional tertiary"]),
-    ("University of Colorado", "Colorado", "Denver, CO", "University", 10, 91, 90, 6, 4, 90, "estimated", ["Anschutz academic", "Mountains and city", "Large class"]),
+    ("University of Colorado", "Colorado", "Aurora, CO", "University", 10, 91, 90, 6, 4, 90, "estimated", ["CU Anschutz", "Anschutz academic", "Mountains and city", "Large class"]),
     ("University of Utah Health", "Utah", "Salt Lake City, UT", "University", 6, 87, 88, 8, 4, 86, "estimated", ["Mountain West flagship", "Outdoor lifestyle", "Strong academic"]),
     ("University of Arizona College of Medicine-Phoenix", "Arizona Phoenix", "Phoenix, AZ", "University", 6, 80, 80, 12, 8, 74, "estimated", ["Banner University Phoenix", "Desert metro", "Growing program"]),
     ("University of Arizona College of Medicine-Tucson", "Arizona Tucson", "Tucson, AZ", "University", 5, 79, 82, 10, 8, 74, "estimated", ["Historic UA academic", "Desert mountains", "Affordable West"]),
@@ -373,6 +375,14 @@ def main() -> None:
         ) = row
         city = CITIES[city_key]
         city_name, state = city_key.rsplit(", ", 1)
+        overlay = overlay_for(name, city_name, state)
+        if overlay.get("class_size"):
+            class_size = overlay["class_size"]
+        if overlay.get("source"):
+            md = overlay["md"]
+            do = overlay["do"]
+            img = overlay["img"]
+            do_source = overlay["source"]
         pid = slugify(short)
         if pid in seen:
             pid = slugify(f"{short}-{state}")
@@ -414,7 +424,9 @@ def main() -> None:
         )
 
     # Validate
+    sources = {"published": 0, "estimated": 0, "roster": 0}
     for p in programs:
+        sources[p["doMdSource"]] = sources.get(p["doMdSource"], 0) + 1
         total = p["percentMD"] + p["percentDO"] + p["percentIMG"]
         if abs(total - 100) > 1:
             raise SystemExit(f"MD/DO/IMG mismatch for {p['shortName']}: {total}")
@@ -429,13 +441,19 @@ def main() -> None:
             "Program quality synthesizes Doximity-style reputation, academic standing, "
             "and fellowship depth. City stats use Census populations and C2ER-style cost "
             "of living (100 = U.S. average). School and college scores are metro/state "
-            "approximations. DO/MD splits use published ResidencyAdvisor figures where "
-            "marked published; otherwise they are estimates from program type and typical mix."
+            "approximations. DO/MD/IMG splits and class sizes use 2026 FREIDA program "
+            "surveys (three-year resident averages) where matched; a few programs use a "
+            "current resident-roster count (marked roster); otherwise they are estimates "
+            "from program type and typical mix."
         ),
         "programs": programs,
     }
     out.write_text(json.dumps(payload, indent=2))
     print(f"Wrote {len(programs)} programs to {out}")
+    print(
+        f"Resident mix sources: {sources['published']} FREIDA 2026, "
+        f"{sources['roster']} roster, {sources['estimated']} estimated"
+    )
 
 
 if __name__ == "__main__":

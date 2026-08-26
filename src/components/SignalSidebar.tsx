@@ -4,8 +4,9 @@ import { useDndContext, useDroppable } from "@dnd-kit/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/context/AppProvider";
-import { GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
+import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { SignalSlot } from "@/components/SignalSlot";
+import type { SignalTier } from "@/lib/types";
 
 const NAV = [
   { href: "/", label: "Explore Programs" },
@@ -14,7 +15,7 @@ const NAV = [
 ];
 
 export function SignalSidebar() {
-  const { selections, goldCount, silverCount, sidebarOpen, setSidebarOpen } =
+  const { selections, goldCount, silverCount, consideringCount, sidebarOpen, setSidebarOpen } =
     useApp();
   const pathname = usePathname();
 
@@ -94,6 +95,13 @@ export function SignalSidebar() {
             max={SILVER_SLOTS}
             ids={selections.silver}
           />
+          <SlotGroup
+            tier="considering"
+            title="Considering"
+            count={consideringCount}
+            max={CONSIDERING_SLOTS}
+            ids={selections.considering}
+          />
         </div>
       </aside>
     </>
@@ -107,7 +115,7 @@ function SlotGroup({
   max,
   ids,
 }: {
-  tier: "gold" | "silver";
+  tier: SignalTier;
   title: string;
   count: number;
   max: number;
@@ -116,6 +124,7 @@ function SlotGroup({
   const { setNodeRef, isOver } = useDroppable({ id: `${tier}-group` });
   const { over } = useDndContext();
   const gold = tier === "gold";
+  const considering = tier === "considering";
   const overId = typeof over?.id === "string" ? over.id : "";
   const highlighted =
     isOver || overId === `${tier}-group` || new RegExp(`^${tier}-\\d+$`).test(overId);
@@ -127,21 +136,29 @@ function SlotGroup({
         highlighted
           ? gold
             ? "bg-[#F3E6C0] ring-2 ring-inset ring-[#C4A35A]"
-            : "bg-stone-200/70 ring-2 ring-inset ring-stone-400"
+            : considering
+              ? "bg-[#DCE8E2] ring-2 ring-inset ring-[#3F5C51]"
+              : "bg-stone-200/70 ring-2 ring-inset ring-stone-400"
           : gold
             ? "bg-[#F7F1E1]/70"
-            : "bg-white/60"
+            : considering
+              ? "bg-[#F3F7F5]"
+              : "bg-white/60"
       }`}
     >
       <div className="mb-2.5 flex items-baseline justify-between px-0.5">
         <h2
           className={`text-[11px] font-semibold tracking-[0.14em] uppercase ${
-            gold ? "text-[#8A6A2A]" : "text-stone-500"
+            gold ? "text-[#8A6A2A]" : considering ? "text-[#3F5C51]" : "text-stone-500"
           }`}
         >
           {title}
         </h2>
-        <span className={`text-[11px] tabular-nums ${gold ? "text-[#8A6A2A]" : "text-stone-500"}`}>
+        <span
+          className={`text-[11px] tabular-nums ${
+            gold ? "text-[#8A6A2A]" : considering ? "text-[#3F5C51]" : "text-stone-500"
+          }`}
+        >
           {count}/{max}
         </span>
       </div>

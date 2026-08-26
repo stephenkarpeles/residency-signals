@@ -1,6 +1,6 @@
 export type ProgramType = "University" | "Hybrid" | "Community";
 export type Region = "Northeast" | "Midwest" | "South" | "West";
-export type DoMdSource = "published" | "estimated";
+export type DoMdSource = "published" | "estimated" | "roster";
 
 export type Program = {
   id: string;
@@ -59,7 +59,10 @@ export type FactorDef = {
 export type Selections = {
   gold: (string | null)[];
   silver: (string | null)[];
+  considering: (string | null)[];
 };
+
+export type SignalTier = "gold" | "silver" | "considering";
 
 export type SortKey =
   | "score"

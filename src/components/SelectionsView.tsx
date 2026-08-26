@@ -3,11 +3,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { rankedSelected, useApp } from "@/context/AppProvider";
 import { ProgramCard } from "@/components/ProgramCard";
+import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 
 export function SelectionsView() {
-  const { selections, weights, goldCount, silverCount, clearAll } = useApp();
-  const { gold, silver } = rankedSelected(selections, weights);
-  const empty = goldCount + silverCount === 0;
+  const { selections, weights, goldCount, silverCount, consideringCount, clearAll } = useApp();
+  const { gold, silver, considering } = rankedSelected(selections, weights);
+  const empty = goldCount + silverCount + consideringCount === 0;
   const [confirmClear, setConfirmClear] = useState(false);
 
   return (
@@ -21,7 +22,8 @@ export function SelectionsView() {
             My current selections
           </h1>
           <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-            {goldCount} of 3 gold · {silverCount} of 15 silver. Drag cards in Explore to fill
+            {goldCount} of {GOLD_SLOTS} gold · {silverCount} of {SILVER_SLOTS} silver ·{" "}
+            {consideringCount} of {CONSIDERING_SLOTS} considering. Drag cards in Explore to fill
             the leftover slots, or rearrange from the left rail.
           </p>
         </div>
@@ -40,6 +42,7 @@ export function SelectionsView() {
         <ClearAllConfirm
           goldCount={goldCount}
           silverCount={silverCount}
+          consideringCount={consideringCount}
           onCancel={() => setConfirmClear(false)}
           onConfirm={() => {
             clearAll();
@@ -50,30 +53,30 @@ export function SelectionsView() {
 
       {empty ? (
         <div className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-20 text-center">
-          <p className="text-lg font-medium text-stone-900">No signals yet</p>
+          <p className="text-lg font-medium text-stone-900">No programs yet</p>
           <p className="mx-auto mt-2 max-w-md text-[15px] text-stone-500">
-            Head to Explore Programs and drop your favorites into the gold and silver slots.
+            Head to Explore Programs and drop programs into gold, silver, or considering slots.
           </p>
         </div>
       ) : (
         <div className="mt-10 space-y-12">
           <section>
             <h2 className="text-[12px] font-semibold tracking-[0.14em] text-[#8A6A2A] uppercase">
-              Gold · {goldCount}/3
+              Gold · {goldCount}/{GOLD_SLOTS}
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {gold.map(({ program }) => (
                 <ProgramCard key={program.id} program={program} />
               ))}
-              {Array.from({ length: 3 - gold.length }).map((_, index) => (
-                <EmptySlot key={`g-${index}`} label={`Open gold slot ${gold.length + index + 1}`} gold />
+              {Array.from({ length: GOLD_SLOTS - gold.length }).map((_, index) => (
+                <EmptySlot key={`g-${index}`} label={`Open gold slot ${gold.length + index + 1}`} tone="gold" />
               ))}
             </div>
           </section>
 
           <section>
             <h2 className="text-[12px] font-semibold tracking-[0.14em] text-stone-500 uppercase">
-              Silver · {silverCount}/15
+              Silver · {silverCount}/{SILVER_SLOTS}
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {silver.map(({ program }) => (
@@ -84,20 +87,52 @@ export function SelectionsView() {
               ) : null}
             </div>
           </section>
+
+          <section>
+            <h2 className="text-[12px] font-semibold tracking-[0.14em] text-[#3F5C51] uppercase">
+              Considering · {consideringCount}/{CONSIDERING_SLOTS}
+            </h2>
+            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {considering.map(({ program }) => (
+                <ProgramCard key={program.id} program={program} />
+              ))}
+              {Array.from({ length: CONSIDERING_SLOTS - considering.length }).map((_, index) => (
+                <EmptySlot
+                  key={`c-${index}`}
+                  label={`Open considering slot ${considering.length + index + 1}`}
+                  tone="considering"
+                />
+              ))}
+            </div>
+          </section>
         </div>
       )}
     </div>
   );
 }
 
-function EmptySlot({ label, gold }: { label: string; gold?: boolean }) {
+function EmptySlot({ label, tone }: { label: string; tone?: "gold" | "considering" }) {
   return (
     <div
       className={`flex min-h-[220px] items-center justify-center rounded-2xl border border-dashed ${
-        gold ? "border-[#E0C97A] bg-[#FBF6E8]/60" : "border-stone-300 bg-white/50"
+        tone === "gold"
+          ? "border-[#E0C97A] bg-[#FBF6E8]/60"
+          : tone === "considering"
+            ? "border-[#C5D4CE] bg-[#F3F7F5]/70"
+            : "border-stone-300 bg-white/50"
       }`}
     >
-      <p className={`text-sm ${gold ? "text-[#C4A35A]" : "text-stone-400"}`}>{label}</p>
+      <p
+        className={`text-sm ${
+          tone === "gold"
+            ? "text-[#C4A35A]"
+            : tone === "considering"
+              ? "text-[#6E8B80]"
+              : "text-stone-400"
+        }`}
+      >
+        {label}
+      </p>
     </div>
   );
 }
@@ -105,11 +140,13 @@ function EmptySlot({ label, gold }: { label: string; gold?: boolean }) {
 function ClearAllConfirm({
   goldCount,
   silverCount,
+  consideringCount,
   onCancel,
   onConfirm,
 }: {
   goldCount: number;
   silverCount: number;
+  consideringCount: number;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
@@ -148,8 +185,8 @@ function ClearAllConfirm({
           Clear all signals?
         </h2>
         <p id={descId} className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          This removes {goldCount} gold and {silverCount} silver from this browser. You can
-          rebuild the list from Explore, but this step cannot be undone.
+          This removes {goldCount} gold, {silverCount} silver, and {consideringCount} considering
+          from this browser. You can rebuild the list from Explore, but this step cannot be undone.
         </p>
         <div className="mt-6 flex flex-wrap justify-end gap-2">
           <button

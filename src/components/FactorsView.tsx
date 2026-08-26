@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useApp } from "@/context/AppProvider";
 import {
   FACTORS,
-  unusedSuggestedFactors,
+  unusedFactors,
   weightsTotal,
 } from "@/lib/factors";
 import { PROGRAMS } from "@/lib/programs";
@@ -14,8 +14,9 @@ import type { FactorId } from "@/lib/types";
 export function FactorsView() {
   const { weights, setWeight, addFactor, dropFactor, resetWeights } = useApp();
   const total = weightsTotal(weights);
-  const active = FACTORS.filter((f) => !f.suggested || (weights[f.id] ?? 0) > 0);
-  const suggestions = unusedSuggestedFactors(weights);
+  const active = FACTORS.filter((f) => (weights[f.id] ?? 0) > 0);
+  const suggestions = unusedFactors(weights);
+  const canRemove = active.length > 1;
 
   const preview = useMemo(
     () =>
@@ -37,7 +38,8 @@ export function FactorsView() {
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
           Drag the sliders to change how programs are scored. Weights always add up to 100%.
-          Unused ideas sit at the bottom — add any that matter to you.
+          Remove anything you don’t care about — it moves to the list below, where you can add it
+          back later.
         </p>
       </header>
 
@@ -81,7 +83,7 @@ export function FactorsView() {
                 <span className="w-12 text-right text-lg font-semibold tabular-nums text-stone-900">
                   {weights[factor.id]}%
                 </span>
-                {factor.suggested || factor.defaultWeight === 0 ? (
+                {canRemove ? (
                   <button
                     type="button"
                     onClick={() => dropFactor(factor.id)}
@@ -110,7 +112,8 @@ export function FactorsView() {
             Other things you might factor in
           </h2>
           <p className="mt-2 text-[14px] text-stone-500">
-            Adding one starts it at 5% and scales the rest down so you stay at 100%.
+            Removed factors and extra ideas live here. Adding one starts it at 5% and scales the
+            rest down so you stay at 100%.
           </p>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {suggestions.map((factor) => (
@@ -193,7 +196,7 @@ function BreakdownNote() {
     <p className="mt-4 text-[12px] leading-relaxed text-stone-400">
       Scores are a weighted blend of the factors above. City data is stored locally in this
       app after being compiled from public sources (Census, C2ER-style cost of living, metro
-      school ratings, and published residency directories).
+      school ratings, and 2026 FREIDA program surveys).
     </p>
   );
 }

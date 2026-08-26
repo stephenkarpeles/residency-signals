@@ -13,6 +13,7 @@ import {
   addSuggestedFactor,
   defaultWeights,
   GOLD_SLOTS,
+  CONSIDERING_SLOTS,
   normalizeWeights,
   removeFactor,
   setWeightKeepingTotal,
@@ -24,12 +25,11 @@ import {
   emptySelections,
   loadSelections,
   loadWeights,
+  normalizeSelections,
   saveSelections,
   saveWeights,
 } from "@/lib/storage";
-import type { FactorId, Program, Selections, Weights } from "@/lib/types";
-
-type Tier = "gold" | "silver";
+import type { FactorId, Program, Selections, SignalTier, Weights } from "@/lib/types";
 
 type AppState = {
   hydrated: boolean;
@@ -43,20 +43,23 @@ type AppState = {
   addFactor: (id: FactorId) => void;
   dropFactor: (id: FactorId) => void;
   resetWeights: () => void;
-  assign: (programId: string, tier: Tier, index?: number) => boolean;
+  assign: (programId: string, tier: SignalTier, index?: number) => boolean;
   unassign: (programId: string) => void;
   clearAll: () => void;
-  findSlot: (programId: string) => { tier: Tier; index: number } | null;
+  findSlot: (programId: string) => { tier: SignalTier; index: number } | null;
   goldCount: number;
   silverCount: number;
+  consideringCount: number;
 };
 
 const AppContext = createContext<AppState | null>(null);
 
 function withoutProgram(selections: Selections, programId: string): Selections {
+  const current = normalizeSelections(selections);
   return {
-    gold: selections.gold.map((id) => (id === programId ? null : id)),
-    silver: selections.silver.map((id) => (id === programId ? null : id)),
+    gold: current.gold.map((id) => (id === programId ? null : id)),
+    silver: current.silver.map((id) => (id === programId ? null : id)),
+    considering: current.considering.map((id) => (id === programId ? null : id)),
   };
 }
 
@@ -78,7 +81,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (hydrated) saveSelections(selections);
+    if (hydrated) saveSelections(normalizeSelections(selections));
   }, [hydrated, selections]);
 
   useEffect(() => {
@@ -87,17 +90,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const findSlot = useCallback(
     (programId: string) => {
-      const goldIndex = selections.gold.indexOf(programId);
+      const current = normalizeSelections(selections);
+      const goldIndex = current.gold.indexOf(programId);
       if (goldIndex >= 0) return { tier: "gold" as const, index: goldIndex };
-      const silverIndex = selections.silver.indexOf(programId);
+      const silverIndex = current.silver.indexOf(programId);
       if (silverIndex >= 0) return { tier: "silver" as const, index: silverIndex };
+      const consideringIndex = current.considering.indexOf(programId);
+      if (consideringIndex >= 0) return { tier: "considering" as const, index: consideringIndex };
       return null;
     },
     [selections],
   );
 
   const assign = useCallback(
-    (programId: string, tier: Tier, index?: number) => {
+    (programId: string, tier: SignalTier, index?: number) => {
       if (!getProgram(programId)) return false;
       let placed = false;
       setSelections((current) => {
@@ -137,10 +143,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const resetWeights = useCallback(() => setWeights(defaultWeights()), []);
 
-  const value = useMemo<AppState>(
-    () => ({
+  const value = useMemo<AppState>(() => {
+    const next = normalizeSelections(selections);
+    return {
       hydrated,
-      selections,
+      selections: next,
       weights,
       sidebarOpen,
       detailId,
@@ -154,25 +161,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
       unassign,
       clearAll,
       findSlot,
-      goldCount: selections.gold.filter(Boolean).length,
-      silverCount: selections.silver.filter(Boolean).length,
-    }),
-    [
-      hydrated,
-      selections,
-      weights,
-      sidebarOpen,
-      detailId,
-      setWeight,
-      addFactor,
-      dropFactor,
-      resetWeights,
-      assign,
-      unassign,
-      clearAll,
-      findSlot,
-    ],
-  );
+      goldCount: next.gold.filter(Boolean).length,
+      silverCount: next.silver.filter(Boolean).length,
+      consideringCount: next.considering.filter(Boolean).length,
+    };
+  }, [
+    hydrated,
+    selections,
+    weights,
+    sidebarOpen,
+    detailId,
+    setWeight,
+    addFactor,
+    dropFactor,
+    resetWeights,
+    assign,
+    unassign,
+    clearAll,
+    findSlot,
+  ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
@@ -189,7 +196,8 @@ export function useProgramSlot(programId: string) {
 }
 
 export function rankedSelected(selections: Selections, weights: Weights) {
-  const collect = (ids: (string | null)[], tier: Tier) =>
+  const current = normalizeSelections(selections);
+  const collect = (ids: (string | null)[], tier: SignalTier) =>
     ids
       .map((id, index) => {
         const program = getProgram(id);
@@ -198,14 +206,15 @@ export function rankedSelected(selections: Selections, weights: Weights) {
       })
       .filter(Boolean) as {
       program: Program;
-      tier: Tier;
+      tier: SignalTier;
       index: number;
       score: number;
     }[];
   return {
-    gold: collect(selections.gold, "gold"),
-    silver: collect(selections.silver, "silver"),
+    gold: collect(current.gold, "gold"),
+    silver: collect(current.silver, "silver"),
+    considering: collect(current.considering, "considering"),
   };
 }
 
-export { GOLD_SLOTS, SILVER_SLOTS };
+export { GOLD_SLOTS, SILVER_SLOTS, CONSIDERING_SLOTS };

@@ -5,13 +5,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
 import { getProgram } from "@/lib/programs";
+import type { SignalTier } from "@/lib/types";
 
 export function SignalSlot({
   tier,
   index,
   programId,
 }: {
-  tier: "gold" | "silver";
+  tier: SignalTier;
   index: number;
   programId: string | null;
 }) {
@@ -25,6 +26,7 @@ export function SignalSlot({
   });
   const program = getProgram(programId);
   const gold = tier === "gold";
+  const considering = tier === "considering";
   const over = droppable.isOver;
 
   useEffect(() => {
@@ -40,6 +42,12 @@ export function SignalSlot({
     draggable.setNodeRef(node);
   };
 
+  const numberClass = gold
+    ? "text-[#C4A35A]"
+    : considering
+      ? "text-[#3F5C51]"
+      : "text-stone-400";
+
   if (program) {
     const dragProps = mounted ? { ...draggable.listeners, ...draggable.attributes } : {};
     return (
@@ -48,14 +56,14 @@ export function SignalSlot({
         style={style}
         {...dragProps}
         className={`group flex items-center gap-2 rounded-xl border px-2 py-1.5 ${
-          gold ? "border-[#E6D5A3] bg-white" : "border-stone-200 bg-white"
+          gold
+            ? "border-[#E6D5A3] bg-white"
+            : considering
+              ? "border-[#C5D4CE] bg-white"
+              : "border-stone-200 bg-white"
         } ${draggable.isDragging ? "opacity-40" : ""} ${over ? "ring-2 ring-[#C4A35A]" : ""}`}
       >
-        <span
-          className={`w-4 shrink-0 text-center text-[10px] font-semibold tabular-nums ${
-            gold ? "text-[#C4A35A]" : "text-stone-400"
-          }`}
-        >
+        <span className={`w-4 shrink-0 text-center text-[10px] font-semibold tabular-nums ${numberClass}`}>
           {index + 1}
         </span>
         <button
@@ -90,17 +98,33 @@ export function SignalSlot({
     <div
       ref={droppable.setNodeRef}
       className={`flex items-center gap-2 rounded-xl border border-dashed px-2 ${
-        gold ? "h-[46px] border-[#E0C97A]/80 bg-[#FBF6E8]/50" : "h-[40px] border-stone-300/80 bg-stone-50/80"
-      } ${over ? (gold ? "border-[#C4A35A] bg-[#F3E6C0] ring-2 ring-inset ring-[#C4A35A]" : "border-stone-400 bg-stone-100 ring-2 ring-inset ring-stone-400") : ""}`}
+        gold
+          ? "h-[46px] border-[#E0C97A]/80 bg-[#FBF6E8]/50"
+          : considering
+            ? "h-[40px] border-[#C5D4CE] bg-[#F3F7F5]/80"
+            : "h-[40px] border-stone-300/80 bg-stone-50/80"
+      } ${
+        over
+          ? gold
+            ? "border-[#C4A35A] bg-[#F3E6C0] ring-2 ring-inset ring-[#C4A35A]"
+            : considering
+              ? "border-[#3F5C51] bg-[#DCE8E2] ring-2 ring-inset ring-[#3F5C51]"
+              : "border-stone-400 bg-stone-100 ring-2 ring-inset ring-stone-400"
+          : ""
+      }`}
     >
       <span
         className={`w-4 shrink-0 text-center text-[10px] font-semibold tabular-nums ${
-          gold ? "text-[#D4B56A]" : "text-stone-300"
+          gold ? "text-[#D4B56A]" : considering ? "text-[#8AA396]" : "text-stone-300"
         }`}
       >
         {index + 1}
       </span>
-      <span className={`text-[11px] ${gold ? "text-[#C4A35A]/80" : "text-stone-400"}`}>
+      <span
+        className={`text-[11px] ${
+          gold ? "text-[#C4A35A]/80" : considering ? "text-[#6E8B80]" : "text-stone-400"
+        }`}
+      >
         Open slot
       </span>
     </div>

@@ -1,13 +1,18 @@
-import { defaultWeights, GOLD_SLOTS, SILVER_SLOTS, normalizeWeights } from "./factors";
+import { defaultWeights, GOLD_SLOTS, SILVER_SLOTS, CONSIDERING_SLOTS, normalizeWeights } from "./factors";
 import type { Selections, Weights } from "./types";
 
 const SELECTIONS_KEY = "obgyn-signals:selections:v1";
 const WEIGHTS_KEY = "obgyn-signals:weights:v1";
 
 export function emptySelections(): Selections {
+  return normalizeSelections({});
+}
+
+export function normalizeSelections(parsed: Partial<Selections> | null | undefined): Selections {
   return {
-    gold: Array.from({ length: GOLD_SLOTS }, () => null),
-    silver: Array.from({ length: SILVER_SLOTS }, () => null),
+    gold: padSlots(parsed?.gold, GOLD_SLOTS),
+    silver: padSlots(parsed?.silver, SILVER_SLOTS),
+    considering: padSlots(parsed?.considering, CONSIDERING_SLOTS),
   };
 }
 
@@ -16,11 +21,7 @@ export function loadSelections(): Selections {
   try {
     const raw = window.localStorage.getItem(SELECTIONS_KEY);
     if (!raw) return emptySelections();
-    const parsed = JSON.parse(raw) as Selections;
-    return {
-      gold: padSlots(parsed.gold, GOLD_SLOTS),
-      silver: padSlots(parsed.silver, SILVER_SLOTS),
-    };
+    return normalizeSelections(JSON.parse(raw) as Partial<Selections>);
   } catch {
     return emptySelections();
   }

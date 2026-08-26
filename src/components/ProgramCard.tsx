@@ -4,6 +4,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
+import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
 import type { Program } from "@/lib/types";
 
@@ -14,7 +15,7 @@ export function ProgramCard({
   program: Program;
   overlay?: boolean;
 }) {
-  const { weights, findSlot, assign, unassign, setDetailId, goldCount, silverCount } =
+  const { weights, findSlot, assign, unassign, setDetailId, goldCount, silverCount, consideringCount } =
     useApp();
   const [mounted, setMounted] = useState(false);
   const slot = findSlot(program.id);
@@ -44,7 +45,9 @@ export function ProgramCard({
           ? "border-[#E6D5A3]"
           : slot?.tier === "silver"
             ? "border-stone-300"
-            : "border-stone-200/80"
+            : slot?.tier === "considering"
+              ? "border-[#C5D4CE]"
+              : "border-stone-200/80"
       } ${draggable.isDragging && !overlay ? "opacity-30" : ""} ${
         overlay ? "shadow-xl ring-1 ring-stone-200" : "hover:shadow-md"
       }`}
@@ -95,9 +98,27 @@ export function ProgramCard({
       </div>
 
       {slot ? (
-        <p className="mt-3 text-[11px] font-medium text-[#8A6A2A]">
-          {slot.tier === "gold" ? "Gold" : "Silver"} signal {slot.index + 1}
-        </p>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <p
+            className={`text-[11px] font-medium ${
+              slot.tier === "considering" ? "text-[#3F5C51]" : "text-[#8A6A2A]"
+            }`}
+          >
+            {slot.tier === "gold"
+              ? `Gold signal ${slot.index + 1}`
+              : slot.tier === "silver"
+                ? `Silver signal ${slot.index + 1}`
+                : `Considering ${slot.index + 1}`}
+          </p>
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={() => unassign(program.id)}
+            className="shrink-0 rounded-xl px-2 py-0.5 text-[11px] text-stone-500 hover:bg-stone-100"
+          >
+            Remove
+          </button>
+        </div>
       ) : null}
 
       <div className="mt-auto flex items-center gap-2 pt-4">
@@ -109,21 +130,11 @@ export function ProgramCard({
         >
           Details
         </button>
-        <div className="ml-auto flex gap-1.5">
-          {slot ? (
-            <button
-              type="button"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={() => unassign(program.id)}
-              className="rounded-xl px-2.5 py-1.5 text-[12px] text-stone-500 hover:bg-stone-100"
-            >
-              Remove
-            </button>
-          ) : null}
+        <div className="ml-auto flex shrink-0 gap-1.5">
           <button
             type="button"
             onPointerDown={(e) => e.stopPropagation()}
-            disabled={slot?.tier !== "gold" && goldCount >= 3}
+            disabled={slot?.tier !== "gold" && goldCount >= GOLD_SLOTS}
             onClick={() => assign(program.id, "gold")}
             className="rounded-xl bg-[#F3E6C0] px-2.5 py-1.5 text-[12px] font-medium text-[#6F5420] hover:bg-[#EAD7A0] disabled:opacity-40"
           >
@@ -132,11 +143,20 @@ export function ProgramCard({
           <button
             type="button"
             onPointerDown={(e) => e.stopPropagation()}
-            disabled={slot?.tier !== "silver" && silverCount >= 15}
+            disabled={slot?.tier !== "silver" && silverCount >= SILVER_SLOTS}
             onClick={() => assign(program.id, "silver")}
             className="rounded-xl bg-stone-200 px-2.5 py-1.5 text-[12px] font-medium text-stone-700 hover:bg-stone-300 disabled:opacity-40"
           >
             Silver
+          </button>
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            disabled={slot?.tier !== "considering" && consideringCount >= CONSIDERING_SLOTS}
+            onClick={() => assign(program.id, "considering")}
+            className="rounded-xl bg-[#E4EDE8] px-2.5 py-1.5 text-[12px] font-medium text-[#3F5C51] hover:bg-[#D5E3DC] disabled:opacity-40"
+          >
+            Consider
           </button>
         </div>
       </div>
