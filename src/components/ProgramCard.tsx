@@ -1,0 +1,154 @@
+"use client";
+
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { useEffect, useState } from "react";
+import { useApp } from "@/context/AppProvider";
+import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
+import type { Program } from "@/lib/types";
+
+export function ProgramCard({
+  program,
+  overlay = false,
+}: {
+  program: Program;
+  overlay?: boolean;
+}) {
+  const { weights, findSlot, assign, unassign, setDetailId, goldCount, silverCount } =
+    useApp();
+  const [mounted, setMounted] = useState(false);
+  const slot = findSlot(program.id);
+  const score = matchScore(program, weights);
+  const draggable = useDraggable({
+    id: `card-${program.id}`,
+    data: { programId: program.id, from: "card" },
+    disabled: overlay || !mounted,
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const transform = !overlay ? CSS.Translate.toString(draggable.transform) : undefined;
+  const dragProps = !overlay && mounted ? { ...draggable.listeners, ...draggable.attributes } : {};
+
+  return (
+    <article
+      ref={overlay ? undefined : draggable.setNodeRef}
+      style={transform ? { transform } : undefined}
+      {...dragProps}
+      className={`flex h-full flex-col rounded-2xl border bg-white p-4 shadow-[0_1px_2px_rgba(28,25,23,0.04)] transition-shadow ${
+        overlay ? "" : "cursor-grab active:cursor-grabbing"
+      } ${
+        slot?.tier === "gold"
+          ? "border-[#E6D5A3]"
+          : slot?.tier === "silver"
+            ? "border-stone-300"
+            : "border-stone-200/80"
+      } ${draggable.isDragging && !overlay ? "opacity-30" : ""} ${
+        overlay ? "shadow-xl ring-1 ring-stone-200" : "hover:shadow-md"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium tracking-wide text-stone-400 uppercase">
+            {program.type} · {program.region}
+          </p>
+          <h3 className="mt-1 text-[15px] leading-snug font-semibold text-stone-900">
+            {program.shortName}
+          </h3>
+          <p className="mt-0.5 text-[13px] text-stone-500">
+            {program.city}, {program.state}
+          </p>
+        </div>
+        <div className="rounded-2xl bg-[#F3E6C0] px-2.5 py-1.5 text-right">
+          <p className="text-[10px] tracking-wide text-[#8A6A2A] uppercase">Match</p>
+          <p className="text-lg leading-none font-semibold tabular-nums text-[#6F5420]">
+            {score.toFixed(1)}
+          </p>
+        </div>
+      </div>
+
+      <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2.5 text-[12px]">
+        <Stat label="Population" value={formatPopulation(program.cityPopulation)} />
+        <Stat
+          label="Cost of living"
+          value={`${program.costOfLiving} · ${colLabel(program.costOfLiving)}`}
+        />
+        <Stat label="Class size" value={`${program.classSize} / year`} />
+        <Stat
+          label="Schools"
+          value={`${Math.round((program.middleSchoolQuality + program.highSchoolQuality) / 2)}`}
+        />
+      </dl>
+
+      <div className="mt-3">
+        <div className="mb-1 flex justify-between text-[11px] text-stone-500">
+          <span>MD {program.percentMD}%</span>
+          <span>DO {program.percentDO}%</span>
+        </div>
+        <div className="flex h-1.5 overflow-hidden rounded-full bg-stone-100">
+          <span className="bg-[#3F5C51]" style={{ width: `${program.percentMD}%` }} />
+          <span className="bg-[#C4A35A]" style={{ width: `${program.percentDO}%` }} />
+          <span className="bg-stone-300" style={{ width: `${program.percentIMG}%` }} />
+        </div>
+      </div>
+
+      {slot ? (
+        <p className="mt-3 text-[11px] font-medium text-[#8A6A2A]">
+          {slot.tier === "gold" ? "Gold" : "Silver"} signal {slot.index + 1}
+        </p>
+      ) : null}
+
+      <div className="mt-auto flex items-center gap-2 pt-4">
+        <button
+          type="button"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={() => setDetailId(program.id)}
+          className="rounded-xl px-2.5 py-1.5 text-[12px] font-medium text-stone-600 hover:bg-stone-100"
+        >
+          Details
+        </button>
+        <div className="ml-auto flex gap-1.5">
+          {slot ? (
+            <button
+              type="button"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={() => unassign(program.id)}
+              className="rounded-xl px-2.5 py-1.5 text-[12px] text-stone-500 hover:bg-stone-100"
+            >
+              Remove
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            disabled={slot?.tier !== "gold" && goldCount >= 3}
+            onClick={() => assign(program.id, "gold")}
+            className="rounded-xl bg-[#F3E6C0] px-2.5 py-1.5 text-[12px] font-medium text-[#6F5420] hover:bg-[#EAD7A0] disabled:opacity-40"
+          >
+            Gold
+          </button>
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            disabled={slot?.tier !== "silver" && silverCount >= 15}
+            onClick={() => assign(program.id, "silver")}
+            className="rounded-xl bg-stone-200 px-2.5 py-1.5 text-[12px] font-medium text-stone-700 hover:bg-stone-300 disabled:opacity-40"
+          >
+            Silver
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] tracking-wide text-stone-400 uppercase">{label}</dt>
+      <dd className="mt-0.5 font-medium text-stone-800">{value}</dd>
+    </div>
+  );
+}
