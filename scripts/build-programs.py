@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -11,6 +12,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extra_programs import EXTRA_CITIES, EXTRA_PROGRAMS
 from freida_overlay import overlay_for
+from delivery_overlay import overlay_deliveries
 
 # City stats: Census populations, C2ER-style COL (100 = U.S. average),
 # metro school quality (GreatSchools/Niche style 0–100), in-state college
@@ -348,6 +350,52 @@ PROGRAMS = [
 CITIES.update(EXTRA_CITIES)
 PROGRAMS.extend(EXTRA_PROGRAMS)
 
+# Published hospital birth totals where the training site is well-known.
+# Everything else is modeled from class size, program type, and volume language.
+DELIVERY_OVERRIDES = {
+    "University of Texas Southwestern Medical Center": 13374,
+    "McGaw Medical Center of Northwestern University": 12000,
+    "UPMC Medical Education": 10500,
+    "Inova Fairfax Medical Campus": 10000,
+    "Women and Infants Hospital of Rhode Island/Brown University": 8500,
+    "Maimonides Medical Center": 7500,
+    "Mass General Brigham/Brigham and Women's Hospital/Massachusetts General Hospital": 6200,
+    "Christiana Care Health Services": 6200,
+    "University of Southern California/LAC+USC Medical Center": 5500,
+    "Rutgers Health/Cooperman Barnabas Medical Center": 5500,
+    "Detroit Medical Center/Wayne State University": 5000,
+    "University of Miami/Jackson Health System": 4500,
+    "Abington Memorial Hospital": 4500,
+    "MedStar Health/Washington Hospital Center": 4000,
+}
+
+DELIVERIES_PER_RESIDENT = {
+    "Community": 320,
+    "Hybrid": 400,
+    "University": 450,
+}
+
+
+def estimate_deliveries(name: str, ptype: str, class_size: int, highlights: list[str]) -> int:
+    if name in DELIVERY_OVERRIDES:
+        return DELIVERY_OVERRIDES[name]
+    base = float(class_size * DELIVERIES_PER_RESIDENT.get(ptype, 400))
+    text = " ".join(highlights).lower()
+    if any(key in text for key in ("enormous volume", "huge volume", "parkland")):
+        base = max(base, 9000)
+    elif "very high" in text:
+        base *= 1.35
+    elif any(
+        key in text
+        for key in ("high-volume", "high volume", "high delivery", "high clinical volume")
+    ):
+        base *= 1.2
+    elif "community volume" in text:
+        base *= 0.9
+    digest = int(hashlib.md5(name.encode()).hexdigest()[:8], 16)
+    factor = 0.93 + (digest % 15) / 100  # 0.93–1.07
+    return max(250, int(round(base * factor / 50.0) * 50))
+
 
 def slugify(value: str) -> str:
     value = value.lower()
@@ -392,6 +440,18 @@ def main() -> None:
         if isinstance(fellowship, str):
             fellowship = int(fellowship)
 
+        deliv = overlay_deliveries(name, city_name, state)
+        if deliv:
+            annual_deliveries = deliv["annual_deliveries"]
+            deliveries_source = deliv["source"]
+            deliveries_note = deliv["note"]
+        else:
+            annual_deliveries = estimate_deliveries(name, ptype, class_size, highlights)
+            deliveries_source = "estimated"
+            deliveries_note = (
+                "No matched public hospital birth total; modeled from class size and program type."
+            )
+
         programs.append(
             {
                 "id": pid,
@@ -402,6 +462,9 @@ def main() -> None:
                 "region": REGION[state],
                 "type": ptype,
                 "classSize": class_size,
+                "annualDeliveries": annual_deliveries,
+                "annualDeliveriesSource": deliveries_source,
+                "annualDeliveriesNote": deliveries_note,
                 "cityPopulation": city["pop"],
                 "costOfLiving": city["col"],
                 "middleSchoolQuality": city["ms"],
@@ -425,8 +488,12 @@ def main() -> None:
 
     # Validate
     sources = {"published": 0, "estimated": 0, "roster": 0}
+    delivery_sources: dict[str, int] = {}
     for p in programs:
         sources[p["doMdSource"]] = sources.get(p["doMdSource"], 0) + 1
+        delivery_sources[p["annualDeliveriesSource"]] = (
+            delivery_sources.get(p["annualDeliveriesSource"], 0) + 1
+        )
         total = p["percentMD"] + p["percentDO"] + p["percentIMG"]
         if abs(total - 100) > 1:
             raise SystemExit(f"MD/DO/IMG mismatch for {p['shortName']}: {total}")
@@ -444,7 +511,11 @@ def main() -> None:
             "approximations. DO/MD/IMG splits and class sizes use 2026 FREIDA program "
             "surveys (three-year resident averages) where matched; a few programs use a "
             "current resident-roster count (marked roster); otherwise they are estimates "
-            "from program type and typical mix."
+            "from program type and typical mix. Annual deliveries use hospital-published "
+            "birth totals where available, New York SPARCS 2023 delivery discharges, "
+            "California HCAI 2024 perinatal discharges, and CMS hospital cost-report "
+            "nursery days (converted at ~2.1 nursery days per birth). A small remainder "
+            "is still modeled from class size when no public hospital total matched."
         ),
         "programs": programs,
     }
@@ -454,6 +525,7 @@ def main() -> None:
         f"Resident mix sources: {sources['published']} FREIDA 2026, "
         f"{sources['roster']} roster, {sources['estimated']} estimated"
     )
+    print("Delivery sources:", ", ".join(f"{k} {v}" for k, v in sorted(delivery_sources.items())))
 
 
 if __name__ == "__main__":

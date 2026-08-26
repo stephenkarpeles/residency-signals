@@ -55,6 +55,25 @@ export function formatPopulation(n: number): string {
   return n.toLocaleString();
 }
 
+export function formatDeliveries(n: number): string {
+  return n.toLocaleString("en-US");
+}
+
+export function deliverySourceLabel(source: string): string {
+  switch (source) {
+    case "published":
+      return "Hospital-published";
+    case "sparcs":
+      return "NYS SPARCS 2023";
+    case "hcai":
+      return "CA HCAI 2024";
+    case "cms":
+      return "CMS cost report";
+    default:
+      return "Unmatched estimate";
+  }
+}
+
 export function colLabel(index: number): string {
   if (index >= 150) return "Very high";
   if (index >= 120) return "High";

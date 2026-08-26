@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
 import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
-import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
+import { colLabel, formatDeliveries, formatPopulation, matchScore } from "@/lib/scoring";
 import type { Program } from "@/lib/types";
 
 export function ProgramCard({
@@ -79,6 +79,7 @@ export function ProgramCard({
           value={`${program.costOfLiving} · ${colLabel(program.costOfLiving)}`}
         />
         <Stat label="Class size" value={`${program.classSize} / year`} />
+        <Stat label="Deliveries" value={`${formatDeliveries(program.annualDeliveries)} / year`} />
         <Stat
           label="Schools"
           value={`${Math.round((program.middleSchoolQuality + program.highSchoolQuality) / 2)}`}

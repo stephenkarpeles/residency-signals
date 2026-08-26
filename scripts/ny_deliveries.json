@@ -1,0 +1,636 @@
+[
+  {
+    "facility_name": "New York-Presbyterian David H. Koch Center",
+    "hospital_county": "Manhattan",
+    "n": 7488
+  },
+  {
+    "facility_name": "Long Island Jewish Medical Center",
+    "hospital_county": "Queens",
+    "n": 7126
+  },
+  {
+    "facility_name": "Mount Sinai Hospital",
+    "hospital_county": "Manhattan",
+    "n": 6167
+  },
+  {
+    "facility_name": "North Shore University Hospital",
+    "hospital_county": "Nassau",
+    "n": 5916
+  },
+  {
+    "facility_name": "Maimonides Medical Center",
+    "hospital_county": "Kings",
+    "n": 5469
+  },
+  {
+    "facility_name": "NYU Langone Hospitals",
+    "hospital_county": "Manhattan",
+    "n": 5148
+  },
+  {
+    "facility_name": "NYU Langone Hospital-Long Island",
+    "hospital_county": "Nassau",
+    "n": 4933
+  },
+  {
+    "facility_name": "Mount Sinai West",
+    "hospital_county": "Manhattan",
+    "n": 4929
+  },
+  {
+    "facility_name": "NYU Langone Hospital-Brooklyn",
+    "hospital_county": "Kings",
+    "n": 4034
+  },
+  {
+    "facility_name": "NewYork-Presbyterian Brooklyn Methodist Hospital",
+    "hospital_county": "Kings",
+    "n": 4032
+  },
+  {
+    "facility_name": "New York-Presbyterian Hospital - Columbia Presbyterian Center",
+    "hospital_county": "Manhattan",
+    "n": 3852
+  },
+  {
+    "facility_name": "Stony Brook University Hospital",
+    "hospital_county": "Suffolk",
+    "n": 3739
+  },
+  {
+    "facility_name": "Lenox Hill Hospital",
+    "hospital_county": "Manhattan",
+    "n": 3714
+  },
+  {
+    "facility_name": "Crouse Hospital",
+    "hospital_county": "Onondaga",
+    "n": 3523
+  },
+  {
+    "facility_name": "Good Samaritan Hospital of Suffern",
+    "hospital_county": "Rockland",
+    "n": 3475
+  },
+  {
+    "facility_name": "John R. Oishei Children's Hospital",
+    "hospital_county": "Erie",
+    "n": 3439
+  },
+  {
+    "facility_name": "Strong Memorial Hospital",
+    "hospital_county": "Monroe",
+    "n": 3182
+  },
+  {
+    "facility_name": "Montefiore Med Center - Jack D Weiler Hosp of A Einstein College Div",
+    "hospital_county": "Bronx",
+    "n": 3140
+  },
+  {
+    "facility_name": "Staten Island University Hosp-North",
+    "hospital_county": "Richmond",
+    "n": 2794
+  },
+  {
+    "facility_name": "St. Peter's Hospital",
+    "hospital_county": "Albany",
+    "n": 2729
+  },
+  {
+    "facility_name": "Richmond University Medical Center",
+    "hospital_county": "Richmond",
+    "n": 2707
+  },
+  {
+    "facility_name": "Sisters of Charity Hospital",
+    "hospital_county": "Erie",
+    "n": 2640
+  },
+  {
+    "facility_name": "Elmhurst Hospital Center",
+    "hospital_county": "Queens",
+    "n": 2618
+  },
+  {
+    "facility_name": "Millard Fillmore Suburban Hospital",
+    "hospital_county": "Erie",
+    "n": 2558
+  },
+  {
+    "facility_name": "South Shore University Hospital",
+    "hospital_county": "Suffolk",
+    "n": 2529
+  },
+  {
+    "facility_name": "Highland Hospital",
+    "hospital_county": "Monroe",
+    "n": 2515
+  },
+  {
+    "facility_name": "Flushing Hospital Medical Center",
+    "hospital_county": "Queens",
+    "n": 2403
+  },
+  {
+    "facility_name": "Vassar Brothers Medical Center",
+    "hospital_county": "Dutchess",
+    "n": 2373
+  },
+  {
+    "facility_name": "Good Samaritan Hospital Medical Center",
+    "hospital_county": "Suffolk",
+    "n": 2350
+  },
+  {
+    "facility_name": "NewYork-Presbyterian/Queens",
+    "hospital_county": "Queens",
+    "n": 2265
+  },
+  {
+    "facility_name": "White Plains Hospital Center",
+    "hospital_county": "Westchester",
+    "n": 2243
+  },
+  {
+    "facility_name": "Mount Sinai South Nassau",
+    "hospital_county": "Nassau",
+    "n": 2180
+  },
+  {
+    "facility_name": "Albany Medical Center Hospital",
+    "hospital_county": "Albany",
+    "n": 2166
+  },
+  {
+    "facility_name": "New York-Presbyterian Hospital - Allen Hospital",
+    "hospital_county": "Manhattan",
+    "n": 2050
+  },
+  {
+    "facility_name": "Long Island Jewish Forest Hills",
+    "hospital_county": "Queens",
+    "n": 1940
+  },
+  {
+    "facility_name": "Northern Westchester Hospital",
+    "hospital_county": "Westchester",
+    "n": 1938
+  },
+  {
+    "facility_name": "Huntington Hospital",
+    "hospital_county": "Suffolk",
+    "n": 1917
+  },
+  {
+    "facility_name": "Jacobi Medical Center",
+    "hospital_county": "Bronx",
+    "n": 1755
+  },
+  {
+    "facility_name": "New York-Presbyterian/Lower Manhattan Hospital",
+    "hospital_county": "Manhattan",
+    "n": 1755
+  },
+  {
+    "facility_name": "Ellis Hospital - Bellevue Woman's Care Center Division",
+    "hospital_county": "Schenectady",
+    "n": 1729
+  },
+  {
+    "facility_name": "Mercy Hospital of Buffalo",
+    "hospital_county": "Erie",
+    "n": 1689
+  },
+  {
+    "facility_name": "Rochester General Hospital",
+    "hospital_county": "Monroe",
+    "n": 1593
+  },
+  {
+    "facility_name": "St. Joseph's Hospital Health Center",
+    "hospital_county": "Onondaga",
+    "n": 1586
+  },
+  {
+    "facility_name": "Jamaica Hospital Medical Center",
+    "hospital_county": "Queens",
+    "n": 1516
+  },
+  {
+    "facility_name": "Bellevue Hospital Center",
+    "hospital_county": "Manhattan",
+    "n": 1501
+  },
+  {
+    "facility_name": "Westchester Medical Center",
+    "hospital_county": "Westchester",
+    "n": 1490
+  },
+  {
+    "facility_name": "United Health Services Hospitals Inc. - Wilson Medical Center",
+    "hospital_county": "Broome",
+    "n": 1470
+  },
+  {
+    "facility_name": "Lincoln Medical & Mental Health Center",
+    "hospital_county": "Bronx",
+    "n": 1454
+  },
+  {
+    "facility_name": "NYC Health + Hospitals/South Brooklyn Health",
+    "hospital_county": "Kings",
+    "n": 1414
+  },
+  {
+    "facility_name": "Kings County Hospital Center",
+    "hospital_county": "Kings",
+    "n": 1400
+  },
+  {
+    "facility_name": "Montefiore Nyack",
+    "hospital_county": "Rockland",
+    "n": 1398
+  },
+  {
+    "facility_name": "Samaritan Medical Center",
+    "hospital_county": "Jefferson",
+    "n": 1372
+  },
+  {
+    "facility_name": "Queens Hospital Center",
+    "hospital_county": "Queens",
+    "n": 1372
+  },
+  {
+    "facility_name": "BronxCare Hospital Center",
+    "hospital_county": "Bronx",
+    "n": 1358
+  },
+  {
+    "facility_name": "The Unity Hospital of Rochester",
+    "hospital_county": "Monroe",
+    "n": 1335
+  },
+  {
+    "facility_name": "Woodhull Medical & Mental Health Center",
+    "hospital_county": "Kings",
+    "n": 1324
+  },
+  {
+    "facility_name": "St Luke's Cornwall Hospital/Newburgh",
+    "hospital_county": "Orange",
+    "n": 1265
+  },
+  {
+    "facility_name": "Brooklyn Hospital Center - Downtown Campus",
+    "hospital_county": "Kings",
+    "n": 1255
+  },
+  {
+    "facility_name": "St. Charles Hospital",
+    "hospital_county": "Suffolk",
+    "n": 1171
+  },
+  {
+    "facility_name": "SJRH - St Johns Division",
+    "hospital_county": "Westchester",
+    "n": 1078
+  },
+  {
+    "facility_name": "Glens Falls Hospital",
+    "hospital_county": "Warren",
+    "n": 1040
+  },
+  {
+    "facility_name": "New York-Presbyterian Westchester",
+    "hospital_county": "Westchester",
+    "n": 1023
+  },
+  {
+    "facility_name": "Montefiore Medical Center-Wakefield Hospital",
+    "hospital_county": "Bronx",
+    "n": 991
+  },
+  {
+    "facility_name": "Faxton-St Lukes Healthcare St Lukes Division",
+    "hospital_county": "Oneida",
+    "n": 985
+  },
+  {
+    "facility_name": "Garnet Health Medical Center",
+    "hospital_county": "Orange",
+    "n": 982
+  },
+  {
+    "facility_name": "Metropolitan Hospital Center",
+    "hospital_county": "Manhattan",
+    "n": 969
+  },
+  {
+    "facility_name": "North Central Bronx Hospital",
+    "hospital_county": "Bronx",
+    "n": 967
+  },
+  {
+    "facility_name": "Northern Dutchess Hospital",
+    "hospital_county": "Dutchess",
+    "n": 922
+  },
+  {
+    "facility_name": "Arnot Ogden Medical Center",
+    "hospital_county": "Chemung",
+    "n": 919
+  },
+  {
+    "facility_name": "UPSTATE University Hospital at Community General",
+    "hospital_county": "Onondaga",
+    "n": 912
+  },
+  {
+    "facility_name": "Mercy Hospital",
+    "hospital_county": "Nassau",
+    "n": 909
+  },
+  {
+    "facility_name": "Nassau University Medical Center",
+    "hospital_county": "Nassau",
+    "n": 900
+  },
+  {
+    "facility_name": "Wyckoff Heights Medical Center",
+    "hospital_county": "Kings",
+    "n": 858
+  },
+  {
+    "facility_name": "Mary Imogene Bassett Hospital",
+    "hospital_county": "Otsego",
+    "n": 841
+  },
+  {
+    "facility_name": "Samaritan Hospital",
+    "hospital_county": "Rensselaer",
+    "n": 798
+  },
+  {
+    "facility_name": "Cayuga Medical Center at Ithaca",
+    "hospital_county": "Tompkins",
+    "n": 791
+  },
+  {
+    "facility_name": "Phelps Hospital",
+    "hospital_county": "Westchester",
+    "n": 758
+  },
+  {
+    "facility_name": "Saratoga Hospital",
+    "hospital_county": "Saratoga",
+    "n": 744
+  },
+  {
+    "facility_name": "NewYork-Presbyterian/Hudson Valley Hospital",
+    "hospital_county": "Westchester",
+    "n": 739
+  },
+  {
+    "facility_name": "F.F. Thompson Hospital",
+    "hospital_county": "Ontario",
+    "n": 718
+  },
+  {
+    "facility_name": "Harlem Hospital Center",
+    "hospital_county": "Manhattan",
+    "n": 696
+  },
+  {
+    "facility_name": "Our Lady of Lourdes Memorial Hospital",
+    "hospital_county": "Broome",
+    "n": 687
+  },
+  {
+    "facility_name": "UPMC Chautauqua at WCA",
+    "hospital_county": "Chautauqua",
+    "n": 672
+  },
+  {
+    "facility_name": "Rome Memorial Hospital, Inc",
+    "hospital_county": "Oneida",
+    "n": 654
+  },
+  {
+    "facility_name": "Stony Brook Southampton Hospital",
+    "hospital_county": "Suffolk",
+    "n": 638
+  },
+  {
+    "facility_name": "The University of Vermont Health Network - Champlain Valley Physicians Hospital",
+    "hospital_county": "Clinton",
+    "n": 634
+  },
+  {
+    "facility_name": "Brookdale Hospital Medical Center",
+    "hospital_county": "Kings",
+    "n": 622
+  },
+  {
+    "facility_name": "Canton-Potsdam Hospital",
+    "hospital_county": "St Lawrence",
+    "n": 622
+  },
+  {
+    "facility_name": "SBH Health System",
+    "hospital_county": "Bronx",
+    "n": 604
+  },
+  {
+    "facility_name": "Montefiore New Rochelle Hospital",
+    "hospital_county": "Westchester",
+    "n": 560
+  },
+  {
+    "facility_name": "University Hospital of Brooklyn",
+    "hospital_county": "Kings",
+    "n": 542
+  },
+  {
+    "facility_name": "Olean General Hospital",
+    "hospital_county": "Cattaraugus",
+    "n": 536
+  },
+  {
+    "facility_name": "Corning Hospital",
+    "hospital_county": "Steuben",
+    "n": 500
+  },
+  {
+    "facility_name": "Garnet Health Medical Center - Catskills",
+    "hospital_county": "Sullivan",
+    "n": 487
+  },
+  {
+    "facility_name": "Peconic Bay Medical Center",
+    "hospital_county": "Suffolk",
+    "n": 481
+  },
+  {
+    "facility_name": "St Catherine of Siena Hospital",
+    "hospital_county": "Suffolk",
+    "n": 479
+  },
+  {
+    "facility_name": "Newark-Wayne Community Hospital",
+    "hospital_county": "Wayne",
+    "n": 474
+  },
+  {
+    "facility_name": "Oneida Health Hospital",
+    "hospital_county": "Madison",
+    "n": 466
+  },
+  {
+    "facility_name": "St Johns Episcopal Hospital So Shore",
+    "hospital_county": "Queens",
+    "n": 424
+  },
+  {
+    "facility_name": "Oswego Hospital",
+    "hospital_county": "Oswego",
+    "n": 420
+  },
+  {
+    "facility_name": "United Memorial Medical Center North Street Campus",
+    "hospital_county": "Genesee",
+    "n": 392
+  },
+  {
+    "facility_name": "St Anthony Community Hospital",
+    "hospital_county": "Orange",
+    "n": 391
+  },
+  {
+    "facility_name": "Redacted for Confidentiality",
+    "n": 354
+  },
+  {
+    "facility_name": "Memorial Hosp of Wm F & Gertrude F Jones A/K/A Jones Memorial Hosp",
+    "hospital_county": "Allegany",
+    "n": 341
+  },
+  {
+    "facility_name": "Auburn Community Hospital",
+    "hospital_county": "Cayuga",
+    "n": 329
+  },
+  {
+    "facility_name": "Carthage Area Hospital Inc",
+    "hospital_county": "Jefferson",
+    "n": 316
+  },
+  {
+    "facility_name": "St. Mary's Healthcare",
+    "hospital_county": "Montgomery",
+    "n": 304
+  },
+  {
+    "facility_name": "Nathan Littauer Hospital",
+    "hospital_county": "Fulton",
+    "n": 303
+  },
+  {
+    "facility_name": "Niagara Falls Memorial Medical Center",
+    "hospital_county": "Niagara",
+    "n": 273
+  },
+  {
+    "facility_name": "Nicholas H. Noyes Memorial Hospital",
+    "hospital_county": "Livingston",
+    "n": 238
+  },
+  {
+    "facility_name": "Guthrie Cortland Medical Center",
+    "hospital_county": "Cortland",
+    "n": 218
+  },
+  {
+    "facility_name": "Chenango Memorial Hospital Inc",
+    "hospital_county": "Chenango",
+    "n": 195
+  },
+  {
+    "facility_name": "Adirondack Medical Center-Saranac Lake Site",
+    "hospital_county": "Franklin",
+    "n": 188
+  },
+  {
+    "facility_name": "Wynn Hospital",
+    "hospital_county": "Oneida",
+    "n": 162
+  },
+  {
+    "facility_name": "HealthAlliance Hospital Mary's Avenue Campus",
+    "hospital_county": "Ulster",
+    "n": 128
+  },
+  {
+    "facility_name": "Mount St. Mary's Hospital and Health Center",
+    "hospital_county": "Niagara",
+    "n": 120
+  },
+  {
+    "facility_name": "Wyoming County Community Hospital",
+    "hospital_county": "Wyoming",
+    "n": 77
+  },
+  {
+    "facility_name": "Claxton-Hepburn Medical Center",
+    "hospital_county": "St Lawrence",
+    "n": 26
+  },
+  {
+    "facility_name": "Putnam Hospital",
+    "hospital_county": "Putnam",
+    "n": 23
+  },
+  {
+    "facility_name": "Unity Specialty Hospital",
+    "hospital_county": "Monroe",
+    "n": 7
+  },
+  {
+    "facility_name": "Buffalo General Medical Center",
+    "hospital_county": "Erie",
+    "n": 5
+  },
+  {
+    "facility_name": "Montefiore Medical Center - Henry & Lucy Moses Div",
+    "hospital_county": "Bronx",
+    "n": 2
+  },
+  {
+    "facility_name": "University Hospital SUNY Health Science Center",
+    "hospital_county": "Onondaga",
+    "n": 2
+  },
+  {
+    "facility_name": "Brooks-TLC Hospital System, Inc.",
+    "hospital_county": "Chautauqua",
+    "n": 2
+  },
+  {
+    "facility_name": "Sisters of Charity Hospital - St. Joseph Campus",
+    "hospital_county": "Erie",
+    "n": 1
+  },
+  {
+    "facility_name": "Erie County Medical Center",
+    "hospital_county": "Erie",
+    "n": 1
+  },
+  {
+    "facility_name": "New York-Presbyterian Hospital - New York Weill Cornell Center",
+    "hospital_county": "Manhattan",
+    "n": 1
+  }
+]

@@ -3,9 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProgramCard } from "@/components/ProgramCard";
 import { useApp } from "@/context/AppProvider";
-import { PROGRAMS, REGIONS, STATE_NAMES, STATES } from "@/lib/programs";
+import {
+  DELIVERY_BANDS,
+  PROGRAMS,
+  REGIONS,
+  STATE_NAMES,
+  STATES,
+  deliveryBandId,
+} from "@/lib/programs";
 import { formatPopulation, matchScore } from "@/lib/scoring";
-import type { ProgramType, SortKey } from "@/lib/types";
+import type { DeliveryBandId, ProgramType, SortKey } from "@/lib/types";
 
 const TYPES: ProgramType[] = ["University", "Hybrid", "Community"];
 
@@ -143,6 +150,7 @@ export function ExploreView() {
   const [regions, setRegions] = useState<string[]>([]);
   const [states, setStates] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
+  const [deliveryBands, setDeliveryBands] = useState<string[]>([]);
   const [minDO, setMinDO] = useState(0);
   const [minMD, setMinMD] = useState(0);
   const [minPopIndex, setMinPopIndex] = useState(0);
@@ -174,6 +182,12 @@ export function ExploreView() {
       if (regions.length > 0 && !regions.includes(program.region)) return false;
       if (states.length > 0 && !states.includes(program.state)) return false;
       if (types.length > 0 && !types.includes(program.type)) return false;
+      if (
+        deliveryBands.length > 0 &&
+        !deliveryBands.includes(deliveryBandId(program.annualDeliveries))
+      ) {
+        return false;
+      }
       if (program.percentDO < minDO) return false;
       if (program.percentMD < minMD) return false;
       if (program.cityPopulation < POPULATION_STEPS[minPopIndex]) return false;
@@ -197,6 +211,8 @@ export function ExploreView() {
           return a.costOfLiving - b.costOfLiving;
         case "classSize":
           return b.classSize - a.classSize;
+        case "deliveries":
+          return b.annualDeliveries - a.annualDeliveries;
         case "do":
           return b.percentDO - a.percentDO;
         case "population":
@@ -212,7 +228,20 @@ export function ExploreView() {
       }
     });
     return rows;
-  }, [query, regions, states, types, minDO, minMD, minPopIndex, maxPopIndex, waterfront, sort, weights]);
+  }, [
+    query,
+    regions,
+    states,
+    types,
+    deliveryBands,
+    minDO,
+    minMD,
+    minPopIndex,
+    maxPopIndex,
+    waterfront,
+    sort,
+    weights,
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -250,6 +279,7 @@ export function ExploreView() {
             <option value="name">Sort: Name</option>
             <option value="col">Sort: Cost of Living</option>
             <option value="classSize">Sort: Class Size</option>
+            <option value="deliveries">Sort: Deliveries</option>
             <option value="do">Sort: % DO</option>
             <option value="population">Sort: City Size</option>
             <option value="schools">Sort: School Quality</option>
@@ -264,6 +294,15 @@ export function ExploreView() {
             onChange={setStates}
             options={stateOptions}
             formatOption={(code) => `${code} · ${STATE_NAMES[code] ?? code}`}
+          />
+          <MultiSelect
+            label="Deliveries"
+            values={deliveryBands}
+            onChange={setDeliveryBands}
+            options={DELIVERY_BANDS.map((band) => band.id)}
+            formatOption={(id) =>
+              DELIVERY_BANDS.find((band) => band.id === (id as DeliveryBandId))?.label ?? id
+            }
           />
           <Toggle pressed={waterfront} onClick={() => setWaterfront((v) => !v)}>
             Near water

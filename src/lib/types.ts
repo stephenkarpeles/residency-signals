@@ -1,6 +1,7 @@
 export type ProgramType = "University" | "Hybrid" | "Community";
 export type Region = "Northeast" | "Midwest" | "South" | "West";
 export type DoMdSource = "published" | "estimated" | "roster";
+export type DeliverySource = "published" | "sparcs" | "hcai" | "cms" | "estimated";
 
 export type Program = {
   id: string;
@@ -11,6 +12,9 @@ export type Program = {
   region: Region;
   type: ProgramType;
   classSize: number;
+  annualDeliveries: number;
+  annualDeliveriesSource: DeliverySource;
+  annualDeliveriesNote: string;
   cityPopulation: number;
   costOfLiving: number;
   middleSchoolQuality: number;
@@ -64,11 +68,20 @@ export type Selections = {
 
 export type SignalTier = "gold" | "silver" | "considering";
 
+export type DeliveryBandId =
+  | "low"
+  | "medium"
+  | "mediumHigh"
+  | "high"
+  | "veryHigh"
+  | "extremelyHigh";
+
 export type SortKey =
   | "score"
   | "name"
   | "col"
   | "classSize"
+  | "deliveries"
   | "do"
   | "population"
   | "schools";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useDndContext, useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/context/AppProvider";
@@ -163,9 +164,14 @@ function SlotGroup({
         </span>
       </div>
       <div className="space-y-1.5">
-        {ids.map((id, index) => (
-          <SignalSlot key={`${tier}-${index}`} tier={tier} index={index} programId={id} />
-        ))}
+        <SortableContext
+          items={ids.map((_, index) => `${tier}-${index}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          {ids.map((id, index) => (
+            <SignalSlot key={`${tier}-${index}`} tier={tier} index={index} programId={id} />
+          ))}
+        </SortableContext>
       </div>
     </section>
   );

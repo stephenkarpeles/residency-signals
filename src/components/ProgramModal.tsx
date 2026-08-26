@@ -3,7 +3,7 @@
 import { useApp } from "@/context/AppProvider";
 import { CONSIDERING_SLOTS, FACTORS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { getProgram } from "@/lib/programs";
-import { colLabel, factorScore, formatPopulation, matchScore } from "@/lib/scoring";
+import { colLabel, deliverySourceLabel, factorScore, formatDeliveries, formatPopulation, matchScore } from "@/lib/scoring";
 
 export function ProgramModal() {
   const { detailId, setDetailId, assign, unassign, findSlot, weights, goldCount, silverCount, consideringCount } =
@@ -44,7 +44,7 @@ export function ProgramModal() {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <Fact label="Population" value={formatPopulation(program.cityPopulation)} />
           <Fact
             label="Cost of living"
@@ -52,8 +52,14 @@ export function ProgramModal() {
             hint={colLabel(program.costOfLiving)}
           />
           <Fact label="Class size" value={`${program.classSize}`} hint="per year" />
+          <Fact
+            label="Deliveries"
+            value={formatDeliveries(program.annualDeliveries)}
+            hint={`${deliverySourceLabel(program.annualDeliveriesSource)} · per year`}
+          />
           <Fact label="Water" value={`${program.waterProximity}`} hint={program.waterNote} />
         </div>
+        <p className="mt-2 text-[11px] text-stone-400">{program.annualDeliveriesNote}</p>
 
         <div className="mt-5 rounded-2xl bg-[#FBF9F6] p-4">
           <div className="mb-2 flex justify-between text-[12px] text-stone-500">

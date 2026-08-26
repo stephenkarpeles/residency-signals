@@ -1,0 +1,1465 @@
+[
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - ROSEVILLE",
+    "city": "ROSEVILLE",
+    "deliveries": 6880,
+    "nursery_infants": 5844,
+    "nicu": 777
+  },
+  {
+    "name": "HOAG MEMORIAL HOSPITAL PRESBYTERIAN",
+    "city": "NEWPORT BEACH",
+    "deliveries": 6538,
+    "nursery_infants": 5900,
+    "nicu": 544
+  },
+  {
+    "name": "SHARP MARY BIRCH HOSPITAL FOR WOMEN AND NEWBORNS",
+    "city": "SAN DIEGO",
+    "deliveries": 6399,
+    "nursery_infants": 6078,
+    "nicu": 1368
+  },
+  {
+    "name": "CEDARS-SINAI MEDICAL CENTER",
+    "city": "LOS ANGELES",
+    "deliveries": 6352,
+    "nursery_infants": 5308,
+    "nicu": 669
+  },
+  {
+    "name": "PALOMAR MEDICAL CENTER",
+    "city": "ESCONDIDO",
+    "deliveries": 5493,
+    "nursery_infants": 3500,
+    "nicu": 307
+  },
+  {
+    "name": "POMONA VALLEY HOSPITAL MEDICAL CENTER",
+    "city": "POMONA",
+    "deliveries": 5470,
+    "nursery_infants": 4531,
+    "nicu": 723
+  },
+  {
+    "name": "MEMORIALCARE MILLER CHILDREN'S & WOMEN'S HOSPITAL LONG BEACH",
+    "city": "LONG BEACH",
+    "deliveries": 5425,
+    "nursery_infants": 4842,
+    "nicu": 927
+  },
+  {
+    "name": "PROVIDENCE ST. JOSEPH HOSPITAL",
+    "city": "ORANGE",
+    "deliveries": 5360,
+    "nursery_infants": 4376,
+    "nicu": 0
+  },
+  {
+    "name": "LUCILE PACKARD CHILDREN'S HOSPITAL STANFORD",
+    "city": "PALO ALTO",
+    "deliveries": 5296,
+    "nursery_infants": 4565,
+    "nicu": 1058
+  },
+  {
+    "name": "UCSD HEALTH LA JOLLA - JACOBS MEDICAL CENTER & SULPIZIO CARDIOVASCULAR CENTER",
+    "city": "LA JOLLA",
+    "deliveries": 5242,
+    "nursery_infants": 4117,
+    "nicu": 638
+  },
+  {
+    "name": "SUTTER MEDICAL CENTER, SACRAMENTO",
+    "city": "SACRAMENTO",
+    "deliveries": 4981,
+    "nursery_infants": 4013,
+    "nicu": 934
+  },
+  {
+    "name": "KAWEAH HEALTH MEDICAL CENTER",
+    "city": "VISALIA",
+    "deliveries": 4919,
+    "nursery_infants": 4245,
+    "nicu": 358
+  },
+  {
+    "name": "LOMA LINDA UNIVERSITY CHILDREN'S HOSPITAL",
+    "city": "LOMA LINDA",
+    "deliveries": 4888,
+    "nursery_infants": 3241,
+    "nicu": 802
+  },
+  {
+    "name": "ALTA BATES SUMMIT MEDICAL CENTER-ALTA BATES CAMPUS",
+    "city": "BERKELEY",
+    "deliveries": 4536,
+    "nursery_infants": 3330,
+    "nicu": 609
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SANTA CLARA",
+    "city": "SANTA CLARA",
+    "deliveries": 4440,
+    "nursery_infants": 3937,
+    "nicu": 341
+  },
+  {
+    "name": "COMMUNITY REGIONAL MEDICAL CENTER-FRESNO",
+    "city": "FRESNO",
+    "deliveries": 4379,
+    "nursery_infants": 3680,
+    "nicu": 819
+  },
+  {
+    "name": "CLOVIS COMMUNITY MEDICAL CENTER",
+    "city": "CLOVIS",
+    "deliveries": 4321,
+    "nursery_infants": 3856,
+    "nicu": 260
+  },
+  {
+    "name": "ST. AGNES MEDICAL CENTER",
+    "city": "FRESNO",
+    "deliveries": 4260,
+    "nursery_infants": 4229,
+    "nicu": 0
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SAN DIEGO - CLAIREMONT MESA",
+    "city": "SAN DIEGO",
+    "deliveries": 4172,
+    "nursery_infants": 3638,
+    "nicu": 382
+  },
+  {
+    "name": "EL CAMINO HEALTH",
+    "city": "MOUNTAIN VIEW",
+    "deliveries": 4077,
+    "nursery_infants": 3591,
+    "nicu": 475
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - MODESTO",
+    "city": "MODESTO",
+    "deliveries": 4020,
+    "nursery_infants": 3675,
+    "nicu": 255
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - DOWNEY",
+    "city": "DOWNEY",
+    "deliveries": 3958,
+    "nursery_infants": 3333,
+    "nicu": 487
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - FONTANA",
+    "city": "FONTANA",
+    "deliveries": 3949,
+    "nursery_infants": 3495,
+    "nicu": 323
+  },
+  {
+    "name": "RIVERSIDE COMMUNITY HOSPITAL",
+    "city": "RIVERSIDE",
+    "deliveries": 3883,
+    "nursery_infants": 2936,
+    "nicu": 559
+  },
+  {
+    "name": "ANTELOPE VALLEY MEDICAL CENTER",
+    "city": "LANCASTER",
+    "deliveries": 3866,
+    "nursery_infants": 3279,
+    "nicu": 403
+  },
+  {
+    "name": "CALIFORNIA PACIFIC MEDICAL CENTER - VAN NESS CAMPUS",
+    "city": "SAN FRANCISCO",
+    "deliveries": 3767,
+    "nursery_infants": 3058,
+    "nicu": 443
+  },
+  {
+    "name": "SOUTHWEST HEALTHCARE RANCHO SPRINGS HOSPITAL",
+    "city": "MURRIETA",
+    "deliveries": 3647,
+    "nursery_infants": 3447,
+    "nicu": 0
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - ORANGE COUNTY - ANAHEIM",
+    "city": "ANAHEIM",
+    "deliveries": 3632,
+    "nursery_infants": 3157,
+    "nicu": 287
+  },
+  {
+    "name": "SCRIPPS MEMORIAL HOSPITAL - LA JOLLA",
+    "city": "LA JOLLA",
+    "deliveries": 3623,
+    "nursery_infants": 3602,
+    "nicu": 0
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SAN LEANDRO",
+    "city": "SAN LEANDRO",
+    "deliveries": 3552,
+    "nursery_infants": 3133,
+    "nicu": 288
+  },
+  {
+    "name": "ADVENTIST HEALTH WHITE MEMORIAL",
+    "city": "LOS ANGELES",
+    "deliveries": 3537,
+    "nursery_infants": 3033,
+    "nicu": 504
+  },
+  {
+    "name": "DOCTORS MEDICAL CENTER",
+    "city": "MODESTO",
+    "deliveries": 3485,
+    "nursery_infants": 2908,
+    "nicu": 306
+  },
+  {
+    "name": "ST. JOSEPH'S MEDICAL CENTER OF STOCKTON",
+    "city": "STOCKTON",
+    "deliveries": 3476,
+    "nursery_infants": 2624,
+    "nicu": 454
+  },
+  {
+    "name": "CALIFORNIA HOSPITAL MEDICAL CENTER - LOS ANGELES",
+    "city": "LOS ANGELES",
+    "deliveries": 3466,
+    "nursery_infants": 0,
+    "nicu": 230
+  },
+  {
+    "name": "HOLLYWOOD PRESBYTERIAN MEDICAL CENTER",
+    "city": "LOS ANGELES",
+    "deliveries": 3417,
+    "nursery_infants": 2763,
+    "nicu": 348
+  },
+  {
+    "name": "EMANATE HEALTH QUEEN OF THE VALLEY HOSPITAL",
+    "city": "WEST COVINA",
+    "deliveries": 3325,
+    "nursery_infants": 2937,
+    "nicu": 387
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - BALDWIN PARK",
+    "city": "BALDWIN PARK",
+    "deliveries": 3292,
+    "nursery_infants": 2948,
+    "nicu": 487
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - WALNUT CREEK",
+    "city": "WALNUT CREEK",
+    "deliveries": 3275,
+    "nursery_infants": 2836,
+    "nicu": 273
+  },
+  {
+    "name": "BAKERSFIELD MEMORIAL HOSPITAL",
+    "city": "BAKERSFIELD",
+    "deliveries": 3267,
+    "nursery_infants": 2819,
+    "nicu": 621
+  },
+  {
+    "name": "SANTA CLARA VALLEY MEDICAL CENTER",
+    "city": "SAN JOSE",
+    "deliveries": 3235,
+    "nursery_infants": 3005,
+    "nicu": 320
+  },
+  {
+    "name": "HUNTINGTON HOSPITAL",
+    "city": "PASADENA",
+    "deliveries": 3186,
+    "nursery_infants": 2744,
+    "nicu": 328
+  },
+  {
+    "name": "JOHN MUIR MEDICAL CENTER-WALNUT CREEK CAMPUS",
+    "city": "WALNUT CREEK",
+    "deliveries": 3140,
+    "nursery_infants": 2700,
+    "nicu": 534
+  },
+  {
+    "name": "UNIVERSITY OF CALIFORNIA IRVINE MEDICAL CENTER",
+    "city": "ORANGE",
+    "deliveries": 3111,
+    "nursery_infants": 1651,
+    "nicu": 720
+  },
+  {
+    "name": "MARIAN REGIONAL MEDICAL CENTER",
+    "city": "SANTA MARIA",
+    "deliveries": 3095,
+    "nursery_infants": 3099,
+    "nicu": 354
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - ONTARIO",
+    "city": "ONTARIO",
+    "deliveries": 3089,
+    "nursery_infants": 2850,
+    "nicu": 278
+  },
+  {
+    "name": "UCSF MEDICAL CENTER AT MISSION BAY",
+    "city": "SAN FRANCISCO",
+    "deliveries": 3084,
+    "nursery_infants": 1970,
+    "nicu": 510
+  },
+  {
+    "name": "SHARP CHULA VISTA MEDICAL CENTER",
+    "city": "CHULA VISTA",
+    "deliveries": 3046,
+    "nursery_infants": 2842,
+    "nicu": 273
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - RIVERSIDE",
+    "city": "RIVERSIDE",
+    "deliveries": 2964,
+    "nursery_infants": 2573,
+    "nicu": 0
+  },
+  {
+    "name": "ST. FRANCIS MEDICAL CENTER",
+    "city": "LYNWOOD",
+    "deliveries": 2917,
+    "nursery_infants": 2363,
+    "nicu": 471
+  },
+  {
+    "name": "GROSSMONT HOSPITAL",
+    "city": "LA MESA",
+    "deliveries": 2887,
+    "nursery_infants": 2429,
+    "nicu": 280
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SOUTH SACRAMENTO",
+    "city": "SACRAMENTO",
+    "deliveries": 2766,
+    "nursery_infants": 2306,
+    "nicu": 195
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - ORANGE COUNTY - IRVINE",
+    "city": "IRVINE",
+    "deliveries": 2700,
+    "nursery_infants": 2430,
+    "nicu": 159
+  },
+  {
+    "name": "PROVIDENCE CEDARS-SINAI TARZANA MEDICAL CENTER",
+    "city": "TARZANA",
+    "deliveries": 2696,
+    "nursery_infants": 2408,
+    "nicu": 267
+  },
+  {
+    "name": "PROVIDENCE LITTLE COMPANY OF MARY MEDICAL CENTER TORRANCE",
+    "city": "TORRANCE",
+    "deliveries": 2684,
+    "nursery_infants": 2677,
+    "nicu": 207
+  },
+  {
+    "name": "SUTTER ROSEVILLE MEDICAL CENTER",
+    "city": "ROSEVILLE",
+    "deliveries": 2663,
+    "nursery_infants": 2360,
+    "nicu": 319
+  },
+  {
+    "name": "KERN MEDICAL CENTER",
+    "city": "BAKERSFIELD",
+    "deliveries": 2660,
+    "nursery_infants": 1783,
+    "nicu": 396
+  },
+  {
+    "name": "PROVIDENCE HOLY CROSS MEDICAL CENTER",
+    "city": "MISSION HILLS",
+    "deliveries": 2601,
+    "nursery_infants": 2249,
+    "nicu": 206
+  },
+  {
+    "name": "SCRIPPS MERCY HOSPITAL",
+    "city": "SAN DIEGO",
+    "deliveries": 2600,
+    "nursery_infants": 2515,
+    "nicu": 0
+  },
+  {
+    "name": "COMMUNITY MEMORIAL HOSPITAL-SAN BUENAVENTURA",
+    "city": "VENTURA",
+    "deliveries": 2515,
+    "nursery_infants": 2397,
+    "nicu": 212
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - LOS ANGELES",
+    "city": "LOS ANGELES",
+    "deliveries": 2503,
+    "nursery_infants": 2085,
+    "nicu": 399
+  },
+  {
+    "name": "TORRANCE MEMORIAL MEDICAL CENTER",
+    "city": "TORRANCE",
+    "deliveries": 2466,
+    "nursery_infants": 2181,
+    "nicu": 268
+  },
+  {
+    "name": "NATIVIDAD MEDICAL CENTER",
+    "city": "SALINAS",
+    "deliveries": 2457,
+    "nursery_infants": 1959,
+    "nicu": 246
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - OAKLAND/RICHMOND",
+    "city": "OAKLAND",
+    "deliveries": 2455,
+    "nursery_infants": 2053,
+    "nicu": 294
+  },
+  {
+    "name": "RIVERSIDE UNIVERSITY HEALTH SYSTEM - MEDICAL CENTER",
+    "city": "MORENO VALLEY",
+    "deliveries": 2411,
+    "nursery_infants": 1745,
+    "nicu": 305
+  },
+  {
+    "name": "PROVIDENCE SAINT JOSEPH MEDICAL CENTER",
+    "city": "BURBANK",
+    "deliveries": 2390,
+    "nursery_infants": 1998,
+    "nicu": 286
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - PANORAMA CITY",
+    "city": "PANORAMA CITY",
+    "deliveries": 2388,
+    "nursery_infants": 2067,
+    "nicu": 260
+  },
+  {
+    "name": "ADVENTIST HEALTH HANFORD",
+    "city": "HANFORD",
+    "deliveries": 2380,
+    "nursery_infants": 2308,
+    "nicu": 0
+  },
+  {
+    "name": "PROVIDENCE ST. JUDE MEDICAL CENTER",
+    "city": "FULLERTON",
+    "deliveries": 2356,
+    "nursery_infants": 2110,
+    "nicu": 197
+  },
+  {
+    "name": "MERCY MEDICAL CENTER - MERCED",
+    "city": "MERCED",
+    "deliveries": 2339,
+    "nursery_infants": 2122,
+    "nicu": 0
+  },
+  {
+    "name": "ARROWHEAD REGIONAL MEDICAL CENTER",
+    "city": "COLTON",
+    "deliveries": 2337,
+    "nursery_infants": 2099,
+    "nicu": 230
+  },
+  {
+    "name": "HOAG HOSPITAL IRVINE",
+    "city": "IRVINE",
+    "deliveries": 2299,
+    "nursery_infants": 2376,
+    "nicu": 0
+  },
+  {
+    "name": "UNIVERSITY OF CALIFORNIA DAVIS MEDICAL CENTER",
+    "city": "SACRAMENTO",
+    "deliveries": 2290,
+    "nursery_infants": 950,
+    "nicu": 641
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SAN FRANCISCO",
+    "city": "SAN FRANCISCO",
+    "deliveries": 2254,
+    "nursery_infants": 1931,
+    "nicu": 194
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SOUTH BAY",
+    "city": "HARBOR CITY",
+    "deliveries": 2250,
+    "nursery_infants": 1985,
+    "nicu": 223
+  },
+  {
+    "name": "PIONEERS MEMORIAL HEALTHCARE DISTRICT",
+    "city": "BRAWLEY",
+    "deliveries": 2237,
+    "nursery_infants": 1876,
+    "nicu": 242
+  },
+  {
+    "name": "ADVENTIST HEALTH BAKERSFIELD",
+    "city": "BAKERSFIELD",
+    "deliveries": 2235,
+    "nursery_infants": 2169,
+    "nicu": 252
+  },
+  {
+    "name": "GARFIELD MEDICAL CENTER",
+    "city": "MONTEREY PARK",
+    "deliveries": 2124,
+    "nursery_infants": 2069,
+    "nicu": 90
+  },
+  {
+    "name": "GOOD SAMARITAN HOSPITAL-SAN JOSE",
+    "city": "SAN JOSE",
+    "deliveries": 2119,
+    "nursery_infants": 1934,
+    "nicu": 286
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SAN JOSE",
+    "city": "SAN JOSE",
+    "deliveries": 2115,
+    "nursery_infants": 1989,
+    "nicu": 102
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - REDWOOD CITY",
+    "city": "REDWOOD CITY",
+    "deliveries": 2104,
+    "nursery_infants": 1962,
+    "nicu": 119
+  },
+  {
+    "name": "SCRIPPS MEMORIAL HOSPITAL - ENCINITAS",
+    "city": "ENCINITAS",
+    "deliveries": 2085,
+    "nursery_infants": 2098,
+    "nicu": 0
+  },
+  {
+    "name": "MERCY SOUTHWEST HOSPITAL",
+    "city": "BAKERSFIELD",
+    "deliveries": 2080,
+    "nursery_infants": 1773,
+    "nicu": 400
+  },
+  {
+    "name": "ENLOE HEALTH",
+    "city": "CHICO",
+    "deliveries": 2051,
+    "nursery_infants": 1802,
+    "nicu": 0
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SANTA ROSA",
+    "city": "SANTA ROSA",
+    "deliveries": 2035,
+    "nursery_infants": 1797,
+    "nicu": 84
+  },
+  {
+    "name": "MEMORIALCARE SADDLEBACK MEDICAL CENTER",
+    "city": "LAGUNA HILLS",
+    "deliveries": 2026,
+    "nursery_infants": 1767,
+    "nicu": 152
+  },
+  {
+    "name": "PROVIDENCE MISSION HOSPITAL",
+    "city": "MISSION VIEJO",
+    "deliveries": 2022,
+    "nursery_infants": 0,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH GLENDALE",
+    "city": "GLENDALE",
+    "deliveries": 1994,
+    "nursery_infants": 1688,
+    "nicu": 218
+  },
+  {
+    "name": "SAINT JOHN'S HEALTH CENTER",
+    "city": "SANTA MONICA",
+    "deliveries": 1983,
+    "nursery_infants": 1855,
+    "nicu": 114
+  },
+  {
+    "name": "RONALD REAGAN UCLA MEDICAL CENTER",
+    "city": "LOS ANGELES",
+    "deliveries": 1974,
+    "nursery_infants": 1662,
+    "nicu": 232
+  },
+  {
+    "name": "SANTA BARBARA COTTAGE HOSPITAL",
+    "city": "SANTA BARBARA",
+    "deliveries": 1933,
+    "nursery_infants": 1682,
+    "nicu": 206
+  },
+  {
+    "name": "PIH HEALTH WHITTIER HOSPITAL",
+    "city": "WHITTIER",
+    "deliveries": 1931,
+    "nursery_infants": 1732,
+    "nicu": 324
+  },
+  {
+    "name": "VALLEY PRESBYTERIAN HOSPITAL",
+    "city": "VAN NUYS",
+    "deliveries": 1880,
+    "nursery_infants": 1693,
+    "nicu": 203
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - WEST LA",
+    "city": "LOS ANGELES",
+    "deliveries": 1874,
+    "nursery_infants": 1625,
+    "nicu": 180
+  },
+  {
+    "name": "SAN ANTONIO REGIONAL HOSPITAL",
+    "city": "UPLAND",
+    "deliveries": 1868,
+    "nursery_infants": 1608,
+    "nicu": 213
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - WOODLAND HILLS",
+    "city": "WOODLAND HILLS",
+    "deliveries": 1858,
+    "nursery_infants": 1613,
+    "nicu": 172
+  },
+  {
+    "name": "UCI HEALTH-FOUNTAIN VALLEY",
+    "city": "FOUNTAIN VALLEY",
+    "deliveries": 1846,
+    "nursery_infants": 1551,
+    "nicu": 164
+  },
+  {
+    "name": "LOS ROBLES HOSPITAL & MEDICAL CENTER",
+    "city": "THOUSAND OAKS",
+    "deliveries": 1829,
+    "nursery_infants": 1463,
+    "nicu": 114
+  },
+  {
+    "name": "DESERT REGIONAL MEDICAL CENTER",
+    "city": "PALM SPRINGS",
+    "deliveries": 1825,
+    "nursery_infants": 1498,
+    "nicu": 338
+  },
+  {
+    "name": "CONTRA COSTA REGIONAL MEDICAL CENTER",
+    "city": "MARTINEZ",
+    "deliveries": 1823,
+    "nursery_infants": 1774,
+    "nicu": 246
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - ANTIOCH",
+    "city": "ANTIOCH",
+    "deliveries": 1815,
+    "nursery_infants": 1602,
+    "nicu": 93
+  },
+  {
+    "name": "ORANGE COUNTY GLOBAL MEDICAL CENTER",
+    "city": "SANTA ANA",
+    "deliveries": 1810,
+    "nursery_infants": 1696,
+    "nicu": 114
+  },
+  {
+    "name": "MEMORIAL MEDICAL CENTER - MODESTO",
+    "city": "MODESTO",
+    "deliveries": 1793,
+    "nursery_infants": 1483,
+    "nicu": 176
+  },
+  {
+    "name": "JOHN F. KENNEDY MEMORIAL HOSPITAL",
+    "city": "INDIO",
+    "deliveries": 1788,
+    "nursery_infants": 1655,
+    "nicu": 0
+  },
+  {
+    "name": "VENTURA COUNTY MEDICAL CENTER",
+    "city": "VENTURA",
+    "deliveries": 1771,
+    "nursery_infants": 1690,
+    "nicu": 206
+  },
+  {
+    "name": "ADVENTIST HEALTH AND RIDEOUT",
+    "city": "MARYSVILLE",
+    "deliveries": 1764,
+    "nursery_infants": 1833,
+    "nicu": 114
+  },
+  {
+    "name": "METHODIST HOSPITAL OF SACRAMENTO",
+    "city": "SACRAMENTO",
+    "deliveries": 1755,
+    "nursery_infants": 1680,
+    "nicu": 44
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - FRESNO",
+    "city": "FRESNO",
+    "deliveries": 1714,
+    "nursery_infants": 1651,
+    "nicu": 215
+  },
+  {
+    "name": "MEMORIALCARE ORANGE COAST MEDICAL CENTER",
+    "city": "FOUNTAIN VALLEY",
+    "deliveries": 1709,
+    "nursery_infants": 1546,
+    "nicu": 138
+  },
+  {
+    "name": "HIGHLAND HOSPITAL",
+    "city": "OAKLAND",
+    "deliveries": 1694,
+    "nursery_infants": 1612,
+    "nicu": 275
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - SAN MARCOS",
+    "city": "SAN MARCOS",
+    "deliveries": 1688,
+    "nursery_infants": 1529,
+    "nicu": 114
+  },
+  {
+    "name": "ST. JOHNS REGIONAL MEDICAL CENTER",
+    "city": "OXNARD",
+    "deliveries": 1639,
+    "nursery_infants": 1353,
+    "nicu": 187
+  },
+  {
+    "name": "NORTHRIDGE HOSPITAL MEDICAL CENTER",
+    "city": "NORTHRIDGE",
+    "deliveries": 1634,
+    "nursery_infants": 707,
+    "nicu": 169
+  },
+  {
+    "name": "MERCY MEDICAL CENTER - REDDING",
+    "city": "REDDING",
+    "deliveries": 1620,
+    "nursery_infants": 1271,
+    "nicu": 435
+  },
+  {
+    "name": "WASHINGTON HOSPITAL - FREMONT",
+    "city": "FREMONT",
+    "deliveries": 1615,
+    "nursery_infants": 1423,
+    "nicu": 151
+  },
+  {
+    "name": "PROVIDENCE ST. MARY MEDICAL CENTER",
+    "city": "APPLE VALLEY",
+    "deliveries": 1612,
+    "nursery_infants": 1292,
+    "nicu": 353
+  },
+  {
+    "name": "MERCY SAN JUAN MEDICAL CENTER",
+    "city": "CARMICHAEL",
+    "deliveries": 1596,
+    "nursery_infants": 1481,
+    "nicu": 470
+  },
+  {
+    "name": "PRISCILLA CHAN & MARK ZUCKERBERG SAN FRANCISCO GENERAL HOSPITAL & TRAUMA CENTER",
+    "city": "SAN FRANCISCO",
+    "deliveries": 1588,
+    "nursery_infants": 1251,
+    "nicu": 140
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - MORENO VALLEY",
+    "city": "MORENO VALLEY",
+    "deliveries": 1574,
+    "nursery_infants": 1386,
+    "nicu": 178
+  },
+  {
+    "name": "COMMUNITY HOSPITAL OF SAN BERNARDINO",
+    "city": "SAN BERNARDINO",
+    "deliveries": 1571,
+    "nursery_infants": 1366,
+    "nicu": 135
+  },
+  {
+    "name": "NORTHBAY MEDICAL CENTER",
+    "city": "FAIRFIELD",
+    "deliveries": 1568,
+    "nursery_infants": 1246,
+    "nicu": 164
+  },
+  {
+    "name": "REDLANDS COMMUNITY HOSPITAL",
+    "city": "REDLANDS",
+    "deliveries": 1535,
+    "nursery_infants": 1336,
+    "nicu": 174
+  },
+  {
+    "name": "HENRY MAYO NEWHALL HOSPITAL",
+    "city": "VALENCIA",
+    "deliveries": 1526,
+    "nursery_infants": 1328,
+    "nicu": 149
+  },
+  {
+    "name": "MILLS-PENINSULA MEDICAL CENTER",
+    "city": "BURLINGAME",
+    "deliveries": 1522,
+    "nursery_infants": 1228,
+    "nicu": 228
+  },
+  {
+    "name": "WHITTIER HOSPITAL MEDICAL CENTER",
+    "city": "WHITTIER",
+    "deliveries": 1467,
+    "nursery_infants": 1448,
+    "nicu": 0
+  },
+  {
+    "name": "PROVIDENCE QUEEN OF THE VALLEY MEDICAL CENTER",
+    "city": "NAPA",
+    "deliveries": 1458,
+    "nursery_infants": 699,
+    "nicu": 88
+  },
+  {
+    "name": "SUTTER DAVIS HOSPITAL",
+    "city": "DAVIS",
+    "deliveries": 1450,
+    "nursery_infants": 1329,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER SANTA ROSA REGIONAL HOSPITAL",
+    "city": "SANTA ROSA",
+    "deliveries": 1443,
+    "nursery_infants": 1310,
+    "nicu": 210
+  },
+  {
+    "name": "SANTA MONICA - UCLA MEDICAL CENTER AND ORTHOPAEDIC HOSPITAL",
+    "city": "SANTA MONICA",
+    "deliveries": 1440,
+    "nursery_infants": 1320,
+    "nicu": 157
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL - VACAVILLE",
+    "city": "VACAVILLE",
+    "deliveries": 1439,
+    "nursery_infants": 1273,
+    "nicu": 98
+  },
+  {
+    "name": "MARINHEALTH MEDICAL CENTER",
+    "city": "GREENBRAE",
+    "deliveries": 1412,
+    "nursery_infants": 1270,
+    "nicu": 168
+  },
+  {
+    "name": "USC ARCADIA HOSPITAL",
+    "city": "ARCADIA",
+    "deliveries": 1389,
+    "nursery_infants": 1273,
+    "nicu": 83
+  },
+  {
+    "name": "ST. MARY MEDICAL CENTER - LONG BEACH",
+    "city": "LONG BEACH",
+    "deliveries": 1350,
+    "nursery_infants": 1188,
+    "nicu": 188
+  },
+  {
+    "name": "KAISER FOUNDATION HOSPITAL & REHAB CENTER - VALLEJO",
+    "city": "VALLEJO",
+    "deliveries": 1332,
+    "nursery_infants": 1157,
+    "nicu": 133
+  },
+  {
+    "name": "LOMA LINDA UNIVERSITY MEDICAL CENTER-MURRIETA",
+    "city": "MURRIETA",
+    "deliveries": 1320,
+    "nursery_infants": 1146,
+    "nicu": 141
+  },
+  {
+    "name": "STANFORD HEALTH CARE TRI-VALLEY",
+    "city": "PLEASANTON",
+    "deliveries": 1306,
+    "nursery_infants": 1168,
+    "nicu": 115
+  },
+  {
+    "name": "LOS ANGELES GENERAL MEDICAL CENTER",
+    "city": "LOS ANGELES",
+    "deliveries": 1295,
+    "nursery_infants": 891,
+    "nicu": 280
+  },
+  {
+    "name": "SAN JOAQUIN GENERAL HOSPITAL",
+    "city": "FRENCH CAMP",
+    "deliveries": 1272,
+    "nursery_infants": 1656,
+    "nicu": 511
+  },
+  {
+    "name": "PIH HEALTH GOOD SAMARITAN HOSPITAL",
+    "city": "LOS ANGELES",
+    "deliveries": 1269,
+    "nursery_infants": 1223,
+    "nicu": 170
+  },
+  {
+    "name": "LAC/HARBOR-UCLA MEDICAL CENTER",
+    "city": "TORRANCE",
+    "deliveries": 1261,
+    "nursery_infants": 1020,
+    "nicu": 48
+  },
+  {
+    "name": "SALINAS VALLEY HEALTH MEDICAL CENTER",
+    "city": "SALINAS",
+    "deliveries": 1228,
+    "nursery_infants": 996,
+    "nicu": 109
+  },
+  {
+    "name": "EMANUEL MEDICAL CENTER",
+    "city": "TURLOCK",
+    "deliveries": 1220,
+    "nursery_infants": 1220,
+    "nicu": 124
+  },
+  {
+    "name": "CORONA REGIONAL MEDICAL CENTER-MAIN",
+    "city": "CORONA",
+    "deliveries": 1210,
+    "nursery_infants": 1049,
+    "nicu": 0
+  },
+  {
+    "name": "SIERRA VIEW MEDICAL CENTER",
+    "city": "PORTERVILLE",
+    "deliveries": 1174,
+    "nursery_infants": 1099,
+    "nicu": 72
+  },
+  {
+    "name": "ST. BERNARDINE MEDICAL CENTER",
+    "city": "SAN BERNARDINO",
+    "deliveries": 1157,
+    "nursery_infants": 968,
+    "nicu": 128
+  },
+  {
+    "name": "EISENHOWER MEDICAL CENTER",
+    "city": "RANCHO MIRAGE",
+    "deliveries": 1156,
+    "nursery_infants": 928,
+    "nicu": 139
+  },
+  {
+    "name": "SEQUOIA HOSPITAL",
+    "city": "REDWOOD CITY",
+    "deliveries": 1148,
+    "nursery_infants": 1143,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH REEDLEY",
+    "city": "REEDLEY",
+    "deliveries": 1146,
+    "nursery_infants": 1072,
+    "nicu": 0
+  },
+  {
+    "name": "EDEN MEDICAL CENTER",
+    "city": "CASTRO VALLEY",
+    "deliveries": 1133,
+    "nursery_infants": 1115,
+    "nicu": 0
+  },
+  {
+    "name": "GLENDALE MEMORIAL HOSPITAL AND HEALTH CENTER",
+    "city": "GLENDALE",
+    "deliveries": 1124,
+    "nursery_infants": 831,
+    "nicu": 98
+  },
+  {
+    "name": "DOCTORS HOSPITAL OF RIVERSIDE",
+    "city": "RIVERSIDE",
+    "deliveries": 1091,
+    "nursery_infants": 881,
+    "nicu": 95
+  },
+  {
+    "name": "ADVENTIST HEALTH SIERRA VISTA",
+    "city": "SAN LUIS OBISPO",
+    "deliveries": 1052,
+    "nursery_infants": 895,
+    "nicu": 170
+  },
+  {
+    "name": "VICTOR VALLEY GLOBAL MEDICAL CENTER",
+    "city": "VICTORVILLE",
+    "deliveries": 1030,
+    "nursery_infants": 1030,
+    "nicu": 0
+  },
+  {
+    "name": "O'CONNOR HOSPITAL",
+    "city": "SAN JOSE",
+    "deliveries": 1024,
+    "nursery_infants": 991,
+    "nicu": 58
+  },
+  {
+    "name": "COMMUNITY HOSPITAL OF THE MONTEREY PENINSULA",
+    "city": "MONTEREY",
+    "deliveries": 1016,
+    "nursery_infants": 902,
+    "nicu": 142
+  },
+  {
+    "name": "LOS ANGELES COUNTY OLIVE VIEW-UCLA MEDICAL CENTER",
+    "city": "SYLMAR",
+    "deliveries": 970,
+    "nursery_infants": 752,
+    "nicu": 106
+  },
+  {
+    "name": "PROVIDENCE SANTA ROSA MEMORIAL HOSPITAL-MONTGOMERY",
+    "city": "SANTA ROSA",
+    "deliveries": 922,
+    "nursery_infants": 997,
+    "nicu": 85
+  },
+  {
+    "name": "ADVENTIST HEALTH LODI MEMORIAL",
+    "city": "LODI",
+    "deliveries": 871,
+    "nursery_infants": 800,
+    "nicu": 39
+  },
+  {
+    "name": "AHMC ANAHEIM REGIONAL MEDICAL CENTER",
+    "city": "ANAHEIM",
+    "deliveries": 852,
+    "nursery_infants": 726,
+    "nicu": 116
+  },
+  {
+    "name": "MERCY HOSPITAL OF FOLSOM",
+    "city": "FOLSOM",
+    "deliveries": 837,
+    "nursery_infants": 826,
+    "nicu": 0
+  },
+  {
+    "name": "WATSONVILLE COMMUNITY HOSPITAL",
+    "city": "WATSONVILLE",
+    "deliveries": 798,
+    "nursery_infants": 685,
+    "nicu": 91
+  },
+  {
+    "name": "UC SAN DIEGO HEALTH HILLCREST - HILLCREST MEDICAL CENTER",
+    "city": "SAN DIEGO",
+    "deliveries": 780,
+    "nursery_infants": 581,
+    "nicu": 93
+  },
+  {
+    "name": "SCRIPPS MERCY HOSPITAL - CHULA VISTA",
+    "city": "CHULA VISTA",
+    "deliveries": 775,
+    "nursery_infants": 743,
+    "nicu": 0
+  },
+  {
+    "name": "EL CAMINO HOSPITAL LOS GATOS",
+    "city": "LOS GATOS",
+    "deliveries": 766,
+    "nursery_infants": 677,
+    "nicu": 79
+  },
+  {
+    "name": "FRENCH HOSPITAL MEDICAL CENTER",
+    "city": "SAN LUIS OBISPO",
+    "deliveries": 752,
+    "nursery_infants": 684,
+    "nicu": 0
+  },
+  {
+    "name": "PROVIDENCE ST. JOSEPH HOSPITAL - EUREKA",
+    "city": "EUREKA",
+    "deliveries": 742,
+    "nursery_infants": 742,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH UKIAH VALLEY",
+    "city": "UKIAH",
+    "deliveries": 739,
+    "nursery_infants": 714,
+    "nicu": 36
+  },
+  {
+    "name": "DOMINICAN HOSPITAL",
+    "city": "SANTA CRUZ",
+    "deliveries": 710,
+    "nursery_infants": 639,
+    "nicu": 112
+  },
+  {
+    "name": "MARTIN LUTHER KING, JR. COMMUNITY HOSPITAL",
+    "city": "LOS ANGELES",
+    "deliveries": 706,
+    "nursery_infants": 672,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER MATERNITY AND SURGERY CENTER OF SANTA CRUZ",
+    "city": "SANTA CRUZ",
+    "deliveries": 639,
+    "nursery_infants": 562,
+    "nicu": 0
+  },
+  {
+    "name": "MERCY GENERAL HOSPITAL",
+    "city": "SACRAMENTO",
+    "deliveries": 623,
+    "nursery_infants": 557,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH DELANO",
+    "city": "DELANO",
+    "deliveries": 596,
+    "nursery_infants": 579,
+    "nicu": 0
+  },
+  {
+    "name": "SOUTH COAST GLOBAL MEDICAL CENTER",
+    "city": "SANTA ANA",
+    "deliveries": 590,
+    "nursery_infants": 590,
+    "nicu": 0
+  },
+  {
+    "name": "MEMORIAL HOSPITAL LOS BANOS",
+    "city": "LOS BANOS",
+    "deliveries": 580,
+    "nursery_infants": 556,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH TWIN CITIES",
+    "city": "TEMPLETON",
+    "deliveries": 573,
+    "nursery_infants": 547,
+    "nicu": 0
+  },
+  {
+    "name": "USC VERDUGO HILLS HOSPITAL",
+    "city": "GLENDALE",
+    "deliveries": 540,
+    "nursery_infants": 497,
+    "nicu": 69
+  },
+  {
+    "name": "EAST LOS ANGELES DOCTORS HOSPITAL",
+    "city": "LOS ANGELES",
+    "deliveries": 505,
+    "nursery_infants": 505,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH SONORA - GREENLEY",
+    "city": "SONORA",
+    "deliveries": 494,
+    "nursery_infants": 494,
+    "nicu": 0
+  },
+  {
+    "name": "ST. ELIZABETH COMMUNITY HOSPITAL",
+    "city": "RED BLUFF",
+    "deliveries": 489,
+    "nursery_infants": 372,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER DELTA MEDICAL CENTER",
+    "city": "ANTIOCH",
+    "deliveries": 481,
+    "nursery_infants": 466,
+    "nicu": 0
+  },
+  {
+    "name": "WOODLAND MEMORIAL HOSPITAL",
+    "city": "WOODLAND",
+    "deliveries": 448,
+    "nursery_infants": 421,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER TRACY COMMUNITY HOSPITAL",
+    "city": "TRACY",
+    "deliveries": 440,
+    "nursery_infants": 392,
+    "nicu": 0
+  },
+  {
+    "name": "HAZEL HAWKINS MEMORIAL HOSPITAL",
+    "city": "HOLLISTER",
+    "deliveries": 413,
+    "nursery_infants": 401,
+    "nicu": 0
+  },
+  {
+    "name": "MARSHALL MEDICAL CENTER",
+    "city": "PLACERVILLE",
+    "deliveries": 399,
+    "nursery_infants": 356,
+    "nicu": 0
+  },
+  {
+    "name": "OROVILLE HOSPITAL",
+    "city": "OROVILLE",
+    "deliveries": 397,
+    "nursery_infants": 383,
+    "nicu": 0
+  },
+  {
+    "name": "TAHOE FOREST HOSPITAL",
+    "city": "TRUCKEE",
+    "deliveries": 389,
+    "nursery_infants": 389,
+    "nicu": 0
+  },
+  {
+    "name": "SIERRA NEVADA MEMORIAL HOSPITAL",
+    "city": "GRASS VALLEY",
+    "deliveries": 369,
+    "nursery_infants": 342,
+    "nicu": 0
+  },
+  {
+    "name": "LOMPOC VALLEY MEDICAL CENTER",
+    "city": "LOMPOC",
+    "deliveries": 328,
+    "nursery_infants": 290,
+    "nicu": 0
+  },
+  {
+    "name": "BARTON MEMORIAL HOSPITAL",
+    "city": "SOUTH LAKE TAHOE",
+    "deliveries": 314,
+    "nursery_infants": 300,
+    "nicu": 0
+  },
+  {
+    "name": "ST. ROSE HOSPITAL",
+    "city": "HAYWARD",
+    "deliveries": 312,
+    "nursery_infants": 324,
+    "nicu": 0
+  },
+  {
+    "name": "MAD RIVER COMMUNITY HOSPITAL",
+    "city": "ARCATA",
+    "deliveries": 278,
+    "nursery_infants": 257,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER LAKESIDE HOSPITAL",
+    "city": "LAKEPORT",
+    "deliveries": 268,
+    "nursery_infants": 257,
+    "nicu": 0
+  },
+  {
+    "name": "ST. LOUISE REGIONAL HOSPITAL",
+    "city": "GILROY",
+    "deliveries": 258,
+    "nursery_infants": 257,
+    "nicu": 0
+  },
+  {
+    "name": "HI-DESERT MEDICAL CENTER",
+    "city": "JOSHUA TREE",
+    "deliveries": 253,
+    "nursery_infants": 247,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER COAST HOSPITAL",
+    "city": "CRESCENT CITY",
+    "deliveries": 248,
+    "nursery_infants": 231,
+    "nicu": 0
+  },
+  {
+    "name": "BARSTOW COMMUNITY HOSPITAL",
+    "city": "BARSTOW",
+    "deliveries": 233,
+    "nursery_infants": 226,
+    "nicu": 0
+  },
+  {
+    "name": "SUTTER AMADOR HOSPITAL",
+    "city": "JACKSON",
+    "deliveries": 229,
+    "nursery_infants": 203,
+    "nicu": 0
+  },
+  {
+    "name": "NORTHERN INYO HOSPITAL",
+    "city": "BISHOP",
+    "deliveries": 224,
+    "nursery_infants": 233,
+    "nicu": 0
+  },
+  {
+    "name": "BANNER LASSEN MEDICAL CENTER",
+    "city": "SUSANVILLE",
+    "deliveries": 222,
+    "nursery_infants": 203,
+    "nicu": 0
+  },
+  {
+    "name": "SAN RAMON REGIONAL MEDICAL CENTER",
+    "city": "SAN RAMON",
+    "deliveries": 216,
+    "nursery_infants": 213,
+    "nicu": 25
+  },
+  {
+    "name": "HEMET GLOBAL MEDICAL CENTER",
+    "city": "HEMET",
+    "deliveries": 196,
+    "nursery_infants": 171,
+    "nicu": 0
+  },
+  {
+    "name": "FAIRCHILD MEDICAL CENTER",
+    "city": "YREKA",
+    "deliveries": 165,
+    "nursery_infants": 165,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH CLEARLAKE",
+    "city": "CLEARLAKE",
+    "deliveries": 162,
+    "nursery_infants": 147,
+    "nicu": 0
+  },
+  {
+    "name": "MONTCLAIR HOSPITAL MEDICAL CENTER",
+    "city": "MONTCLAIR",
+    "deliveries": 159,
+    "nursery_infants": 147,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH SIMI VALLEY",
+    "city": "SIMI VALLEY",
+    "deliveries": 157,
+    "nursery_infants": 152,
+    "nicu": 9
+  },
+  {
+    "name": "SAN GORGONIO MEMORIAL HOSPITAL",
+    "city": "BANNING",
+    "deliveries": 127,
+    "nursery_infants": 113,
+    "nicu": 0
+  },
+  {
+    "name": "MERCY MEDICAL CENTER MT. SHASTA",
+    "city": "MOUNT SHASTA",
+    "deliveries": 118,
+    "nursery_infants": 112,
+    "nicu": 0
+  },
+  {
+    "name": "VENTURA COUNTY MEDICAL CENTER - SANTA PAULA HOSPITAL",
+    "city": "SANTA PAULA",
+    "deliveries": 96,
+    "nursery_infants": 85,
+    "nicu": 0
+  },
+  {
+    "name": "RIDGECREST REGIONAL HOSPITAL",
+    "city": "RIDGECREST",
+    "deliveries": 67,
+    "nursery_infants": 66,
+    "nicu": 0
+  },
+  {
+    "name": "ADVENTIST HEALTH TULARE",
+    "city": "TULARE",
+    "deliveries": 39,
+    "nursery_infants": 44,
+    "nicu": 0
+  }
+]

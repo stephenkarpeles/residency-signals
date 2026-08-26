@@ -1,6 +1,6 @@
 "use client";
 
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
@@ -18,28 +18,23 @@ export function SignalSlot({
 }) {
   const { unassign, setDetailId } = useApp();
   const [mounted, setMounted] = useState(false);
-  const droppable = useDroppable({ id: `${tier}-${index}` });
-  const draggable = useDraggable({
-    id: `slot-${tier}-${index}`,
-    data: { programId, from: "slot" },
-    disabled: !programId || !mounted,
-  });
   const program = getProgram(programId);
+  const sortable = useSortable({
+    id: `${tier}-${index}`,
+    data: { programId, from: "slot", tier, index },
+    disabled: { draggable: !programId || !mounted, droppable: false },
+  });
   const gold = tier === "gold";
   const considering = tier === "considering";
-  const over = droppable.isOver;
+  const over = sortable.isOver;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const style = {
-    transform: CSS.Translate.toString(draggable.transform),
-  };
-
-  const setRefs = (node: HTMLElement | null) => {
-    droppable.setNodeRef(node);
-    draggable.setNodeRef(node);
+    transform: CSS.Transform.toString(sortable.transform),
+    transition: sortable.transition,
   };
 
   const numberClass = gold
@@ -49,27 +44,26 @@ export function SignalSlot({
       : "text-stone-400";
 
   if (program) {
-    const dragProps = mounted ? { ...draggable.listeners, ...draggable.attributes } : {};
+    const dragProps = mounted ? { ...sortable.listeners, ...sortable.attributes } : {};
     return (
       <div
-        ref={setRefs}
+        ref={sortable.setNodeRef}
         style={style}
         {...dragProps}
-        className={`group flex items-center gap-2 rounded-xl border px-2 py-1.5 ${
+        className={`group flex cursor-grab items-center gap-2 rounded-xl border px-2 py-1.5 active:cursor-grabbing ${
           gold
             ? "border-[#E6D5A3] bg-white"
             : considering
               ? "border-[#C5D4CE] bg-white"
               : "border-stone-200 bg-white"
-        } ${draggable.isDragging ? "opacity-40" : ""} ${over ? "ring-2 ring-[#C4A35A]" : ""}`}
+        } ${sortable.isDragging ? "z-10 opacity-40" : ""} ${over ? "ring-2 ring-[#C4A35A]" : ""}`}
       >
         <span className={`w-4 shrink-0 text-center text-[10px] font-semibold tabular-nums ${numberClass}`}>
           {index + 1}
         </span>
         <button
           type="button"
-          className="min-w-0 flex-1 text-left"
-          onPointerDown={(e) => e.stopPropagation()}
+          className="min-w-0 flex-1 cursor-grab text-left active:cursor-grabbing"
           onClick={() => setDetailId(program.id)}
         >
           <p className="truncate text-[12px] font-medium text-stone-800">
@@ -96,7 +90,8 @@ export function SignalSlot({
 
   return (
     <div
-      ref={droppable.setNodeRef}
+      ref={sortable.setNodeRef}
+      style={style}
       className={`flex items-center gap-2 rounded-xl border border-dashed px-2 ${
         gold
           ? "h-[46px] border-[#E0C97A]/80 bg-[#FBF6E8]/50"
