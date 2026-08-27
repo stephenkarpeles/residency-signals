@@ -176,6 +176,7 @@ export function ExploreView() {
   const [waterfront, setWaterfront] = useState(false);
   const [sort, setSort] = useState<SortKey>("score");
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const advancedActive =
     types.length > 0 ||
@@ -287,15 +288,39 @@ export function ExploreView() {
 
       <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_2px_rgba(28,25,23,0.04)]">
         <div className="flex flex-col gap-3 lg:flex-row">
-          <label className="relative flex-1">
-            <span className="sr-only">Search programs</span>
+          <div className="relative flex-1">
+            <label className="sr-only" htmlFor="program-search">
+              Search programs
+            </label>
             <input
+              id="program-search"
+              ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by program, city, or state"
-              className="w-full rounded-xl border border-stone-200 bg-[#FBF9F6] px-4 py-2.5 text-[14px] text-stone-800 outline-none placeholder:text-stone-400 focus:border-[#C4A35A] focus:ring-2 focus:ring-[#C4A35A]/20"
+              className="w-full rounded-xl border border-stone-200 bg-[#FBF9F6] py-2.5 pr-10 pl-4 text-[14px] text-stone-800 outline-none placeholder:text-stone-400 focus:border-[#C4A35A] focus:ring-2 focus:ring-[#C4A35A]/20"
             />
-          </label>
+            {query ? (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => {
+                  setQuery("");
+                  searchRef.current?.focus();
+                }}
+                className="absolute top-1/2 right-2 -translate-y-1/2 rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+              >
+                <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path
+                    d="M3 3l6 6M9 3l-6 6"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            ) : null}
+          </div>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}

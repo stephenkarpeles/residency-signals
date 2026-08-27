@@ -29,6 +29,10 @@ PUBLISHED = {
     "UPMC Medical Education": (10500, "UPMC Magee-Womens Hospital published obstetric volume"),
     "Christiana Care Health Services": (6200, "Christiana Hospital published obstetric volume"),
     "Maimonides Medical Center": (7500, "Maimonides Medical Center published obstetric volume"),
+    "Tower Health/Reading Hospital": (
+        3500,
+        "Tower Health/Reading Hospital OB/GYN residency (>3,500 deliveries/year)",
+    ),
     "Womack Army Medical Center": (
         3000,
         "Womack Army Medical Center (~200–300 deliveries/month)",
@@ -60,6 +64,94 @@ PUBLISHED = {
     "University of Tennessee College of Medicine (Nashville)": (
         7000,
         "Ascension Saint Thomas Hospital Midtown (~7,000 deliveries/year)",
+    ),
+    "University of Southern California/LAC+USC Medical Center": (
+        10000,
+        "LAC+USC residency (over 10,000 deliveries/year across training sites)",
+    ),
+    "Memorial Healthcare System, Hollywood, Florida": (
+        8000,
+        "Memorial Hospital West and Memorial Regional combined (~8,000 deliveries/year)",
+    ),
+    "Mountain Area Health Education Center": (
+        4000,
+        "MAHEC / Mission Hospital OB/GYN residency (>4,000 deliveries/year)",
+    ),
+    "University of Tennessee College of Medicine at Chattanooga": (
+        6000,
+        "UT Chattanooga / Erlanger (~6,000 deliveries/year)",
+    ),
+    "UMass Chan - Baystate": (
+        4600,
+        "Baystate Medical Center (4,600 deliveries/year)",
+    ),
+    "Carolinas Medical Center": (
+        7000,
+        "Atrium Health Carolinas Medical Center (~7,000 deliveries/year)",
+    ),
+    "Louisiana State University (Shreveport)": (
+        4200,
+        "Ochsner LSU St. Mary's (~2,400) and Monroe (~1,800) combined",
+    ),
+    "Medical University of South Carolina": (
+        3500,
+        "MUSC OB/GYN residency (>3,500 deliveries/year)",
+    ),
+    "University of Oklahoma Health Sciences Center": (
+        4000,
+        "OU Health Mother & Baby Center (~4,000 deliveries/year)",
+    ),
+    "Boston University Medical Center": (
+        2400,
+        "Boston Medical Center published obstetric volume",
+    ),
+    "Beth Israel Deaconess Medical Center": (
+        6000,
+        "Beth Israel Deaconess Medical Center (~6,000 obstetric deliveries/year)",
+    ),
+    "University of Colorado": (
+        3800,
+        "UCHealth Labor and Delivery (3,800 births/year)",
+    ),
+    "University of Kansas School of Medicine": (
+        3000,
+        "University of Kansas OB/GYN residency (~3,000 deliveries/year)",
+    ),
+    "Zucker School of Medicine at Hofstra/Northwell at South Shore University Hospital": (
+        4800,
+        "Northwell South Shore residency (>4,800 deliveries/year across training hospitals)",
+    ),
+    "Detroit Medical Center/Wayne State University": (
+        3000,
+        "Wayne State / DMC Hutzel residency (>3,000 deliveries/year)",
+    ),
+    "Kirk Kerkorian School of Medicine at UNLV": (
+        5000,
+        "UNLV OB/GYN residency (~5,000 deliveries/year across training hospitals)",
+    ),
+    "AdventHealth Florida (Orlando)": (
+        5000,
+        "AdventHealth Orlando (~5,000 deliveries/year)",
+    ),
+    "University of Connecticut": (
+        4000,
+        "Hartford Hospital (~4,000 births/year; UConn's primary obstetric site)",
+    ),
+    "Corewell Health (Royal Oak)": (
+        5572,
+        "Corewell Health William Beaumont University Hospital Leapfrog live births",
+    ),
+    "University of Massachusetts": (
+        5210,
+        "UMass Memorial Medical Center FY2025 deliveries",
+    ),
+    "Sidney Kimmel Medical College at Thomas Jefferson University/TJUH": (
+        3000,
+        "Thomas Jefferson University Hospital (~3,000 deliveries/year)",
+    ),
+    "Abington Memorial Hospital": (
+        4500,
+        "Jefferson Abington Hospital (~4,500 births/year)",
     ),
 }
 
