@@ -1,7 +1,6 @@
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
 import { getProgram } from "@/lib/programs";
@@ -22,7 +21,7 @@ export function SignalSlot({
   const sortable = useSortable({
     id: `${tier}-${index}`,
     data: { programId, from: "slot", tier, index },
-    disabled: { draggable: !programId || !mounted, droppable: false },
+    disabled: { draggable: !programId || !mounted, droppable: !mounted },
   });
   const gold = tier === "gold";
   const considering = tier === "considering";
@@ -31,11 +30,6 @@ export function SignalSlot({
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const style = {
-    transform: CSS.Transform.toString(sortable.transform),
-    transition: sortable.transition,
-  };
 
   const numberClass = gold
     ? "text-[#C4A35A]"
@@ -48,7 +42,6 @@ export function SignalSlot({
     return (
       <div
         ref={sortable.setNodeRef}
-        style={style}
         {...dragProps}
         className={`group flex cursor-grab items-center gap-2 rounded-xl border px-2 py-1.5 active:cursor-grabbing ${
           gold
@@ -91,7 +84,6 @@ export function SignalSlot({
   return (
     <div
       ref={sortable.setNodeRef}
-      style={style}
       className={`flex items-center gap-2 rounded-xl border border-dashed px-2 ${
         gold
           ? "h-[46px] border-[#E0C97A]/80 bg-[#FBF6E8]/50"

@@ -11,7 +11,7 @@ import {
   STATES,
   deliveryBandId,
 } from "@/lib/programs";
-import { formatPopulation, matchScore } from "@/lib/scoring";
+import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
 import type { DeliveryBandId, ProgramType, SortKey } from "@/lib/types";
 
 const TYPES: ProgramType[] = ["University", "Hybrid", "Community"];
@@ -120,6 +120,8 @@ const POPULATION_STEPS = [
   0, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 2_500_000, Number.POSITIVE_INFINITY,
 ] as const;
 
+const COL_STEPS = [0, 85, 95, 100, 105, 120, 150, Number.POSITIVE_INFINITY] as const;
+
 function populationSummary(minValue: number, maxValue: number): string {
   const minAny = minValue === 0;
   const maxAny = !Number.isFinite(maxValue);
@@ -127,6 +129,20 @@ function populationSummary(minValue: number, maxValue: number): string {
   if (minAny) return `Up to ${formatPopulation(maxValue)}`;
   if (maxAny) return `${formatPopulation(minValue)}+`;
   return `${formatPopulation(minValue)} – ${formatPopulation(maxValue)}`;
+}
+
+function colStepLabel(value: number): string {
+  if (!Number.isFinite(value) || value === 0) return "Any";
+  return `${value} · ${colLabel(value)}`;
+}
+
+function colSummary(minValue: number, maxValue: number): string {
+  const minAny = minValue === 0;
+  const maxAny = !Number.isFinite(maxValue);
+  if (minAny && maxAny) return "Any";
+  if (minAny) return `Up to ${maxValue} · ${colLabel(maxValue)}`;
+  if (maxAny) return `${minValue}+ · ${colLabel(minValue)}`;
+  return `${minValue} – ${maxValue}`;
 }
 
 function tokenMatchesHay(token: string, hay: string): boolean {
@@ -155,12 +171,18 @@ export function ExploreView() {
   const [minMD, setMinMD] = useState(0);
   const [minPopIndex, setMinPopIndex] = useState(0);
   const [maxPopIndex, setMaxPopIndex] = useState(POPULATION_STEPS.length - 1);
+  const [minColIndex, setMinColIndex] = useState(0);
+  const [maxColIndex, setMaxColIndex] = useState(COL_STEPS.length - 1);
   const [waterfront, setWaterfront] = useState(false);
   const [sort, setSort] = useState<SortKey>("score");
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const advancedActive =
-    types.length > 0 || minPopIndex > 0 || maxPopIndex < POPULATION_STEPS.length - 1;
+    types.length > 0 ||
+    minPopIndex > 0 ||
+    maxPopIndex < POPULATION_STEPS.length - 1 ||
+    minColIndex > 0 ||
+    maxColIndex < COL_STEPS.length - 1;
 
   const stateOptions = useMemo(() => {
     if (regions.length === 0) return STATES;
@@ -192,6 +214,8 @@ export function ExploreView() {
       if (program.percentMD < minMD) return false;
       if (program.cityPopulation < POPULATION_STEPS[minPopIndex]) return false;
       if (program.cityPopulation > POPULATION_STEPS[maxPopIndex]) return false;
+      if (program.costOfLiving < COL_STEPS[minColIndex]) return false;
+      if (program.costOfLiving > COL_STEPS[maxColIndex]) return false;
       if (waterfront && program.waterProximity < 70) return false;
       if (!q) return true;
       const nick = CITY_NICKNAMES[program.city] ?? "";
@@ -238,6 +262,8 @@ export function ExploreView() {
     minMD,
     minPopIndex,
     maxPopIndex,
+    minColIndex,
+    maxColIndex,
     waterfront,
     sort,
     weights,
@@ -356,6 +382,18 @@ export function ExploreView() {
               onChangeMax={(index) => {
                 setMaxPopIndex(index);
                 if (index < minPopIndex) setMinPopIndex(index);
+              }}
+            />
+            <ColSlider
+              minIndex={minColIndex}
+              maxIndex={maxColIndex}
+              onChangeMin={(index) => {
+                setMinColIndex(index);
+                if (index > maxColIndex) setMaxColIndex(index);
+              }}
+              onChangeMax={(index) => {
+                setMaxColIndex(index);
+                if (index < minColIndex) setMinColIndex(index);
               }}
             />
           </div>
@@ -603,6 +641,72 @@ function PopulationSlider({
             step={1}
             value={maxIndex}
             aria-label="Maximum town population"
+            onChange={(e) => onChangeMax(Number(e.target.value))}
+            className="w-full accent-[#C4A35A]"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
+function ColSlider({
+  minIndex,
+  maxIndex,
+  onChangeMin,
+  onChangeMax,
+}: {
+  minIndex: number;
+  maxIndex: number;
+  onChangeMin: (index: number) => void;
+  onChangeMax: (index: number) => void;
+}) {
+  const last = COL_STEPS.length - 1;
+  const minValue = COL_STEPS[minIndex];
+  const maxValue = COL_STEPS[maxIndex];
+  const active = minIndex > 0 || maxIndex < last;
+
+  return (
+    <div
+      className={`rounded-xl border px-3 py-2.5 ${
+        active ? "border-[#E6D5A3] bg-[#FBF6E8]" : "border-stone-200 bg-[#FBF9F6]"
+      }`}
+    >
+      <div className="mb-1.5 flex items-center justify-between text-[13px]">
+        <span className="text-stone-500">Cost of living</span>
+        <span className="font-semibold tabular-nums text-stone-800">
+          {colSummary(minValue, maxValue)}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <label>
+          <span className="mb-1 flex items-center justify-between text-[11px] text-stone-400">
+            Min
+            <span className="tabular-nums text-stone-600">{colStepLabel(minValue)}</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={1}
+            value={minIndex}
+            aria-label="Minimum cost of living"
+            onChange={(e) => onChangeMin(Number(e.target.value))}
+            className="w-full accent-[#C4A35A]"
+          />
+        </label>
+        <label>
+          <span className="mb-1 flex items-center justify-between text-[11px] text-stone-400">
+            Max
+            <span className="tabular-nums text-stone-600">{colStepLabel(maxValue)}</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={1}
+            value={maxIndex}
+            aria-label="Maximum cost of living"
             onChange={(e) => onChangeMax(Number(e.target.value))}
             className="w-full accent-[#C4A35A]"
           />
