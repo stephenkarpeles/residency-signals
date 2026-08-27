@@ -4,6 +4,7 @@ import { SignalSidebar } from "@/components/SignalSidebar";
 import { ProgramModal } from "@/components/ProgramModal";
 import { DndRoot } from "@/components/DndRoot";
 import { AppProvider, useApp } from "@/context/AppProvider";
+import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import type { ReactNode } from "react";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -32,11 +33,11 @@ function Shell({ children }: { children: ReactNode }) {
           Signals
         </button>
         <p className="text-[13px] text-stone-500">
-          <span className="font-medium text-[#8A6A2A]">{goldCount}/3 gold</span>
+          <span className="font-medium text-[#8A6A2A]">{goldCount}/{GOLD_SLOTS} gold</span>
           <span className="mx-1.5 text-stone-300">·</span>
-          <span className="font-medium text-stone-600">{silverCount}/15 silver</span>
+          <span className="font-medium text-stone-600">{silverCount}/{SILVER_SLOTS} silver</span>
           <span className="mx-1.5 text-stone-300">·</span>
-          <span className="font-medium text-[#3F5C51]">{consideringCount}/10 considering</span>
+          <span className="font-medium text-[#3F5C51]">{consideringCount}/{CONSIDERING_SLOTS} considering</span>
         </p>
       </header>
       <main className="px-4 py-8 sm:px-8 lg:pl-[332px] lg:pr-10 lg:py-10">{children}</main>

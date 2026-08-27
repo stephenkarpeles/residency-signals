@@ -4,6 +4,7 @@ import { useDndContext, useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useApp } from "@/context/AppProvider";
 import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { SignalSlot } from "@/components/SignalSlot";
@@ -19,6 +20,7 @@ export function SignalSidebar() {
   const { selections, goldCount, silverCount, consideringCount, sidebarOpen, setSidebarOpen } =
     useApp();
   const pathname = usePathname();
+  const [listScrolled, setListScrolled] = useState(false);
 
   return (
     <>
@@ -81,7 +83,15 @@ export function SignalSidebar() {
           })}
         </nav>
 
-        <div className="mt-5 flex-1 space-y-5 overflow-y-auto px-3 pt-1 pb-6">
+        <div
+          className={`mt-5 min-h-0 flex-1 space-y-5 overflow-y-auto px-3 pt-1 pb-6 ${
+            listScrolled ? "border-t border-stone-300/90" : "border-t border-transparent"
+          }`}
+          onScroll={(event) => {
+            const next = event.currentTarget.scrollTop > 2;
+            setListScrolled((prev) => (prev === next ? prev : next));
+          }}
+        >
           <SlotGroup
             tier="gold"
             title="Gold signals"

@@ -2,7 +2,7 @@ import type { FactorDef, FactorId, Weights } from "./types";
 
 export const GOLD_SLOTS = 3;
 export const SILVER_SLOTS = 15;
-export const CONSIDERING_SLOTS = 10;
+export const CONSIDERING_SLOTS = 20;
 
 export const FACTORS: FactorDef[] = [
   {
