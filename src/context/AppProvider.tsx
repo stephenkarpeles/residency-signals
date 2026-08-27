@@ -1,6 +1,5 @@
 "use client";
 
-import { arrayMove } from "@dnd-kit/sortable";
 import {
   createContext,
   useCallback,
@@ -115,7 +114,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
             return current;
           }
           placed = true;
-          return { ...normalized, [tier]: arrayMove(normalized[tier], fromIndex, index) };
+          const slots = [...normalized[tier]];
+          const displaced = slots[index];
+          slots[index] = slots[fromIndex];
+          slots[fromIndex] = displaced;
+          return { ...normalized, [tier]: slots };
         }
         const cleared = withoutProgram(current, programId);
         const slots = [...cleared[tier]];
