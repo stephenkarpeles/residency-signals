@@ -276,7 +276,7 @@ export function ExploreView() {
           Explore
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">
-          Find your 3 gold and 15 silver signals
+          Assign your 3 Gold and 15 Silver signals
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
           Search {PROGRAMS.length} ACGME programs, then drag one into an open gold, silver, or
