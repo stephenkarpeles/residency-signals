@@ -28,9 +28,10 @@ function Shell({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
-          className="rounded-xl bg-white px-3 py-2 text-[13px] font-medium shadow-sm ring-1 ring-stone-200"
+          aria-label="Open signals panel"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-stone-800 shadow-sm ring-1 ring-stone-200"
         >
-          Signals
+          <MenuIcon />
         </button>
         <p className="text-[13px] text-stone-500">
           <span className="font-medium text-[#8A6A2A]">{goldCount}/{GOLD_SLOTS} gold</span>
@@ -42,5 +43,18 @@ function Shell({ children }: { children: ReactNode }) {
       </header>
       <main className="px-4 py-8 sm:px-8 lg:pl-[332px] lg:pr-10 lg:py-10">{children}</main>
     </div>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M3 4.5h10M3 8h10M3 11.5h10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }

@@ -14,7 +14,7 @@ export function SelectionsView() {
   return (
     <div className="mx-auto max-w-6xl">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="max-w-2xl">
+        <div className="min-w-0 max-w-2xl">
           <p className="text-[12px] font-medium tracking-[0.16em] text-[#8A6A2A] uppercase">
             Selections
           </p>
@@ -31,7 +31,7 @@ export function SelectionsView() {
           <button
             type="button"
             onClick={() => setConfirmClear(true)}
-            className="self-start rounded-xl border border-stone-200 bg-white px-3 py-2 text-[13px] text-stone-600 hover:bg-stone-50"
+            className="shrink-0 self-start whitespace-nowrap rounded-xl border border-stone-200 bg-white px-3 py-2 text-[13px] text-stone-600 hover:bg-stone-50"
           >
             Clear all
           </button>
