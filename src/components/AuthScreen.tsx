@@ -181,10 +181,7 @@ function Brand() {
       <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6E8B80] to-[#3F5C51] text-sm font-semibold text-white shadow-sm">
         RF
       </span>
-      <div>
-        <p className="text-[15px] font-semibold tracking-tight text-stone-900">Residency Finder</p>
-        <p className="text-[11px] text-stone-500">Residency decisions</p>
-      </div>
+      <p className="text-[15px] font-semibold tracking-tight text-stone-900">Residency Finder</p>
     </div>
   );
 }
