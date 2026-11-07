@@ -5,6 +5,10 @@ const SELECTIONS_KEY = "obgyn-signals:selections:v1";
 const WEIGHTS_KEY = "obgyn-signals:weights:v1";
 const SPECIALTIES_KEY = "residency-signals:specialties:v1";
 
+function specialtiesKey(userId: string) {
+  return `${SPECIALTIES_KEY}:${userId}`;
+}
+
 export function emptySelections(): Selections {
   return normalizeSelections({});
 }
@@ -53,10 +57,10 @@ export function normalizeSpecialties(value: unknown): string[] {
   return [...new Set(names)];
 }
 
-export function loadSpecialties(): string[] {
-  if (typeof window === "undefined") return [];
+export function loadSpecialties(userId: string): string[] {
+  if (typeof window === "undefined" || !userId) return [];
   try {
-    const raw = window.localStorage.getItem(SPECIALTIES_KEY);
+    const raw = window.localStorage.getItem(specialtiesKey(userId));
     if (!raw) return [];
     return normalizeSpecialties(JSON.parse(raw));
   } catch {
@@ -64,8 +68,9 @@ export function loadSpecialties(): string[] {
   }
 }
 
-export function saveSpecialties(specialties: string[]) {
-  window.localStorage.setItem(SPECIALTIES_KEY, JSON.stringify(specialties));
+export function saveSpecialties(userId: string, specialties: string[]) {
+  if (!userId) return;
+  window.localStorage.setItem(specialtiesKey(userId), JSON.stringify(specialties));
 }
 
 function padSlots(slots: (string | null)[] | undefined, length: number) {

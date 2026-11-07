@@ -100,8 +100,8 @@ export function WeightsView() {
               ) : null}
               {openThis && active ? (
                 <div className="mt-4 rounded-2xl bg-[#F6F3EE] p-4">
-                  <label className="block text-[13px] font-medium text-stone-700">
-                    New weight for {active.short}
+                  <label className="flex items-center gap-3 text-[13px] font-medium text-stone-700">
+                    <span>New weight for {active.short}</span>
                     <input
                       type="number"
                       min={0}
@@ -112,7 +112,7 @@ export function WeightsView() {
                         setDraft(Number.isFinite(next) ? Math.max(0, Math.min(100, Math.round(next))) : 0);
                         setCounterpart("");
                       }}
-                      className="mt-1.5 w-28 rounded-xl bg-white px-3 py-2 text-[15px] tabular-nums ring-1 ring-stone-200 outline-none focus:ring-2 focus:ring-[#C4A35A]"
+                      className="w-28 shrink-0 rounded-xl bg-white px-3 py-2 text-[15px] tabular-nums ring-1 ring-stone-200 outline-none focus:ring-2 focus:ring-[#C4A35A]"
                     />
                   </label>
                   {delta === 0 ? (

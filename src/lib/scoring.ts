@@ -43,6 +43,8 @@ export function factorScore(program: Program, id: FactorId): number | null {
 }
 
 export function matchScore(program: Program, weights: Weights): number | null {
+  // A state-level college score alone is not enough to rank a program.
+  if (program.coverage === "basic") return null;
   const scored = FACTORS.flatMap((factor) => {
     const weight = weights[factor.id] ?? 0;
     if (weight <= 0) return [];

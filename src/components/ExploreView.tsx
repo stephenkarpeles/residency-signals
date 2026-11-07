@@ -2,14 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProgramCard } from "@/components/ProgramCard";
+import { SpecialtyPicker } from "@/components/SpecialtyPicker";
 import { useApp } from "@/context/AppProvider";
+import { specialtyLabel } from "@/lib/catalog";
+import { OBGYN_SPECIALTY, programsForSpecialties } from "@/lib/directory";
 import {
   DELIVERY_BANDS,
-  PROGRAMS,
   REGIONS,
   STATE_NAMES,
-  STATES,
   deliveryBandId,
+  isEnrichedProgram,
 } from "@/lib/programs";
 import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
 import type { DeliveryBandId, ProgramType, SortKey } from "@/lib/types";
@@ -160,8 +162,22 @@ function tokenMatchesHay(token: string, hay: string): boolean {
     );
 }
 
+function compareNullable(a: number | null, b: number | null, direction: "asc" | "desc") {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return direction === "asc" ? a - b : b - a;
+}
+
 export function ExploreView() {
-  const { weights } = useApp();
+  const {
+    weights,
+    specialties,
+    chooseSpecialty,
+    setSpecialties,
+    setChooseSpecialty,
+    selections,
+  } = useApp();
   const [query, setQuery] = useState("");
   const [regions, setRegions] = useState<string[]>([]);
   const [states, setStates] = useState<string[]>([]);
@@ -176,21 +192,36 @@ export function ExploreView() {
   const [waterfront, setWaterfront] = useState(false);
   const [sort, setSort] = useState<SortKey>("score");
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  const programs = useMemo(() => programsForSpecialties(specialties), [specialties]);
+  const clinical = programs.some((program) => program.coverage === "full");
+  const placeStats = programs.some((program) => program.cityPopulation != null);
   const advancedActive =
-    types.length > 0 ||
-    minPopIndex > 0 ||
-    maxPopIndex < POPULATION_STEPS.length - 1 ||
-    minColIndex > 0 ||
-    maxColIndex < COL_STEPS.length - 1;
+    (clinical && types.length > 0) ||
+    (placeStats &&
+      (minPopIndex > 0 ||
+        maxPopIndex < POPULATION_STEPS.length - 1 ||
+        minColIndex > 0 ||
+        maxColIndex < COL_STEPS.length - 1));
+  const showSpecialty = specialties.length > 1;
+  const suggested = useMemo(() => {
+    if (specialties.length > 0) return specialties;
+    const ids = [...selections.gold, ...selections.silver, ...selections.considering].filter(
+      (id): id is string => Boolean(id),
+    );
+    if (ids.some((id) => isEnrichedProgram(id))) return [OBGYN_SPECIALTY];
+    return [];
+  }, [specialties, selections]);
 
   const stateOptions = useMemo(() => {
-    if (regions.length === 0) return STATES;
-    return STATES.filter((code) =>
-      PROGRAMS.some((program) => program.state === code && regions.includes(program.region)),
+    const codes = [...new Set(programs.map((program) => program.state))].sort();
+    if (regions.length === 0) return codes;
+    return codes.filter((code) =>
+      programs.some((program) => program.state === code && regions.includes(program.region)),
     );
-  }, [regions]);
+  }, [programs, regions]);
 
   useEffect(() => {
     setStates((current) => {
@@ -199,25 +230,67 @@ export function ExploreView() {
     });
   }, [stateOptions]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [
+    specialties,
+    query,
+    regions,
+    states,
+    types,
+    deliveryBands,
+    minDO,
+    minMD,
+    minPopIndex,
+    maxPopIndex,
+    minColIndex,
+    maxColIndex,
+    waterfront,
+    sort,
+  ]);
+
+  useEffect(() => {
+    if (!clinical && (sort === "classSize" || sort === "deliveries" || sort === "do")) {
+      setSort("score");
+    }
+    if (!placeStats && (sort === "col" || sort === "population" || sort === "schools")) {
+      setSort("score");
+    }
+  }, [clinical, placeStats, sort]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const rows = PROGRAMS.filter((program) => {
+    const populationActive = minPopIndex > 0 || maxPopIndex < POPULATION_STEPS.length - 1;
+    const colActive = minColIndex > 0 || maxColIndex < COL_STEPS.length - 1;
+    const rows = programs.filter((program) => {
       if (regions.length > 0 && !regions.includes(program.region)) return false;
       if (states.length > 0 && !states.includes(program.state)) return false;
-      if (types.length > 0 && !types.includes(program.type)) return false;
+      if (clinical && types.length > 0 && (program.type == null || !types.includes(program.type))) {
+        return false;
+      }
       if (
+        clinical &&
         deliveryBands.length > 0 &&
-        !deliveryBands.includes(deliveryBandId(program.annualDeliveries))
+        (program.annualDeliveries == null ||
+          !deliveryBands.includes(deliveryBandId(program.annualDeliveries)))
       ) {
         return false;
       }
-      if (program.percentDO < minDO) return false;
-      if (program.percentMD < minMD) return false;
-      if (program.cityPopulation < POPULATION_STEPS[minPopIndex]) return false;
-      if (program.cityPopulation > POPULATION_STEPS[maxPopIndex]) return false;
-      if (program.costOfLiving < COL_STEPS[minColIndex]) return false;
-      if (program.costOfLiving > COL_STEPS[maxColIndex]) return false;
-      if (waterfront && program.waterProximity < 70) return false;
+      if (clinical && minDO > 0 && (program.percentDO == null || program.percentDO < minDO)) return false;
+      if (clinical && minMD > 0 && (program.percentMD == null || program.percentMD < minMD)) return false;
+      if (placeStats && populationActive) {
+        if (program.cityPopulation == null) return false;
+        if (program.cityPopulation < POPULATION_STEPS[minPopIndex]) return false;
+        if (program.cityPopulation > POPULATION_STEPS[maxPopIndex]) return false;
+      }
+      if (placeStats && colActive) {
+        if (program.costOfLiving == null) return false;
+        if (program.costOfLiving < COL_STEPS[minColIndex]) return false;
+        if (program.costOfLiving > COL_STEPS[maxColIndex]) return false;
+      }
+      if (placeStats && waterfront && (program.waterProximity == null || program.waterProximity < 70)) {
+        return false;
+      }
       if (!q) return true;
       const nick = CITY_NICKNAMES[program.city] ?? "";
       const programNick = PROGRAM_NICKNAMES[program.id] ?? "";
@@ -233,27 +306,42 @@ export function ExploreView() {
         case "name":
           return a.shortName.localeCompare(b.shortName);
         case "col":
-          return a.costOfLiving - b.costOfLiving;
+          return compareNullable(a.costOfLiving, b.costOfLiving, "asc") || a.shortName.localeCompare(b.shortName);
         case "classSize":
-          return b.classSize - a.classSize;
+          return compareNullable(a.classSize, b.classSize, "desc") || a.shortName.localeCompare(b.shortName);
         case "deliveries":
-          return b.annualDeliveries - a.annualDeliveries;
-        case "do":
-          return b.percentDO - a.percentDO;
-        case "population":
-          return b.cityPopulation - a.cityPopulation;
-        case "schools":
           return (
-            b.middleSchoolQuality +
-            b.highSchoolQuality -
-            (a.middleSchoolQuality + a.highSchoolQuality)
+            compareNullable(a.annualDeliveries, b.annualDeliveries, "desc") ||
+            a.shortName.localeCompare(b.shortName)
           );
+        case "do":
+          return compareNullable(a.percentDO, b.percentDO, "desc") || a.shortName.localeCompare(b.shortName);
+        case "population":
+          return (
+            compareNullable(a.cityPopulation, b.cityPopulation, "desc") ||
+            a.shortName.localeCompare(b.shortName)
+          );
+        case "schools": {
+          const aSchools =
+            a.middleSchoolQuality != null && a.highSchoolQuality != null
+              ? a.middleSchoolQuality + a.highSchoolQuality
+              : null;
+          const bSchools =
+            b.middleSchoolQuality != null && b.highSchoolQuality != null
+              ? b.middleSchoolQuality + b.highSchoolQuality
+              : null;
+          return compareNullable(aSchools, bSchools, "desc") || a.shortName.localeCompare(b.shortName);
+        }
         default:
-          return matchScore(b, weights) - matchScore(a, weights);
+          return compareNullable(matchScore(a, weights), matchScore(b, weights), "desc") ||
+            a.shortName.localeCompare(b.shortName);
       }
     });
     return rows;
   }, [
+    programs,
+    clinical,
+    placeStats,
     query,
     regions,
     states,
@@ -270,6 +358,20 @@ export function ExploreView() {
     weights,
   ]);
 
+  if (specialties.length === 0 || chooseSpecialty) {
+    return (
+      <SpecialtyPicker
+        key={specialties.join("|") || "new"}
+        initial={specialties.length > 0 ? specialties : suggested}
+        onSave={setSpecialties}
+        onCancel={specialties.length > 0 ? () => setChooseSpecialty(false) : undefined}
+      />
+    );
+  }
+
+  const specialtyNames = specialties.map((name) => specialtyLabel(name)).join(", ");
+  const needsDirectoryNote = programs.some((program) => program.coverage !== "full");
+
   return (
     <div className="mx-auto max-w-6xl">
       <header className="max-w-2xl">
@@ -279,11 +381,34 @@ export function ExploreView() {
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">
           Assign your 3 Gold and 15 Silver signals
         </h1>
-        <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          Search {PROGRAMS.length} ACGME programs, then drag one into an open gold, silver, or
-          considering slot on the left — or tap Gold / Silver / Consider on a card. Scores update
-          live from your Important Factors.
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {specialties.map((name) => (
+            <span
+              key={name}
+              className="rounded-full bg-white px-3 py-1 text-[12px] font-medium text-stone-700 ring-1 ring-stone-200"
+            >
+              {name}
+            </span>
+          ))}
+          <button
+            type="button"
+            onClick={() => setChooseSpecialty(true)}
+            className="rounded-full px-3 py-1 text-[12px] font-medium text-[#8A6A2A] hover:bg-white"
+          >
+            Change
+          </button>
+        </div>
+        <p className="mt-3 text-[15px] leading-relaxed text-stone-500">
+          Search {programs.length.toLocaleString()} {specialtyNames} programs, then drag one into an
+          open gold, silver, or considering slot on the left — or tap Gold / Silver / Consider on a
+          card. Scores update live from your Important Factors.
         </p>
+        {needsDirectoryNote ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-stone-400">
+            Detailed program stats are included for obstetrics and gynecology. Other specialties
+            come from the ACGME directory, and scores use city and state factors when we have them.
+          </p>
+        ) : null}
       </header>
 
       <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_2px_rgba(28,25,23,0.04)]">
@@ -328,12 +453,12 @@ export function ExploreView() {
           >
             <option value="score">Sort: Match Score</option>
             <option value="name">Sort: Name</option>
-            <option value="col">Sort: Cost of Living</option>
-            <option value="classSize">Sort: Class Size</option>
-            <option value="deliveries">Sort: Deliveries</option>
-            <option value="do">Sort: % DO</option>
-            <option value="population">Sort: City Size</option>
-            <option value="schools">Sort: School Quality</option>
+            {placeStats ? <option value="col">Sort: Cost of Living</option> : null}
+            {clinical ? <option value="classSize">Sort: Class Size</option> : null}
+            {clinical ? <option value="deliveries">Sort: Deliveries</option> : null}
+            {clinical ? <option value="do">Sort: % DO</option> : null}
+            {placeStats ? <option value="population">Sort: City Size</option> : null}
+            {placeStats ? <option value="schools">Sort: School Quality</option> : null}
           </select>
         </div>
 
@@ -346,35 +471,42 @@ export function ExploreView() {
             options={stateOptions}
             formatOption={(code) => `${code} · ${STATE_NAMES[code] ?? code}`}
           />
-          <MultiSelect
-            label="Deliveries"
-            values={deliveryBands}
-            onChange={setDeliveryBands}
-            options={DELIVERY_BANDS.map((band) => band.id)}
-            formatOption={(id) =>
-              DELIVERY_BANDS.find((band) => band.id === (id as DeliveryBandId))?.label ?? id
-            }
-          />
-          <Toggle pressed={waterfront} onClick={() => setWaterfront((v) => !v)}>
-            Near water
-          </Toggle>
+          {clinical ? (
+            <MultiSelect
+              label="Deliveries"
+              values={deliveryBands}
+              onChange={setDeliveryBands}
+              options={DELIVERY_BANDS.map((band) => band.id)}
+              formatOption={(id) =>
+                DELIVERY_BANDS.find((band) => band.id === (id as DeliveryBandId))?.label ?? id
+              }
+            />
+          ) : null}
+          {placeStats ? (
+            <Toggle pressed={waterfront} onClick={() => setWaterfront((v) => !v)}>
+              Near water
+            </Toggle>
+          ) : null}
         </div>
 
-        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <PercentSlider
-            label="Min DO %"
-            value={minDO}
-            onChange={setMinDO}
-            accent="gold"
-          />
-          <PercentSlider
-            label="Min MD %"
-            value={minMD}
-            onChange={setMinMD}
-            accent="green"
-          />
-        </div>
+        {clinical ? (
+          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <PercentSlider
+              label="Min DO %"
+              value={minDO}
+              onChange={setMinDO}
+              accent="gold"
+            />
+            <PercentSlider
+              label="Min MD %"
+              value={minMD}
+              onChange={setMinMD}
+              accent="green"
+            />
+          </div>
+        ) : null}
 
+        {clinical || placeStats ? (
         <button
           type="button"
           aria-expanded={advancedOpen}
@@ -386,41 +518,48 @@ export function ExploreView() {
           {advancedOpen ? "Hide advanced filters" : "Advanced filters"}
           {!advancedOpen && advancedActive ? " · on" : ""}
         </button>
+        ) : null}
 
-        {advancedOpen ? (
+        {advancedOpen && (clinical || placeStats) ? (
           <div className="mt-3 space-y-2">
-            <MultiSelect
-              label="Type"
-              values={types}
-              onChange={setTypes}
-              options={TYPES}
-              emptyLabel="Any type"
-              formatOption={(value) => TYPE_LABELS[value as ProgramType] ?? value}
-            />
-            <PopulationSlider
-              minIndex={minPopIndex}
-              maxIndex={maxPopIndex}
-              onChangeMin={(index) => {
-                setMinPopIndex(index);
-                if (index > maxPopIndex) setMaxPopIndex(index);
-              }}
-              onChangeMax={(index) => {
-                setMaxPopIndex(index);
-                if (index < minPopIndex) setMinPopIndex(index);
-              }}
-            />
-            <ColSlider
-              minIndex={minColIndex}
-              maxIndex={maxColIndex}
-              onChangeMin={(index) => {
-                setMinColIndex(index);
-                if (index > maxColIndex) setMaxColIndex(index);
-              }}
-              onChangeMax={(index) => {
-                setMaxColIndex(index);
-                if (index < minColIndex) setMinColIndex(index);
-              }}
-            />
+            {clinical ? (
+              <MultiSelect
+                label="Type"
+                values={types}
+                onChange={setTypes}
+                options={TYPES}
+                emptyLabel="Any type"
+                formatOption={(value) => TYPE_LABELS[value as ProgramType] ?? value}
+              />
+            ) : null}
+            {placeStats ? (
+              <>
+                <PopulationSlider
+                  minIndex={minPopIndex}
+                  maxIndex={maxPopIndex}
+                  onChangeMin={(index) => {
+                    setMinPopIndex(index);
+                    if (index > maxPopIndex) setMaxPopIndex(index);
+                  }}
+                  onChangeMax={(index) => {
+                    setMaxPopIndex(index);
+                    if (index < minPopIndex) setMinPopIndex(index);
+                  }}
+                />
+                <ColSlider
+                  minIndex={minColIndex}
+                  maxIndex={maxColIndex}
+                  onChangeMin={(index) => {
+                    setMinColIndex(index);
+                    if (index > maxColIndex) setMaxColIndex(index);
+                  }}
+                  onChangeMax={(index) => {
+                    setMaxColIndex(index);
+                    if (index < minColIndex) setMinColIndex(index);
+                  }}
+                />
+              </>
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -430,10 +569,21 @@ export function ExploreView() {
       </p>
 
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {filtered.map((program) => (
-          <ProgramCard key={program.id} program={program} />
+        {(filtered.length > 360 ? filtered.slice(0, page * 72) : filtered).map((program) => (
+          <ProgramCard key={program.id} program={program} showSpecialty={showSpecialty} />
         ))}
       </div>
+      {filtered.length > 360 && page * 72 < filtered.length ? (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setPage((current) => current + 1)}
+            className="rounded-xl bg-white px-4 py-2 text-[13px] font-medium text-stone-700 ring-1 ring-stone-200 hover:bg-[#FBF9F6]"
+          >
+            Show more · {(filtered.length - page * 72).toLocaleString()} left
+          </button>
+        </div>
+      ) : null}
 
       {filtered.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-white/60 px-6 py-16 text-center">

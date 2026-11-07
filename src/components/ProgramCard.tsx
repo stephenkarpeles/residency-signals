@@ -73,20 +73,22 @@ export function ProgramCard({
             <p className="mt-0.5 text-[12px] text-stone-400">{program.specialty}</p>
           ) : null}
         </div>
-        <div
-          className="rounded-2xl bg-[#F3E6C0] px-2.5 py-1.5 text-right"
-          title={
-            partial
-              ? "Scored from the city and state factors we have. Program-specific stats are not in for this specialty yet."
-              : undefined
-          }
-        >
-          <p className="text-[10px] tracking-wide text-[#8A6A2A] uppercase">Match</p>
-          <p className="text-lg leading-none font-semibold tabular-nums text-[#6F5420]">
-            {score == null ? "—" : score.toFixed(1)}
-          </p>
-          {partial ? <p className="mt-0.5 text-[9px] text-[#8A6A2A]">City data</p> : null}
-        </div>
+        {score == null ? null : (
+          <div
+            className="rounded-2xl bg-[#F3E6C0] px-2.5 py-1.5 text-right"
+            title={
+              partial
+                ? "Scored from the city and state factors we have. Program-specific stats are not in for this specialty yet."
+                : undefined
+            }
+          >
+            <p className="text-[10px] tracking-wide text-[#8A6A2A] uppercase">Match</p>
+            <p className="text-lg leading-none font-semibold tabular-nums text-[#6F5420]">
+              {score.toFixed(1)}
+            </p>
+            {partial ? <p className="mt-0.5 text-[9px] text-[#8A6A2A]">City data</p> : null}
+          </div>
+        )}
       </div>
 
       {stats.length > 0 ? (

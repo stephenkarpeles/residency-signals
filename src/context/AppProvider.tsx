@@ -117,7 +117,7 @@ export function AppProvider({ children, userId }: { children: ReactNode; userId:
       const supabase = getSupabase();
       const localSelections = loadSelections();
       const localWeights = normalizeWeights(loadWeights());
-      const localSpecialties = knownSpecialties(loadSpecialties());
+      const localSpecialties = knownSpecialties(loadSpecialties(userId));
       if (!supabase) {
         if (!cancelled) {
           setSelections(localSelections);
@@ -169,7 +169,7 @@ export function AppProvider({ children, userId }: { children: ReactNode; userId:
         if (insertError) setSyncError(insertError.message);
       }
       if (cancelled) return;
-      saveSpecialties(nextSpecialties);
+      saveSpecialties(userId, nextSpecialties);
       setSelections(nextSelections);
       setWeights(nextWeights);
       setSpecialtiesState(nextSpecialties);
@@ -204,10 +204,10 @@ export function AppProvider({ children, userId }: { children: ReactNode; userId:
 
   const setSpecialties = useCallback((next: string[]) => {
     const cleaned = knownSpecialties(next);
-    saveSpecialties(cleaned);
+    saveSpecialties(userId, cleaned);
     setSpecialtiesState(cleaned);
     setChooseSpecialty(false);
-  }, []);
+  }, [userId]);
 
   const findSlot = useCallback(
     (programId: string) => {

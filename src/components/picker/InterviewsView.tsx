@@ -114,7 +114,7 @@ export function InterviewsView() {
         </p>
       </header>
 
-      <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
+      <div className="mt-6 flex flex-wrap gap-2">
         <Chip
           active={specialty === ""}
           onClick={() => {
