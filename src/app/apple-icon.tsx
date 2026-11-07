@@ -15,9 +15,9 @@ export default function AppleIcon() {
           justifyContent: "center",
           background: "#3F5C51",
           color: "white",
-          fontSize: 108,
+          fontSize: 84,
           fontWeight: 700,
-          letterSpacing: "-0.06em",
+          letterSpacing: "0.02em",
         }}
       >
         RF
