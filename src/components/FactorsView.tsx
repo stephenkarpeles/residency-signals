@@ -35,7 +35,7 @@ export function FactorsView() {
   );
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-6xl">
       <header className="max-w-2xl">
         <p className="text-[12px] font-medium tracking-[0.16em] text-[#8A6A2A] uppercase">
           Weights
@@ -154,7 +154,7 @@ export function FactorsView() {
         </h2>
         {preview.length === 0 ? (
           <p className="mt-4 text-[14px] text-stone-500">
-            Choose a specialty in Explore to see how these weights rank programs.
+            Choose a specialty in the top bar to see how these weights rank programs.
           </p>
         ) : (
         <div className="mt-4 divide-y divide-stone-100 overflow-hidden rounded-2xl border border-stone-200/80 bg-white">

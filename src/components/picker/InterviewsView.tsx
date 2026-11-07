@@ -8,22 +8,21 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type ReactNode,
 } from "react";
 import Link from "next/link";
+import { useApp } from "@/context/AppProvider";
 import { usePicker } from "@/context/PickerProvider";
 import {
   CATALOG_GENERATED,
-  SPECIALTIES,
-  SPECIALTY_CHIPS,
   getCatalogProgram,
   searchCatalog,
+  specialtyLabel,
   type CatalogProgram,
 } from "@/lib/catalog";
 
 export function InterviewsView() {
   const { board, addProgram, removeProgram, clearPrograms } = usePicker();
-  const [specialty, setSpecialty] = useState("");
+  const { specialties } = useApp();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
@@ -33,18 +32,20 @@ export function InterviewsView() {
   const listId = useId();
   const searchId = useId();
   const selected = useMemo(() => new Set(board.programIds), [board.programIds]);
+  const specialtyKey = specialties.join("|");
+  const specialtyNames = specialties.map((name) => specialtyLabel(name)).join(", ");
 
-  const results = useMemo(() => searchCatalog(query, specialty), [query, specialty]);
+  const results = useMemo(() => searchCatalog(query, specialties), [query, specialties]);
   const visible = results.matches;
   const showList = open;
 
   useEffect(() => {
     setHighlight(0);
-  }, [query, specialty]);
+  }, [query, specialtyKey]);
 
   useEffect(() => {
     setOpen(false);
-  }, [specialty]);
+  }, [specialtyKey]);
 
   useLayoutEffect(() => {
     if (!showList) return;
@@ -97,7 +98,7 @@ export function InterviewsView() {
     }
   }
 
-  const directoryCount = useMemo(() => searchCatalog("", specialty).total, [specialty]);
+  const directoryCount = useMemo(() => searchCatalog("", specialties).total, [specialties]);
 
   return (
     <div>
@@ -109,49 +110,13 @@ export function InterviewsView() {
           Where did you get an interview?
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          Add every program that invited you. Filter by specialty, then search. Next you will
-          rank this list one area at a time.
+          Add every program that invited you in {specialtyNames || "your specialty"}. Search, then
+          rank this list one area at a time. Change specialty from the top bar.
         </p>
       </header>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        <Chip
-          active={specialty === ""}
-          onClick={() => {
-            setSpecialty("");
-            setOpen(false);
-          }}
-        >
-          All
-        </Chip>
-        {SPECIALTY_CHIPS.map((chip) => (
-          <Chip
-            key={chip.specialty}
-            active={specialty === chip.specialty}
-            onClick={() => setSpecialty(chip.specialty)}
-          >
-            {chip.label}
-          </Chip>
-        ))}
-      </div>
-
-      <label className="mt-4 block max-w-md">
-        <span className="text-[13px] font-medium text-stone-700">Specialty</span>
-        <select
-          value={specialty}
-          onChange={(event) => setSpecialty(event.target.value)}
-          className="mt-1.5 w-full rounded-xl bg-white py-2.5 pr-9 pl-3 text-[14px] text-stone-800 ring-1 ring-stone-200 outline-none focus:ring-2 focus:ring-[#C4A35A]"
-        >
-          <option value="">All specialties</option>
-          {SPECIALTIES.map((name) => (
-            <option key={name} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <p className="mt-2 text-[12px] text-stone-500">
-        {directoryCount.toLocaleString()} {specialty || "accredited"} programs in the ACGME
+      <p className="mt-6 text-[12px] text-stone-500">
+        {directoryCount.toLocaleString()} {specialtyNames || "residency"} programs in the ACGME
         directory, updated {CATALOG_GENERATED}.
       </p>
 
@@ -167,7 +132,7 @@ export function InterviewsView() {
             aria-expanded={showList}
             aria-controls={listId}
             aria-autocomplete="list"
-            placeholder={specialty ? "Search this specialty" : "Program, city, or state"}
+            placeholder={specialties.length > 1 ? "Search your specialties" : "Search this specialty"}
             onChange={(event) => {
               setQuery(event.target.value);
               setOpen(true);
@@ -334,29 +299,5 @@ export function InterviewsView() {
         </ul>
       </section>
     </div>
-  );
-}
-
-function Chip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 rounded-xl px-3 py-1.5 text-[13px] transition-colors ${
-        active
-          ? "bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-200/70 hover:bg-[#F3E6C0] hover:ring-[#E6D5A3]"
-          : "text-stone-600 hover:bg-white hover:text-stone-900"
-      }`}
-    >
-      {children}
-    </button>
   );
 }

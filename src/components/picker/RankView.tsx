@@ -72,7 +72,7 @@ export function RankView() {
         </p>
       </header>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-2 py-1">
         {PICKER_CRITERIA.map((item, itemIndex) => {
           const active = itemIndex === index;
           const done = board.confirmed.includes(item.id);
@@ -84,10 +84,10 @@ export function RankView() {
                 if (itemIndex !== index) acceptOrder(criterion.id);
                 setIndex(itemIndex);
               }}
-              className={`rounded-xl px-3 py-1.5 text-[13px] whitespace-nowrap transition-colors ${
+              className={`inline-flex h-8 items-center rounded-xl border px-3 text-[13px] leading-none whitespace-nowrap transition-colors ${
                 active
-                  ? "bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-200/70"
-                  : "text-stone-600 hover:bg-white/70 hover:text-stone-900"
+                  ? "border-stone-300 bg-white font-medium text-stone-900 shadow-sm"
+                  : "border-transparent text-stone-600 hover:border-stone-200 hover:bg-white/70 hover:text-stone-900"
               }`}
             >
               {item.short}

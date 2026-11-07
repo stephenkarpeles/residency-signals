@@ -1,18 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="RF">
-  <defs>
-    <linearGradient id="mark" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6E8B80"/>
-      <stop offset="1" stop-color="#3F5C51"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="9" fill="url(#mark)"/>
+  <rect width="32" height="32" rx="7" fill="#3F5C51"/>
   <text
     x="16"
-    y="21.5"
+    y="17"
     text-anchor="middle"
+    dominant-baseline="central"
     fill="#fff"
     font-family="ui-sans-serif, system-ui, sans-serif"
-    font-size="13"
+    font-size="20"
     font-weight="700"
     letter-spacing="-0.04em"
   >RF</text>

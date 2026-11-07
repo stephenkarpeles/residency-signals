@@ -87,7 +87,7 @@ export function WeightsView() {
                   <button
                     type="button"
                     onClick={() => (openThis ? setEditing(null) : open(criterion.id))}
-                    className="rounded-xl px-3 py-1.5 text-[13px] font-medium text-stone-700 ring-1 ring-stone-200 hover:bg-stone-50"
+                    className="inline-flex h-8 items-center rounded-xl border border-stone-300 bg-white px-3 text-[13px] leading-none font-medium text-stone-700 hover:bg-stone-50"
                   >
                     {openThis ? "Close" : "Change"}
                   </button>

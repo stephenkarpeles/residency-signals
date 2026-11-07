@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   RESIDENCY_SPECIALTIES,
   SPECIALTIES,
@@ -15,15 +15,25 @@ export function SpecialtyPicker({
   initial,
   onSave,
   onCancel,
+  autoFocus = false,
 }: {
   initial: string[];
   onSave: (specialties: string[]) => void;
   onCancel?: () => void;
+  autoFocus?: boolean;
 }) {
   const [selected, setSelected] = useState<string[]>(initial);
   const [query, setQuery] = useState("");
   const [othersOpen, setOthersOpen] = useState(false);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
+
+  useEffect(() => {
+    if (!autoFocus) return;
+    const field = document.getElementById("specialty-search");
+    if (!(field instanceof HTMLInputElement)) return;
+    field.focus();
+    field.scrollIntoView({ block: "center" });
+  }, [autoFocus]);
 
   const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const searching = tokens.length > 0;
@@ -44,17 +54,17 @@ export function SpecialtyPicker({
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-6xl">
       <header className="max-w-2xl">
         <p className="text-[12px] font-medium tracking-[0.16em] text-[#8A6A2A] uppercase">
-          Explore
+          Specialty
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">
-          Which specialty are you signaling?
+          Which specialty?
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          Pick one or more. This is saved to your account, so Explore opens on your programs next
-          time. You can change it later.
+          Pick one or more. This is saved to your account and used for signals and rankings. You
+          can change it from the top bar.
         </p>
       </header>
 
@@ -179,7 +189,7 @@ export function SpecialtyPicker({
             onClick={() => onSave(selected)}
             className="rounded-xl bg-[#3F5C51] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#344c43] disabled:opacity-40"
           >
-            {selected.length === 0 ? "Show programs" : `Show ${total.toLocaleString()} programs`}
+            Save
           </button>
         </div>
       </div>

@@ -20,7 +20,7 @@ export function SetupScreen() {
           Connect Supabase to sign in
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-stone-500">
-          Accounts save both the signal board and the interview picker. Add your project keys,
+          Accounts save both the signal board and the residency rankings. Add your project keys,
           run the SQL once, then restart the app.
         </p>
         <ol className="mt-6 space-y-3 text-[14px] leading-relaxed text-stone-700">
@@ -178,7 +178,7 @@ function EyeOffIcon() {
 function Brand() {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6E8B80] to-[#3F5C51] text-sm font-semibold text-white shadow-sm">
+      <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#3F5C51] text-sm font-semibold text-white shadow-sm">
         RF
       </span>
       <p className="text-[15px] font-semibold tracking-tight text-stone-900">Residency Finder</p>

@@ -67,7 +67,7 @@ export function BoardView() {
                 className="rounded-2xl bg-white p-5 ring-1 ring-stone-200/80"
               >
                 <div className="flex items-start gap-4">
-                  <p className="w-12 shrink-0 text-2xl font-semibold tabular-nums text-[#8A6A2A]">
+                  <p className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F3E6C0] px-2 text-xl font-semibold tabular-nums leading-none text-[#6F5420]">
                     #{index + 1}
                   </p>
                   <div className="min-w-0 flex-1">

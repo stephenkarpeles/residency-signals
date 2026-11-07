@@ -6,8 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useApp } from "@/context/AppProvider";
-import { specialtyLabel } from "@/lib/catalog";
 import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
+import { AccountMenu } from "@/components/AccountMenu";
 import { SignalSlot } from "@/components/SignalSlot";
 import type { SignalTier } from "@/lib/types";
 
@@ -25,8 +25,6 @@ export function SignalSidebar() {
     consideringCount,
     sidebarOpen,
     setSidebarOpen,
-    specialties,
-    setChooseSpecialty,
   } = useApp();
   const pathname = usePathname();
   const [listScrolled, setListScrolled] = useState(false);
@@ -47,7 +45,7 @@ export function SignalSidebar() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between px-5 pt-6 pb-4">
+        <div className="flex items-center justify-between border-b border-stone-300/80 bg-stone-200 px-5 py-4">
           <h2 className="px-1.5 text-[15px] font-semibold tracking-tight text-stone-900">
             Signals
           </h2>
@@ -61,7 +59,7 @@ export function SignalSidebar() {
           </button>
         </div>
 
-        <nav className="space-y-1 px-3">
+        <nav className="space-y-1 px-3 pt-3">
           {NAV.map((item) => {
             const active =
               item.href === "/"
@@ -72,10 +70,10 @@ export function SignalSidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`block rounded-xl px-3 py-2 text-[13px] transition-colors ${
+                className={`block rounded-lg px-3 py-1.5 text-[13px] transition-colors ${
                   active
-                    ? "bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-200/70 hover:bg-[#F3E6C0] hover:ring-[#E6D5A3]"
-                    : "text-stone-600 hover:bg-white hover:text-stone-900"
+                    ? "bg-stone-200/80 font-medium text-stone-900"
+                    : "text-stone-600 hover:bg-stone-200/50 hover:text-stone-900"
                 }`}
               >
                 {item.label}
@@ -84,23 +82,7 @@ export function SignalSidebar() {
           })}
         </nav>
 
-        <Link
-          href="/"
-          onClick={() => {
-            setChooseSpecialty(true);
-            setSidebarOpen(false);
-          }}
-          className="mx-3 mt-4 block rounded-xl px-3 py-2 text-left hover:bg-white"
-        >
-          <span className="text-[11px] font-semibold tracking-[0.14em] text-stone-400 uppercase">
-            Specialty
-          </span>
-          <span className="mt-0.5 block truncate text-[13px] font-medium text-stone-800">
-            {specialties.length > 0
-              ? specialties.map((name) => specialtyLabel(name)).join(", ")
-              : "Choose a specialty"}
-          </span>
-        </Link>
+        <div className="mt-3 border-t border-stone-300/80" />
 
         <div
           className={`mt-5 min-h-0 flex-1 space-y-5 overflow-y-auto px-3 pt-1 pb-6 ${
@@ -133,6 +115,7 @@ export function SignalSidebar() {
             ids={selections.considering}
           />
         </div>
+        <AccountMenu />
       </aside>
     </>
   );

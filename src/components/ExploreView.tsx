@@ -2,17 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProgramCard } from "@/components/ProgramCard";
-import { SpecialtyPicker } from "@/components/SpecialtyPicker";
 import { useApp } from "@/context/AppProvider";
 import { specialtyLabel } from "@/lib/catalog";
-import { OBGYN_SPECIALTY, programsForSpecialties } from "@/lib/directory";
-import {
-  DELIVERY_BANDS,
-  REGIONS,
-  STATE_NAMES,
-  deliveryBandId,
-  isEnrichedProgram,
-} from "@/lib/programs";
+import { programsForSpecialties } from "@/lib/directory";
+import { DELIVERY_BANDS, REGIONS, STATE_NAMES, deliveryBandId } from "@/lib/programs";
 import { colLabel, formatPopulation, matchScore } from "@/lib/scoring";
 import type { DeliveryBandId, ProgramType, SortKey } from "@/lib/types";
 
@@ -173,10 +166,6 @@ export function ExploreView() {
   const {
     weights,
     specialties,
-    chooseSpecialty,
-    setSpecialties,
-    setChooseSpecialty,
-    selections,
   } = useApp();
   const [query, setQuery] = useState("");
   const [regions, setRegions] = useState<string[]>([]);
@@ -206,14 +195,6 @@ export function ExploreView() {
         minColIndex > 0 ||
         maxColIndex < COL_STEPS.length - 1));
   const showSpecialty = specialties.length > 1;
-  const suggested = useMemo(() => {
-    if (specialties.length > 0) return specialties;
-    const ids = [...selections.gold, ...selections.silver, ...selections.considering].filter(
-      (id): id is string => Boolean(id),
-    );
-    if (ids.some((id) => isEnrichedProgram(id))) return [OBGYN_SPECIALTY];
-    return [];
-  }, [specialties, selections]);
 
   const stateOptions = useMemo(() => {
     const codes = [...new Set(programs.map((program) => program.state))].sort();
@@ -358,17 +339,6 @@ export function ExploreView() {
     weights,
   ]);
 
-  if (specialties.length === 0 || chooseSpecialty) {
-    return (
-      <SpecialtyPicker
-        key={specialties.join("|") || "new"}
-        initial={specialties.length > 0 ? specialties : suggested}
-        onSave={setSpecialties}
-        onCancel={specialties.length > 0 ? () => setChooseSpecialty(false) : undefined}
-      />
-    );
-  }
-
   const specialtyNames = specialties.map((name) => specialtyLabel(name)).join(", ");
   const needsDirectoryNote = programs.some((program) => program.coverage !== "full");
 
@@ -381,22 +351,15 @@ export function ExploreView() {
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">
           Assign your 3 Gold and 15 Silver signals
         </h1>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-2 py-1">
           {specialties.map((name) => (
             <span
               key={name}
-              className="rounded-full bg-white px-3 py-1 text-[12px] font-medium text-stone-700 ring-1 ring-stone-200"
+              className="inline-flex h-7 items-center rounded-full border border-stone-300 bg-white px-3 text-[12px] font-medium leading-none text-stone-700"
             >
               {name}
             </span>
           ))}
-          <button
-            type="button"
-            onClick={() => setChooseSpecialty(true)}
-            className="rounded-full px-3 py-1 text-[12px] font-medium text-[#8A6A2A] hover:bg-white"
-          >
-            Change
-          </button>
         </div>
         <p className="mt-3 text-[15px] leading-relaxed text-stone-500">
           Search {programs.length.toLocaleString()} {specialtyNames} programs, then drag one into an

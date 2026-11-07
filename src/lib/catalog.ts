@@ -159,6 +159,8 @@ export const RESIDENCY_SPECIALTIES = [
   "Vascular surgery - integrated",
 ].filter((name) => SPECIALTIES.includes(name));
 
+const RESIDENCY_SET = new Set<string>(RESIDENCY_SPECIALTIES);
+
 export const CATALOG_GENERATED = data.generated;
 export const CATALOG_COUNT = CATALOG.length;
 
@@ -191,12 +193,20 @@ function tokenHits(program: CatalogProgram, token: string) {
   return program.search.includes(token);
 }
 
-export function searchCatalog(query: string, specialty: string, limit = 40) {
+export function searchCatalog(
+  query: string,
+  specialty: string | readonly string[] = "",
+  limit = 40,
+) {
   const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const pool = specialty ? CATALOG.filter((program) => program.specialty === specialty) : CATALOG;
+  const names = typeof specialty === "string" ? (specialty ? [specialty] : []) : specialty;
+  const allowed = names.length > 0 ? new Set<string>(names) : null;
+  const pool = allowed
+    ? CATALOG.filter((program) => allowed.has(program.specialty))
+    : CATALOG.filter((program) => RESIDENCY_SET.has(program.specialty));
   if (tokens.length === 0) {
     return {
-      matches: specialty ? pool.slice(0, limit) : [],
+      matches: allowed ? pool.slice(0, limit) : [],
       total: pool.length,
     };
   }
