@@ -19,6 +19,7 @@ import {
   specialtyLabel,
   type CatalogProgram,
 } from "@/lib/catalog";
+import { PICKER_CRITERIA } from "@/lib/picker";
 
 export function InterviewsView() {
   const { board, addProgram, removeProgram, clearPrograms } = usePicker();
@@ -27,6 +28,7 @@ export function InterviewsView() {
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [pendingRemove, setPendingRemove] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const listId = useId();
@@ -99,6 +101,21 @@ export function InterviewsView() {
   }
 
   const directoryCount = useMemo(() => searchCatalog("", specialties).total, [specialties]);
+  const rankedAreas = useMemo(
+    () =>
+      PICKER_CRITERIA.filter((criterion) => board.confirmed.includes(criterion.id)).map(
+        (criterion) => criterion.short,
+      ),
+    [board.confirmed],
+  );
+
+  function requestRemove(id: string) {
+    if (rankedAreas.length === 0) {
+      removeProgram(id);
+      return;
+    }
+    setPendingRemove(id);
+  }
 
   return (
     <div>
@@ -288,7 +305,7 @@ export function InterviewsView() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => removeProgram(id)}
+                  onClick={() => requestRemove(id)}
                   className="rounded-xl px-2.5 py-1.5 text-[13px] font-medium text-stone-500 hover:bg-stone-100 hover:text-stone-800"
                 >
                   Remove
@@ -298,6 +315,96 @@ export function InterviewsView() {
           })}
         </ul>
       </section>
+      {pendingRemove ? (
+        <RemoveInterviewConfirm
+          name={getCatalogProgram(pendingRemove)?.name ?? "This program"}
+          areas={rankedAreas}
+          onCancel={() => setPendingRemove(null)}
+          onConfirm={() => {
+            removeProgram(pendingRemove);
+            setPendingRemove(null);
+          }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function joinList(items: string[]) {
+  if (items.length <= 1) return items[0] ?? "";
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+}
+
+function RemoveInterviewConfirm({
+  name,
+  areas,
+  onCancel,
+  onConfirm,
+}: {
+  name: string;
+  areas: string[];
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const titleId = useId();
+  const descId = useId();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const one = areas.length === 1;
+
+  useEffect(() => {
+    cancelRef.current?.focus();
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") onCancel();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+      <button
+        type="button"
+        className="absolute inset-0 bg-stone-900/35"
+        aria-label="Keep interview"
+        onClick={onCancel}
+      />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descId}
+        className="relative mx-4 mb-4 w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:mb-0 sm:p-7"
+      >
+        <p className="text-[12px] font-medium tracking-[0.16em] text-[#8A6A2A] uppercase">
+          Rankings
+        </p>
+        <h2 id={titleId} className="mt-2 text-xl font-semibold tracking-tight text-stone-900">
+          Remove this interview?
+        </h2>
+        <p id={descId} className="mt-2 text-[15px] leading-relaxed text-stone-500">
+          {one
+            ? `${name} is in your ${areas[0]} ranking. Removing it loses that place. Adding it again puts it at the bottom of the list.`
+            : `${name} is in your rankings for ${joinList(areas)}. Removing it loses those places. Adding it again puts it at the bottom of each list.`}
+        </p>
+        <div className="mt-6 flex flex-wrap justify-end gap-2">
+          <button
+            ref={cancelRef}
+            type="button"
+            onClick={onCancel}
+            className="rounded-xl border border-stone-200 px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50"
+          >
+            Keep it
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
