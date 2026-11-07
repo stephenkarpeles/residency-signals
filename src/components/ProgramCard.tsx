@@ -75,7 +75,7 @@ export function ProgramCard({
         </div>
         {score == null ? null : (
           <div
-            className="rounded-2xl bg-[#F3E6C0] px-2.5 py-1.5 text-right"
+            className="shrink-0 rounded-2xl bg-[#F3E6C0] px-2.5 py-1.5 text-right whitespace-nowrap"
             title={
               partial
                 ? "Scored from the city and state factors we have. Program-specific stats are not in for this specialty yet."
@@ -86,7 +86,7 @@ export function ProgramCard({
             <p className="text-lg leading-none font-semibold tabular-nums text-[#6F5420]">
               {score.toFixed(1)}
             </p>
-            {partial ? <p className="mt-0.5 text-[9px] text-[#8A6A2A]">City data</p> : null}
+            {partial ? <p className="mt-0.5 text-[9px] whitespace-nowrap text-[#8A6A2A]">City data</p> : null}
           </div>
         )}
       </div>
@@ -120,8 +120,12 @@ export function ProgramCard({
       {slot ? (
         <div className="mt-3 flex items-center justify-between gap-2">
           <p
-            className={`text-[11px] font-medium ${
-              slot.tier === "considering" ? "text-[#3F5C51]" : "text-[#8A6A2A]"
+            className={`text-[12px] font-semibold ${
+              slot.tier === "gold"
+                ? "text-[#8A6A2A]"
+                : slot.tier === "silver"
+                  ? "text-stone-700"
+                  : "text-[#3F5C51]"
             }`}
           >
             {slot.tier === "gold"
@@ -151,36 +155,76 @@ export function ProgramCard({
           Details
         </button>
         <div className="ml-auto flex shrink-0 gap-1.5">
-          <button
-            type="button"
-            onPointerDown={(e) => e.stopPropagation()}
+          <TierButton
+            label="Gold"
+            active={slot?.tier === "gold"}
             disabled={slot?.tier !== "gold" && goldCount >= GOLD_SLOTS}
             onClick={() => assign(program.id, "gold")}
-            className="rounded-xl bg-[#F3E6C0] px-2.5 py-1.5 text-[12px] font-medium text-[#6F5420] hover:bg-[#EAD7A0] disabled:opacity-40"
-          >
-            Gold
-          </button>
-          <button
-            type="button"
-            onPointerDown={(e) => e.stopPropagation()}
+            activeClass="bg-[#E4D09A] text-[#6F5420] shadow-[inset_0_0_0_1px_#C4A35A]"
+            idleClass="bg-[#F3E6C0] text-[#6F5420] hover:bg-[#EAD7A0]"
+          />
+          <TierButton
+            label="Silver"
+            active={slot?.tier === "silver"}
             disabled={slot?.tier !== "silver" && silverCount >= SILVER_SLOTS}
             onClick={() => assign(program.id, "silver")}
-            className="rounded-xl bg-stone-200 px-2.5 py-1.5 text-[12px] font-medium text-stone-700 hover:bg-stone-300 disabled:opacity-40"
-          >
-            Silver
-          </button>
-          <button
-            type="button"
-            onPointerDown={(e) => e.stopPropagation()}
+            activeClass="bg-stone-300 text-stone-800 shadow-[inset_0_0_0_1px_#78716c]"
+            idleClass="bg-stone-200 text-stone-700 hover:bg-stone-300"
+          />
+          <TierButton
+            label="Consider"
+            active={slot?.tier === "considering"}
             disabled={slot?.tier !== "considering" && consideringCount >= CONSIDERING_SLOTS}
             onClick={() => assign(program.id, "considering")}
-            className="rounded-xl bg-[#E4EDE8] px-2.5 py-1.5 text-[12px] font-medium text-[#3F5C51] hover:bg-[#D5E3DC] disabled:opacity-40"
-          >
-            Consider
-          </button>
+            activeClass="bg-[#D5E3DC] text-[#3F5C51] shadow-[inset_0_0_0_1px_#8AA396]"
+            idleClass="bg-[#E4EDE8] text-[#3F5C51] hover:bg-[#D5E3DC]"
+          />
         </div>
       </div>
     </article>
+  );
+}
+
+function TierButton({
+  label,
+  active,
+  disabled,
+  onClick,
+  activeClass,
+  idleClass,
+}: {
+  label: string;
+  active: boolean;
+  disabled: boolean;
+  onClick: () => void;
+  activeClass: string;
+  idleClass: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onPointerDown={(event) => event.stopPropagation()}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex items-center rounded-xl py-1.5 text-[12px] font-medium disabled:opacity-40 ${
+        active ? `gap-1 pr-2.5 pl-2 ${activeClass}` : `px-2.5 ${idleClass}`
+      }`}
+    >
+      {active ? (
+        <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+          <path
+            d="M2 5.2L4.1 7.3 8 2.8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ) : null}
+      {label}
+    </button>
   );
 }
 

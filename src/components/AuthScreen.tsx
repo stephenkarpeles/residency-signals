@@ -178,7 +178,7 @@ function EyeOffIcon() {
 function Brand() {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#3F5C51] text-sm font-semibold text-white shadow-sm">
+      <span className="flex h-9 w-9 items-center justify-center rounded bg-[#3F5C51] text-sm font-semibold text-white shadow-sm">
         RF
       </span>
       <p className="text-[15px] font-semibold tracking-tight text-stone-900">Residency Finder</p>

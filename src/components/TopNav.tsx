@@ -36,22 +36,30 @@ export function TopNav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-300/80 bg-[#F6F3EE]/90 backdrop-blur">
-      <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
+      <div className="flex h-14 min-w-0 items-center gap-1.5 px-3 sm:gap-3 sm:px-6">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
           aria-label={picker ? "Open rankings panel" : "Open signals panel"}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-stone-800 shadow-sm ring-1 ring-stone-200 lg:hidden"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-stone-800 shadow-sm ring-1 ring-stone-200 lg:hidden"
         >
           <MenuIcon />
         </button>
-        <Link href="/" className="hidden items-center gap-2 rounded-xl px-1.5 py-1 transition-colors hover:bg-white/80 sm:flex">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#3F5C51] text-xs font-semibold text-white">
+        <Link
+          href="/"
+          aria-label="Residency Finder"
+          onClick={() => setChooseSpecialty(false)}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#3F5C51] text-xs font-semibold text-white lg:hidden"
+        >
+          RF
+        </Link>
+        <Link href="/" className="hidden shrink-0 items-center gap-2 rounded-xl px-1.5 py-1 transition-colors hover:bg-white/80 lg:flex">
+          <span className="flex h-8 w-8 items-center justify-center rounded bg-[#3F5C51] text-xs font-semibold text-white">
             RF
           </span>
           <span className="text-[14px] font-semibold tracking-tight text-stone-900">Residency Finder</span>
         </Link>
-        <nav className="flex items-center gap-1">
+        <nav className="hidden shrink-0 items-center gap-1 lg:flex">
           {LINKS.map((item) => {
             const active = item.href === "/" ? !picker : picker;
             return (
@@ -70,31 +78,31 @@ export function TopNav() {
             );
           })}
         </nav>
-        <span className="mx-1 hidden h-5 w-px shrink-0 bg-stone-300 sm:block" aria-hidden />
-        <button
-          type="button"
-          onClick={() => setChooseSpecialty(!chooseSpecialty)}
-          title={specialtyNames}
-          aria-label={`Specialty: ${specialtyNames}`}
-          className={`flex h-9 shrink-0 items-center gap-2 rounded-xl border bg-white px-2.5 shadow-sm transition-colors sm:ml-2 sm:gap-2.5 sm:px-3 ${
-            chooseSpecialty
-              ? "border-[#C4A35A] ring-2 ring-[#C4A35A]/25"
-              : "border-stone-300 hover:border-[#C4A35A]"
-          }`}
-        >
-          <span className="shrink-0 text-[11px] font-semibold tracking-[0.14em] text-[#8A6A2A] uppercase">
-            Specialty
-          </span>
-          <span
-            className={`max-w-[9rem] truncate text-[13px] sm:max-w-[14rem] lg:max-w-[18rem] ${
-              specialties.length > 0 ? "font-semibold text-stone-900" : "font-medium text-stone-400"
+        <div className="ml-auto flex min-w-0 items-center justify-end gap-2 sm:gap-3">
+          <span className="mx-1 hidden h-5 w-px shrink-0 bg-stone-300 lg:block" aria-hidden />
+          <button
+            type="button"
+            onClick={() => setChooseSpecialty(!chooseSpecialty)}
+            title={specialtyNames}
+            aria-label={`Specialty: ${specialtyNames}`}
+            className={`flex h-9 min-w-0 items-center gap-2 rounded-xl border bg-white px-2.5 shadow-sm transition-colors sm:gap-2.5 sm:px-3 ${
+              chooseSpecialty
+                ? "border-[#C4A35A] ring-2 ring-[#C4A35A]/25"
+                : "border-stone-300 hover:border-[#C4A35A]"
             }`}
           >
-            {specialtyNames}
-          </span>
-          <ChevronIcon />
-        </button>
-        <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
+            <span className="shrink-0 text-[11px] font-semibold tracking-[0.14em] text-[#8A6A2A] uppercase">
+              Specialty
+            </span>
+            <span
+              className={`min-w-0 truncate text-[13px] lg:max-w-[18rem] ${
+                specialties.length > 0 ? "font-semibold text-stone-900" : "font-medium text-stone-400"
+              }`}
+            >
+              {specialtyNames}
+            </span>
+            <ChevronIcon />
+          </button>
           {picker ? null : (
             <p className="hidden shrink-0 text-[12px] text-stone-500 md:block lg:hidden">
               <span className="font-medium text-[#8A6A2A]">

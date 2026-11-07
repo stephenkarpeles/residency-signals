@@ -167,18 +167,18 @@ export function SpecialtyPicker({
         </>
       )}
 
-      <div className="sticky bottom-4 mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-stone-200/80 bg-white/95 px-4 py-3 shadow-[0_8px_24px_rgba(28,25,23,0.08)] backdrop-blur">
-        <p className="text-[13px] text-stone-500">
+      <div className="sticky bottom-4 z-20 mt-8 flex flex-wrap items-center gap-3 rounded-2xl bg-[#1C1917] px-5 py-3.5 text-white shadow-[0_20px_50px_-8px_rgba(28,25,23,0.55)]">
+        <p className="text-[15px] font-semibold tracking-tight">
           {selected.length === 0
             ? "Select at least one specialty"
             : `${selected.length} ${selected.length === 1 ? "specialty" : "specialties"} · ${total.toLocaleString()} programs`}
         </p>
-        <div className="ml-auto flex gap-2">
+        <div className="ml-auto flex items-center gap-1.5">
           {onCancel ? (
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-xl px-3 py-2 text-[13px] font-medium text-stone-600 hover:bg-stone-100"
+              className="rounded-xl px-3.5 py-2.5 text-[14px] font-medium text-stone-300 hover:bg-white/10 hover:text-white"
             >
               Cancel
             </button>
@@ -187,7 +187,7 @@ export function SpecialtyPicker({
             type="button"
             disabled={selected.length === 0}
             onClick={() => onSave(selected)}
-            className="rounded-xl bg-[#3F5C51] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#344c43] disabled:opacity-40"
+            className="rounded-xl bg-white px-5 py-2.5 text-[14px] font-semibold text-[#1C1917] hover:bg-stone-100 disabled:opacity-40"
           >
             Save
           </button>

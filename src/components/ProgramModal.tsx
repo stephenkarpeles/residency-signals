@@ -186,25 +186,40 @@ export function ProgramModal() {
           ) : null}
           <button
             type="button"
+            aria-pressed={slot?.tier === "gold"}
             disabled={slot?.tier !== "gold" && goldCount >= GOLD_SLOTS}
             onClick={() => assign(program.id, "gold")}
-            className="rounded-xl bg-[#C4A35A] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#B3944C] disabled:opacity-40"
+            className={`rounded-xl px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40 ${
+              slot?.tier === "gold"
+                ? "bg-[#C4A35A] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7)]"
+                : "bg-[#C4A35A] hover:bg-[#B3944C]"
+            }`}
           >
             Signal gold
           </button>
           <button
             type="button"
+            aria-pressed={slot?.tier === "silver"}
             disabled={slot?.tier !== "silver" && silverCount >= SILVER_SLOTS}
             onClick={() => assign(program.id, "silver")}
-            className="rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-40"
+            className={`rounded-xl px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40 ${
+              slot?.tier === "silver"
+                ? "bg-stone-800 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7)]"
+                : "bg-stone-800 hover:bg-stone-700"
+            }`}
           >
             Signal silver
           </button>
           <button
             type="button"
+            aria-pressed={slot?.tier === "considering"}
             disabled={slot?.tier !== "considering" && consideringCount >= CONSIDERING_SLOTS}
             onClick={() => assign(program.id, "considering")}
-            className="rounded-xl bg-[#3F5C51] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#344c43] disabled:opacity-40"
+            className={`rounded-xl px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40 ${
+              slot?.tier === "considering"
+                ? "bg-[#3F5C51] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7)]"
+                : "bg-[#3F5C51] hover:bg-[#344c43]"
+            }`}
           >
             Considering
           </button>
