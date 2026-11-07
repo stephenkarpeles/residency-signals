@@ -7,24 +7,31 @@ import {
   unusedFactors,
   weightsTotal,
 } from "@/lib/factors";
-import { PROGRAMS } from "@/lib/programs";
+import { getProgram, programsForSpecialties } from "@/lib/directory";
 import { factorScore, matchScore } from "@/lib/scoring";
 import type { FactorId } from "@/lib/types";
 
 export function FactorsView() {
-  const { weights, setWeight, addFactor, dropFactor, resetWeights } = useApp();
+  const { weights, setWeight, addFactor, dropFactor, resetWeights, specialties } = useApp();
   const total = weightsTotal(weights);
   const active = FACTORS.filter((f) => (weights[f.id] ?? 0) > 0);
   const suggestions = unusedFactors(weights);
   const canRemove = active.length > 1;
 
+  const programs = useMemo(() => programsForSpecialties(specialties), [specialties]);
+  const partialSpecialty = programs.some((program) => program.coverage !== "full");
   const preview = useMemo(
     () =>
-      [...PROGRAMS]
+      programs
         .map((program) => ({ program, score: matchScore(program, weights) }))
-        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => {
+          if (a.score == null && b.score == null) return a.program.shortName.localeCompare(b.program.shortName);
+          if (a.score == null) return 1;
+          if (b.score == null) return -1;
+          return b.score - a.score;
+        })
         .slice(0, 5),
-    [weights],
+    [programs, weights],
   );
 
   return (
@@ -41,6 +48,13 @@ export function FactorsView() {
           Remove anything you don’t care about — it moves to the list below, where you can add it
           back later.
         </p>
+        {partialSpecialty ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-stone-400">
+            Program quality, fellowship, class size, and DO representation are scored for
+            obstetrics and gynecology. Other specialties are scored on the city and state factors
+            we have.
+          </p>
+        ) : null}
       </header>
 
       <div className="mt-8 flex items-center justify-between rounded-2xl border border-stone-200/80 bg-white px-5 py-4">
@@ -138,6 +152,11 @@ export function FactorsView() {
         <h2 className="text-[12px] font-semibold tracking-[0.14em] text-stone-500 uppercase">
           Top matches with these weights
         </h2>
+        {preview.length === 0 ? (
+          <p className="mt-4 text-[14px] text-stone-500">
+            Choose a specialty in Explore to see how these weights rank programs.
+          </p>
+        ) : (
         <div className="mt-4 divide-y divide-stone-100 overflow-hidden rounded-2xl border border-stone-200/80 bg-white">
           {preview.map(({ program, score }, index) => (
             <div key={program.id} className="flex items-center gap-4 px-5 py-3.5">
@@ -152,11 +171,12 @@ export function FactorsView() {
               </div>
               <ScoreStack programId={program.id} weights={weights} />
               <span className="text-[15px] font-semibold tabular-nums text-stone-900">
-                {score.toFixed(1)}
+                {score == null ? "—" : score.toFixed(1)}
               </span>
             </div>
           ))}
         </div>
+        )}
         <BreakdownNote />
       </section>
     </div>
@@ -170,9 +190,11 @@ function ScoreStack({
   programId: string;
   weights: Record<FactorId, number>;
 }) {
-  const program = PROGRAMS.find((p) => p.id === programId);
+  const program = getProgram(programId);
   if (!program) return null;
-  const parts = FACTORS.filter((f) => (weights[f.id] ?? 0) > 0).slice(0, 4);
+  const parts = FACTORS.filter(
+    (factor) => (weights[factor.id] ?? 0) > 0 && factorScore(program, factor.id) != null,
+  ).slice(0, 4);
   return (
     <div className="hidden items-center gap-1 md:flex">
       {parts.map((factor) => (
@@ -183,7 +205,7 @@ function ScoreStack({
         >
           <span
             className="block h-full bg-[#3F5C51]"
-            style={{ width: `${factorScore(program, factor.id)}%` }}
+            style={{ width: `${factorScore(program, factor.id) ?? 0}%` }}
           />
         </span>
       ))}

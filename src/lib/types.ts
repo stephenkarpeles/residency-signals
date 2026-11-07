@@ -3,6 +3,8 @@ export type Region = "Northeast" | "Midwest" | "South" | "West";
 export type DoMdSource = "published" | "estimated" | "roster";
 export type DeliverySource = "published" | "sparcs" | "hcai" | "cms" | "estimated";
 
+export type ProgramCoverage = "full" | "place" | "basic";
+
 export type Program = {
   id: string;
   name: string;
@@ -10,28 +12,31 @@ export type Program = {
   city: string;
   state: string;
   region: Region;
-  type: ProgramType;
-  classSize: number;
-  annualDeliveries: number;
-  annualDeliveriesSource: DeliverySource;
+  specialty: string;
+  /** full = program stats, place = city stats only, basic = name and location */
+  coverage: ProgramCoverage;
+  type: ProgramType | null;
+  classSize: number | null;
+  annualDeliveries: number | null;
+  annualDeliveriesSource: DeliverySource | null;
   annualDeliveriesNote: string;
-  cityPopulation: number;
-  costOfLiving: number;
-  middleSchoolQuality: number;
-  highSchoolQuality: number;
-  inStateCollegeQuality: number;
-  programQuality: number;
-  townQuality: number;
-  waterProximity: number;
+  cityPopulation: number | null;
+  costOfLiving: number | null;
+  middleSchoolQuality: number | null;
+  highSchoolQuality: number | null;
+  inStateCollegeQuality: number | null;
+  programQuality: number | null;
+  townQuality: number | null;
+  waterProximity: number | null;
   waterNote: string;
-  percentMD: number;
-  percentDO: number;
-  percentIMG: number;
-  doMdSource: DoMdSource;
-  fellowshipStrength: number;
-  safety: number;
-  walkability: number;
-  climate: number;
+  percentMD: number | null;
+  percentDO: number | null;
+  percentIMG: number | null;
+  doMdSource: DoMdSource | null;
+  fellowshipStrength: number | null;
+  safety: number | null;
+  walkability: number | null;
+  climate: number | null;
   highlights: string[];
 };
 

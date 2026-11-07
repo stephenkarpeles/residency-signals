@@ -3,6 +3,7 @@ import type { Selections, Weights } from "./types";
 
 const SELECTIONS_KEY = "obgyn-signals:selections:v1";
 const WEIGHTS_KEY = "obgyn-signals:weights:v1";
+const SPECIALTIES_KEY = "residency-signals:specialties:v1";
 
 export function emptySelections(): Selections {
   return normalizeSelections({});
@@ -44,6 +45,27 @@ export function loadWeights(): Weights {
 
 export function saveWeights(weights: Weights) {
   window.localStorage.setItem(WEIGHTS_KEY, JSON.stringify(weights));
+}
+
+export function normalizeSpecialties(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const names = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+  return [...new Set(names)];
+}
+
+export function loadSpecialties(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(SPECIALTIES_KEY);
+    if (!raw) return [];
+    return normalizeSpecialties(JSON.parse(raw));
+  } catch {
+    return [];
+  }
+}
+
+export function saveSpecialties(specialties: string[]) {
+  window.localStorage.setItem(SPECIALTIES_KEY, JSON.stringify(specialties));
 }
 
 function padSlots(slots: (string | null)[] | undefined, length: number) {

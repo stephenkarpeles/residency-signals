@@ -15,7 +15,7 @@ import {
 } from "@dnd-kit/core";
 import { useState, type ReactNode } from "react";
 import { useApp } from "@/context/AppProvider";
-import { getProgram } from "@/lib/programs";
+import { getProgram } from "@/lib/directory";
 import type { SignalTier } from "@/lib/types";
 import { ProgramCard } from "@/components/ProgramCard";
 

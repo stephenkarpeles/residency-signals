@@ -8,6 +8,8 @@ import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 export function SelectionsView() {
   const { selections, weights, goldCount, silverCount, consideringCount, clearAll } = useApp();
   const { gold, silver, considering } = rankedSelected(selections, weights);
+  const showSpecialty =
+    new Set([...gold, ...silver, ...considering].map(({ program }) => program.specialty)).size > 1;
   const empty = goldCount + silverCount + consideringCount === 0;
   const [confirmClear, setConfirmClear] = useState(false);
 
@@ -66,7 +68,7 @@ export function SelectionsView() {
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {gold.map(({ program }) => (
-                <ProgramCard key={program.id} program={program} />
+                <ProgramCard key={program.id} program={program} showSpecialty={showSpecialty} />
               ))}
               {Array.from({ length: GOLD_SLOTS - gold.length }).map((_, index) => (
                 <EmptySlot key={`g-${index}`} label={`Open gold slot ${gold.length + index + 1}`} tone="gold" />
@@ -80,7 +82,7 @@ export function SelectionsView() {
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {silver.map(({ program }) => (
-                <ProgramCard key={program.id} program={program} />
+                <ProgramCard key={program.id} program={program} showSpecialty={showSpecialty} />
               ))}
               {silver.length === 0 ? (
                 <EmptySlot label="Open silver slots" />
@@ -94,7 +96,7 @@ export function SelectionsView() {
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {considering.map(({ program }) => (
-                <ProgramCard key={program.id} program={program} />
+                <ProgramCard key={program.id} program={program} showSpecialty={showSpecialty} />
               ))}
               {Array.from({ length: CONSIDERING_SLOTS - considering.length }).map((_, index) => (
                 <EmptySlot

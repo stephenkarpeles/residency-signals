@@ -19,15 +19,18 @@ import {
   setWeightKeepingTotal,
   SILVER_SLOTS,
 } from "@/lib/factors";
-import { getProgram } from "@/lib/programs";
+import { SPECIALTIES } from "@/lib/catalog";
+import { getProgram } from "@/lib/directory";
 import { matchScore } from "@/lib/scoring";
+import { getSupabase } from "@/lib/supabase";
 import {
   emptySelections,
   loadSelections,
+  loadSpecialties,
   loadWeights,
   normalizeSelections,
-  saveSelections,
-  saveWeights,
+  normalizeSpecialties,
+  saveSpecialties,
 } from "@/lib/storage";
 import type { FactorId, Program, Selections, SignalTier, Weights } from "@/lib/types";
 
@@ -35,6 +38,10 @@ type AppState = {
   hydrated: boolean;
   selections: Selections;
   weights: Weights;
+  specialties: string[];
+  chooseSpecialty: boolean;
+  setSpecialties: (specialties: string[]) => void;
+  setChooseSpecialty: (open: boolean) => void;
   sidebarOpen: boolean;
   detailId: string | null;
   setSidebarOpen: (open: boolean) => void;
@@ -47,6 +54,7 @@ type AppState = {
   unassign: (programId: string) => void;
   clearAll: () => void;
   findSlot: (programId: string) => { tier: SignalTier; index: number } | null;
+  syncError: string | null;
   goldCount: number;
   silverCount: number;
   consideringCount: number;
@@ -67,26 +75,139 @@ function firstEmpty(slots: (string | null)[]) {
   return slots.findIndex((id) => id === null);
 }
 
-export function AppProvider({ children }: { children: ReactNode }) {
+const MIGRATED_KEY = "obgyn-signals:migrated-to";
+const SPECIALTY_SET = new Set<string>(SPECIALTIES);
+
+function knownSpecialties(value: unknown) {
+  return normalizeSpecialties(value).filter((name) => SPECIALTY_SET.has(name));
+}
+
+function signalPayload(
+  userId: string,
+  selections: Selections,
+  weights: Weights,
+  specialties: string[],
+) {
+  return {
+    user_id: userId,
+    selections: { ...selections, specialties },
+    weights,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function hasAnySignal(selections: Selections) {
+  return [...selections.gold, ...selections.silver, ...selections.considering].some(Boolean);
+}
+
+export function AppProvider({ children, userId }: { children: ReactNode; userId: string }) {
   const [hydrated, setHydrated] = useState(false);
+  const [canSave, setCanSave] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [selections, setSelections] = useState<Selections>(emptySelections);
   const [weights, setWeights] = useState<Weights>(defaultWeights);
+  const [specialties, setSpecialtiesState] = useState<string[]>([]);
+  const [chooseSpecialty, setChooseSpecialty] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
 
   useEffect(() => {
-    setSelections(loadSelections());
-    setWeights(normalizeWeights(loadWeights()));
-    setHydrated(true);
+    let cancelled = false;
+    async function load() {
+      const supabase = getSupabase();
+      const localSelections = loadSelections();
+      const localWeights = normalizeWeights(loadWeights());
+      const localSpecialties = knownSpecialties(loadSpecialties());
+      if (!supabase) {
+        if (!cancelled) {
+          setSelections(localSelections);
+          setWeights(localWeights);
+          setSpecialtiesState(localSpecialties);
+          setHydrated(true);
+        }
+        return;
+      }
+      const { data, error } = await supabase
+        .from("signal_boards")
+        .select("selections, weights")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        setSyncError(error.message);
+        setCanSave(false);
+        setSpecialtiesState(localSpecialties);
+        setHydrated(true);
+        return;
+      }
+      const rawSelections = (data?.selections ?? {}) as Partial<Selections> & {
+        specialties?: unknown;
+      };
+      const remoteHasSpecialties =
+        data?.selections != null &&
+        typeof data.selections === "object" &&
+        "specialties" in data.selections;
+      const remoteSelections = normalizeSelections(rawSelections);
+      const remoteSpecialties = knownSpecialties(rawSelections.specialties);
+      const migratedTo = window.localStorage.getItem(MIGRATED_KEY);
+      let nextSelections = remoteSelections;
+      let nextWeights = normalizeWeights((data?.weights ?? {}) as Weights);
+      let nextSpecialties = remoteHasSpecialties ? remoteSpecialties : localSpecialties;
+      if (!hasAnySignal(remoteSelections) && hasAnySignal(localSelections) && !migratedTo) {
+        nextSelections = localSelections;
+        nextWeights = localWeights;
+        if (!remoteHasSpecialties) nextSpecialties = localSpecialties;
+        window.localStorage.setItem(MIGRATED_KEY, userId);
+        const { error: migrateError } = await supabase
+          .from("signal_boards")
+          .upsert(signalPayload(userId, nextSelections, nextWeights, nextSpecialties));
+        if (migrateError) setSyncError(migrateError.message);
+      } else if (!data) {
+        const { error: insertError } = await supabase
+          .from("signal_boards")
+          .upsert(signalPayload(userId, nextSelections, nextWeights, nextSpecialties));
+        if (insertError) setSyncError(insertError.message);
+      }
+      if (cancelled) return;
+      saveSpecialties(nextSpecialties);
+      setSelections(nextSelections);
+      setWeights(nextWeights);
+      setSpecialtiesState(nextSpecialties);
+      setCanSave(true);
+      setHydrated(true);
+    }
+    setHydrated(false);
+    setCanSave(false);
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    if (!hydrated || !canSave) return;
+    const supabase = getSupabase();
+    if (!supabase) return;
+    const handle = window.setTimeout(() => {
+      void supabase
+        .from("signal_boards")
+        .upsert(signalPayload(userId, normalizeSelections(selections), weights, specialties))
+        .then(({ error }) => {
+          setSyncError((current) => {
+            const next = error?.message ?? null;
+            return current === next ? current : next;
+          });
+        });
+    }, 500);
+    return () => window.clearTimeout(handle);
+  }, [hydrated, canSave, selections, weights, specialties, userId]);
+
+  const setSpecialties = useCallback((next: string[]) => {
+    const cleaned = knownSpecialties(next);
+    saveSpecialties(cleaned);
+    setSpecialtiesState(cleaned);
+    setChooseSpecialty(false);
   }, []);
-
-  useEffect(() => {
-    if (hydrated) saveSelections(normalizeSelections(selections));
-  }, [hydrated, selections]);
-
-  useEffect(() => {
-    if (hydrated) saveWeights(weights);
-  }, [hydrated, weights]);
 
   const findSlot = useCallback(
     (programId: string) => {
@@ -162,6 +283,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hydrated,
       selections: next,
       weights,
+      specialties,
+      chooseSpecialty,
+      setSpecialties,
+      setChooseSpecialty,
       sidebarOpen,
       detailId,
       setSidebarOpen,
@@ -174,6 +299,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       unassign,
       clearAll,
       findSlot,
+      syncError,
       goldCount: next.gold.filter(Boolean).length,
       silverCount: next.silver.filter(Boolean).length,
       consideringCount: next.considering.filter(Boolean).length,
@@ -182,6 +308,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     hydrated,
     selections,
     weights,
+    specialties,
+    chooseSpecialty,
+    setSpecialties,
+    setChooseSpecialty,
     sidebarOpen,
     detailId,
     setWeight,
@@ -192,6 +322,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     unassign,
     clearAll,
     findSlot,
+    syncError,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -221,7 +352,7 @@ export function rankedSelected(selections: Selections, weights: Weights) {
       program: Program;
       tier: SignalTier;
       index: number;
-      score: number;
+      score: number | null;
     }[];
   return {
     gold: collect(current.gold, "gold"),

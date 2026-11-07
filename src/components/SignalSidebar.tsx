@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useApp } from "@/context/AppProvider";
+import { specialtyLabel } from "@/lib/catalog";
 import { CONSIDERING_SLOTS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
 import { SignalSlot } from "@/components/SignalSlot";
 import type { SignalTier } from "@/lib/types";
@@ -17,8 +18,16 @@ const NAV = [
 ];
 
 export function SignalSidebar() {
-  const { selections, goldCount, silverCount, consideringCount, sidebarOpen, setSidebarOpen } =
-    useApp();
+  const {
+    selections,
+    goldCount,
+    silverCount,
+    consideringCount,
+    sidebarOpen,
+    setSidebarOpen,
+    specialties,
+    setChooseSpecialty,
+  } = useApp();
   const pathname = usePathname();
   const [listScrolled, setListScrolled] = useState(false);
 
@@ -34,22 +43,14 @@ export function SignalSidebar() {
       ) : null}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-[300px] flex-col border-r border-stone-200/80 bg-[#FBF9F6] transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed top-14 bottom-0 left-0 z-40 flex w-[300px] flex-col border-r border-stone-200/80 bg-[#FBF9F6] transition-transform duration-200 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between px-5 pt-6 pb-4">
-          <Link href="/" className="flex items-center gap-2.5" onClick={() => setSidebarOpen(false)}>
-            <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E8C872] to-[#C4A35A] text-sm font-semibold text-white shadow-sm">
-              OB
-            </span>
-            <div>
-              <p className="text-[15px] font-semibold tracking-tight text-stone-900">
-                Signal Board
-              </p>
-              <p className="text-[11px] text-stone-500">OB/GYN 2027 Match</p>
-            </div>
-          </Link>
+          <h2 className="px-1.5 text-[15px] font-semibold tracking-tight text-stone-900">
+            Signals
+          </h2>
           <button
             type="button"
             className="rounded-xl p-2 text-stone-500 hover:bg-stone-100 lg:hidden"
@@ -73,8 +74,8 @@ export function SignalSidebar() {
                 onClick={() => setSidebarOpen(false)}
                 className={`block rounded-xl px-3 py-2 text-[13px] transition-colors ${
                   active
-                    ? "bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-200/70"
-                    : "text-stone-600 hover:bg-white/70 hover:text-stone-900"
+                    ? "bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-200/70 hover:bg-[#F3E6C0] hover:ring-[#E6D5A3]"
+                    : "text-stone-600 hover:bg-white hover:text-stone-900"
                 }`}
               >
                 {item.label}
@@ -82,6 +83,24 @@ export function SignalSidebar() {
             );
           })}
         </nav>
+
+        <Link
+          href="/"
+          onClick={() => {
+            setChooseSpecialty(true);
+            setSidebarOpen(false);
+          }}
+          className="mx-3 mt-4 block rounded-xl px-3 py-2 text-left hover:bg-white"
+        >
+          <span className="text-[11px] font-semibold tracking-[0.14em] text-stone-400 uppercase">
+            Specialty
+          </span>
+          <span className="mt-0.5 block truncate text-[13px] font-medium text-stone-800">
+            {specialties.length > 0
+              ? specialties.map((name) => specialtyLabel(name)).join(", ")
+              : "Choose a specialty"}
+          </span>
+        </Link>
 
         <div
           className={`mt-5 min-h-0 flex-1 space-y-5 overflow-y-auto px-3 pt-1 pb-6 ${

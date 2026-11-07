@@ -2,8 +2,8 @@
 
 import { useApp } from "@/context/AppProvider";
 import { CONSIDERING_SLOTS, FACTORS, GOLD_SLOTS, SILVER_SLOTS } from "@/lib/factors";
-import { getProgram } from "@/lib/programs";
-import { colLabel, deliverySourceLabel, factorScore, formatDeliveries, formatPopulation, matchScore } from "@/lib/scoring";
+import { getProgram } from "@/lib/directory";
+import { colLabel, deliverySourceLabel, factorScore, formatDeliveries, formatPopulation, matchScore, matchUsesPartialData } from "@/lib/scoring";
 
 export function ProgramModal() {
   const { detailId, setDetailId, assign, unassign, findSlot, weights, goldCount, silverCount, consideringCount } =
@@ -12,8 +12,13 @@ export function ProgramModal() {
   if (!program) return null;
   const slot = findSlot(program.id);
   const score = matchScore(program, weights);
-  const schoolAvg = Math.round(
-    (program.middleSchoolQuality + program.highSchoolQuality) / 2,
+  const partial = score != null && matchUsesPartialData(program, weights);
+  const schoolAvg =
+    program.middleSchoolQuality != null && program.highSchoolQuality != null
+      ? Math.round((program.middleSchoolQuality + program.highSchoolQuality) / 2)
+      : null;
+  const scoredFactors = FACTORS.filter(
+    (factor) => (weights[factor.id] ?? 0) > 0 && factorScore(program, factor.id) != null,
   );
 
   return (
@@ -28,7 +33,9 @@ export function ProgramModal() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-medium tracking-wide text-stone-400 uppercase">
-              {program.type} · {program.region}
+              {program.coverage === "full" && program.type
+                ? `${program.type} · ${program.region}`
+                : `${program.specialty} · ${program.region}`}
             </p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight text-stone-900">
               {program.shortName}
@@ -40,89 +47,130 @@ export function ProgramModal() {
           </div>
           <div className="rounded-2xl bg-[#F4F1EB] px-3 py-2 text-right">
             <p className="text-[10px] tracking-wide text-stone-500 uppercase">Match</p>
-            <p className="text-2xl font-semibold tabular-nums">{score.toFixed(1)}</p>
+            <p className="text-2xl font-semibold tabular-nums">
+              {score == null ? "—" : score.toFixed(1)}
+            </p>
           </div>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Fact label="Population" value={formatPopulation(program.cityPopulation)} />
-          <Fact
-            label="Cost of living"
-            value={`${program.costOfLiving}`}
-            hint={colLabel(program.costOfLiving)}
-          />
-          <Fact label="Class size" value={`${program.classSize}`} hint="per year" />
-          <Fact
-            label="Deliveries"
-            value={formatDeliveries(program.annualDeliveries)}
-            hint={`${deliverySourceLabel(program.annualDeliveriesSource)} · per year`}
-          />
-          <Fact label="Water" value={`${program.waterProximity}`} hint={program.waterNote} />
+          {program.cityPopulation != null ? (
+            <Fact label="Population" value={formatPopulation(program.cityPopulation)} />
+          ) : null}
+          {program.costOfLiving != null ? (
+            <Fact
+              label="Cost of living"
+              value={`${program.costOfLiving}`}
+              hint={colLabel(program.costOfLiving)}
+            />
+          ) : null}
+          {program.classSize != null ? (
+            <Fact label="Class size" value={`${program.classSize}`} hint="per year" />
+          ) : null}
+          {program.annualDeliveries != null ? (
+            <Fact
+              label="Deliveries"
+              value={formatDeliveries(program.annualDeliveries)}
+              hint={`${deliverySourceLabel(program.annualDeliveriesSource ?? "estimated")} · per year`}
+            />
+          ) : null}
+          {program.waterProximity != null ? (
+            <Fact label="Water" value={`${program.waterProximity}`} hint={program.waterNote} />
+          ) : null}
         </div>
-        <p className="mt-2 text-[11px] text-stone-400">{program.annualDeliveriesNote}</p>
+        {program.annualDeliveriesNote ? (
+          <p className="mt-2 text-[11px] text-stone-400">{program.annualDeliveriesNote}</p>
+        ) : null}
 
-        <div className="mt-5 rounded-2xl bg-[#FBF9F6] p-4">
-          <div className="mb-2 flex justify-between text-[12px] text-stone-500">
-            <span>MD {program.percentMD}%</span>
-            <span>DO {program.percentDO}%</span>
-            <span>IMG {program.percentIMG}%</span>
+        {program.percentMD != null && program.percentDO != null && program.percentIMG != null ? (
+          <div className="mt-5 rounded-2xl bg-[#FBF9F6] p-4">
+            <div className="mb-2 flex justify-between text-[12px] text-stone-500">
+              <span>MD {program.percentMD}%</span>
+              <span>DO {program.percentDO}%</span>
+              <span>IMG {program.percentIMG}%</span>
+            </div>
+            <div className="flex h-2 overflow-hidden rounded-full bg-stone-200">
+              <span className="bg-[#3F5C51]" style={{ width: `${program.percentMD}%` }} />
+              <span className="bg-[#C4A35A]" style={{ width: `${program.percentDO}%` }} />
+              <span className="bg-stone-400" style={{ width: `${program.percentIMG}%` }} />
+            </div>
+            <p className="mt-2 text-[11px] text-stone-400">
+              {program.doMdSource === "roster"
+                ? "Resident mix counted from the program's current resident roster."
+                : program.doMdSource === "published"
+                  ? "Resident mix from 2026 FREIDA program surveys (three-year averages)."
+                  : "Resident mix estimated from program type and typical mix."}
+            </p>
           </div>
-          <div className="flex h-2 overflow-hidden rounded-full bg-stone-200">
-            <span className="bg-[#3F5C51]" style={{ width: `${program.percentMD}%` }} />
-            <span className="bg-[#C4A35A]" style={{ width: `${program.percentDO}%` }} />
-            <span className="bg-stone-400" style={{ width: `${program.percentIMG}%` }} />
-          </div>
-          <p className="mt-2 text-[11px] text-stone-400">
-            {program.doMdSource === "roster"
-              ? "Resident mix counted from the program's current resident roster."
-              : program.doMdSource === "published"
-                ? "Resident mix from 2026 FREIDA program surveys (three-year averages)."
-                : "Resident mix estimated from program type and typical mix."}
-          </p>
-        </div>
+        ) : null}
 
         <dl className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <ScoreRow label="Program quality" value={program.programQuality} />
-          <ScoreRow label="Fellowship strength" value={program.fellowshipStrength} />
-          <ScoreRow label="Middle schools" value={program.middleSchoolQuality} />
-          <ScoreRow label="High schools" value={program.highSchoolQuality} />
-          <ScoreRow label="In-state colleges" value={program.inStateCollegeQuality} />
-          <ScoreRow label="Town / amenities" value={program.townQuality} />
-          <ScoreRow label="Safety (metro)" value={program.safety} />
-          <ScoreRow label="Walkability" value={program.walkability} />
+          {program.programQuality != null ? (
+            <ScoreRow label="Program quality" value={program.programQuality} />
+          ) : null}
+          {program.fellowshipStrength != null ? (
+            <ScoreRow label="Fellowship strength" value={program.fellowshipStrength} />
+          ) : null}
+          {program.middleSchoolQuality != null ? (
+            <ScoreRow label="Middle schools" value={program.middleSchoolQuality} />
+          ) : null}
+          {program.highSchoolQuality != null ? (
+            <ScoreRow label="High schools" value={program.highSchoolQuality} />
+          ) : null}
+          {program.inStateCollegeQuality != null ? (
+            <ScoreRow label="In-state colleges" value={program.inStateCollegeQuality} />
+          ) : null}
+          {program.townQuality != null ? (
+            <ScoreRow label="Town / amenities" value={program.townQuality} />
+          ) : null}
+          {program.safety != null ? <ScoreRow label="Safety (metro)" value={program.safety} /> : null}
+          {program.walkability != null ? (
+            <ScoreRow label="Walkability" value={program.walkability} />
+          ) : null}
         </dl>
 
-        <p className="mt-2 text-[12px] text-stone-400">
-          Combined public-school score {schoolAvg}. Climate livability {program.climate}.
-        </p>
+        {schoolAvg != null || program.climate != null ? (
+          <p className="mt-2 text-[12px] text-stone-400">
+            {schoolAvg != null ? `Combined public-school score ${schoolAvg}. ` : ""}
+            {program.climate != null ? `Climate livability ${program.climate}.` : ""}
+          </p>
+        ) : null}
+        {partial ? (
+          <p className="mt-2 text-[12px] leading-relaxed text-stone-400">
+            This score uses the city and state factors we have. Program quality, class size,
+            deliveries, and resident mix are not in for this specialty yet, so they are left out.
+          </p>
+        ) : null}
 
-        <ul className="mt-5 space-y-1.5">
-          {program.highlights.map((item) => (
-            <li key={item} className="text-[14px] text-stone-600 before:mr-2 before:text-[#C4A35A] before:content-['•']">
-              {item}
-            </li>
-          ))}
-        </ul>
+        {program.highlights.length > 0 ? (
+          <ul className="mt-5 space-y-1.5">
+            {program.highlights.map((item) => (
+              <li key={item} className="text-[14px] text-stone-600 before:mr-2 before:text-[#C4A35A] before:content-['•']">
+                {item}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
         <div className="mt-6">
           <p className="text-[11px] font-semibold tracking-wide text-stone-400 uppercase">
             How this program scores for you
           </p>
           <div className="mt-2 space-y-2">
-            {FACTORS.filter((f) => (weights[f.id] ?? 0) > 0).map((factor) => (
-              <div key={factor.id} className="flex items-center gap-3 text-[12px]">
-                <span className="w-40 truncate text-stone-500">{factor.label}</span>
-                <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-100">
-                  <span
-                    className="block h-full bg-[#3F5C51]"
-                    style={{ width: `${factorScore(program, factor.id)}%` }}
-                  />
-                </span>
-                <span className="w-10 text-right tabular-nums text-stone-700">
-                  {Math.round(factorScore(program, factor.id))}
-                </span>
-              </div>
-            ))}
+            {scoredFactors.map((factor) => {
+              const value = factorScore(program, factor.id) ?? 0;
+              return (
+                <div key={factor.id} className="flex items-center gap-3 text-[12px]">
+                  <span className="w-40 truncate text-stone-500">{factor.label}</span>
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-100">
+                    <span className="block h-full bg-[#3F5C51]" style={{ width: `${value}%` }} />
+                  </span>
+                  <span className="w-10 text-right tabular-nums text-stone-700">
+                    {Math.round(value)}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

@@ -30,6 +30,28 @@ body {
   scrollbar-color: #d6d3d1 transparent;
 }
 
+a,
+button:not(:disabled),
+summary,
+[role="button"]:not([aria-disabled="true"]),
+[role="option"]:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0%200%2012%208' fill='none'%3E%3Cpath d='M1.5%201.5%206%206l4.5-4.5' stroke='%231c1917' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px 8px;
+  padding-right: 2.25rem;
+}
+
 input[type="range"] {
   height: 6px;
   border-radius: 999px;

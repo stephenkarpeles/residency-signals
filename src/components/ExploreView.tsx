@@ -324,7 +324,7 @@ export function ExploreView() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-xl border border-stone-200 bg-[#FBF9F6] px-3 py-2.5 text-[13px] text-stone-700 outline-none focus:border-[#C4A35A]"
+            className="rounded-xl border border-stone-200 bg-[#FBF9F6] py-2.5 pr-9 pl-3 text-[13px] text-stone-700 outline-none focus:border-[#C4A35A]"
           >
             <option value="score">Sort: Match Score</option>
             <option value="name">Sort: Name</option>

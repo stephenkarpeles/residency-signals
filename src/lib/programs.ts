@@ -1,7 +1,15 @@
 import data from "@/data/programs.json";
-import type { DeliveryBandId, Program } from "./types";
+import type { DeliveryBandId, Program, Region } from "./types";
 
-export const PROGRAMS = data.programs as Program[];
+export const OBGYN_SPECIALTY = "Obstetrics and gynecology";
+
+type StoredProgram = Omit<Program, "specialty" | "coverage">;
+
+export const PROGRAMS: Program[] = (data.programs as StoredProgram[]).map((program) => ({
+  ...program,
+  specialty: OBGYN_SPECIALTY,
+  coverage: "full",
+}));
 export const DATA_NOTES = data.notes;
 export const DATA_GENERATED = data.generated;
 
@@ -10,6 +18,10 @@ const byId = new Map(PROGRAMS.map((program) => [program.id, program]));
 export function getProgram(id: string | null | undefined): Program | undefined {
   if (!id) return undefined;
   return byId.get(id);
+}
+
+export function isEnrichedProgram(id: string | null | undefined) {
+  return !!id && byId.has(id);
 }
 
 export const STATES = [...new Set(PROGRAMS.map((p) => p.state))].sort();
@@ -83,4 +95,65 @@ export const STATE_NAMES: Record<string, string> = {
   WI: "Wisconsin",
   WV: "West Virginia",
   PR: "Puerto Rico",
+  AK: "Alaska",
+  ID: "Idaho",
+  MT: "Montana",
+  ND: "North Dakota",
+  SD: "South Dakota",
+  WY: "Wyoming",
+};
+
+export const REGION_BY_STATE: Record<string, Region> = {
+  CT: "Northeast",
+  ME: "Northeast",
+  MA: "Northeast",
+  NH: "Northeast",
+  RI: "Northeast",
+  VT: "Northeast",
+  NJ: "Northeast",
+  NY: "Northeast",
+  PA: "Northeast",
+  IL: "Midwest",
+  IN: "Midwest",
+  MI: "Midwest",
+  OH: "Midwest",
+  WI: "Midwest",
+  IA: "Midwest",
+  KS: "Midwest",
+  MN: "Midwest",
+  MO: "Midwest",
+  NE: "Midwest",
+  ND: "Midwest",
+  SD: "Midwest",
+  DE: "South",
+  FL: "South",
+  GA: "South",
+  MD: "South",
+  NC: "South",
+  SC: "South",
+  VA: "South",
+  DC: "South",
+  WV: "South",
+  AL: "South",
+  KY: "South",
+  MS: "South",
+  TN: "South",
+  AR: "South",
+  LA: "South",
+  OK: "South",
+  TX: "South",
+  PR: "South",
+  AZ: "West",
+  CO: "West",
+  ID: "West",
+  MT: "West",
+  NV: "West",
+  NM: "West",
+  UT: "West",
+  WY: "West",
+  AK: "West",
+  CA: "West",
+  HI: "West",
+  OR: "West",
+  WA: "West",
 };

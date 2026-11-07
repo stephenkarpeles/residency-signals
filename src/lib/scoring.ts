@@ -5,15 +5,17 @@ function clamp(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, value));
 }
 
-export function factorScore(program: Program, id: FactorId): number {
+export function factorScore(program: Program, id: FactorId): number | null {
   switch (id) {
     case "programQuality":
       return program.programQuality;
     case "inStateColleges":
       return program.inStateCollegeQuality;
     case "schools":
+      if (program.middleSchoolQuality == null || program.highSchoolQuality == null) return null;
       return (program.middleSchoolQuality + program.highSchoolQuality) / 2;
     case "affordability":
+      if (program.costOfLiving == null) return null;
       return clamp(((180 - program.costOfLiving) / 100) * 100);
     case "townQuality":
       return program.townQuality;
@@ -22,10 +24,12 @@ export function factorScore(program: Program, id: FactorId): number {
     case "fellowship":
       return program.fellowshipStrength;
     case "classSize":
+      if (program.classSize == null) return null;
       return clamp((program.classSize / 12) * 100);
     case "doRepresentation":
       return program.percentDO;
     case "citySize": {
+      if (program.cityPopulation == null) return null;
       const log = Math.log10(Math.max(program.cityPopulation, 1));
       return clamp(((log - 4.3) / (6.92 - 4.3)) * 100);
     }
@@ -38,15 +42,26 @@ export function factorScore(program: Program, id: FactorId): number {
   }
 }
 
-export function matchScore(program: Program, weights: Weights): number {
-  const total = FACTORS.reduce((sum, factor) => sum + (weights[factor.id] ?? 0), 0);
-  if (total <= 0) return 0;
-  const weighted = FACTORS.reduce((sum, factor) => {
+export function matchScore(program: Program, weights: Weights): number | null {
+  const scored = FACTORS.flatMap((factor) => {
     const weight = weights[factor.id] ?? 0;
-    if (weight <= 0) return sum;
-    return sum + (weight / total) * factorScore(program, factor.id);
-  }, 0);
+    if (weight <= 0) return [];
+    const score = factorScore(program, factor.id);
+    if (score == null) return [];
+    return [{ weight, score }];
+  });
+  const total = scored.reduce((sum, factor) => sum + factor.weight, 0);
+  if (total <= 0) return null;
+  const weighted = scored.reduce((sum, factor) => sum + (factor.weight / total) * factor.score, 0);
   return Math.round(weighted * 10) / 10;
+}
+
+/** True when a weighted factor has no data, so the score leaves that factor out. */
+export function matchUsesPartialData(program: Program, weights: Weights): boolean {
+  return FACTORS.some((factor) => {
+    const weight = weights[factor.id] ?? 0;
+    return weight > 0 && factorScore(program, factor.id) == null;
+  });
 }
 
 export function formatPopulation(n: number): string {

@@ -10,9 +10,9 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Signal Board · OB/GYN Residency",
+  title: "Residency Finder",
   description:
-    "Compare OB/GYN residency programs and choose 3 gold and 15 silver signals.",
+    "Rank interview invites and compare OB/GYN residency signals.",
 };
 
 export const viewport: Viewport = {

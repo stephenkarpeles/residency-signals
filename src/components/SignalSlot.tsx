@@ -3,7 +3,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppProvider";
-import { getProgram } from "@/lib/programs";
+import { getProgram } from "@/lib/directory";
 import type { SignalTier } from "@/lib/types";
 
 export function SignalSlot({
